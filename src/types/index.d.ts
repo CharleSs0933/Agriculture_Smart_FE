@@ -13,3 +13,20 @@ interface NewsArticle {
   tags: string[];
   source: string;
 }
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  category: string;
+  image: string;
+  views: number;
+  featured: boolean;
+  publishedAt: string;
+  updatedAt: string;
+  likes?: number;
+  comments?: number;
+  tags: string[];
+}

@@ -11,14 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Leaf, Menu } from "lucide-react";
-
-const navItems = [
-  { href: "/news", label: "Tin tức" },
-  { href: "/blog", label: "Blog nông dân" },
-  { href: "/ai-diagnosis", label: "AI Chẩn đoán" },
-  { href: "/support", label: "Hỗ trợ" },
-  { href: "#", label: "Liên hệ" },
-];
+import { navItems } from "@/lib/constants";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
