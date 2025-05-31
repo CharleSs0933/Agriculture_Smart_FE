@@ -4,7 +4,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Leaf, Menu } from "lucide-react";
 
 const navItems = [
@@ -72,7 +77,7 @@ export function Header() {
       </motion.div>
 
       {/* Mobile Navigation */}
-      <div className="ml-auto md:hidden">
+      <div className="ml-auto md:hidden ">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="sm" className="p-2">
@@ -80,16 +85,17 @@ export function Header() {
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+
+          <SheetContent side="right" className="w-[300px] sm:w-[400px] p-4">
             <div className="flex flex-col space-y-4 mt-6">
-              <div className="flex items-center justify-between">
+              <SheetTitle className="flex items-center justify-between">
                 <div className="flex items-center">
                   <Leaf className="h-6 w-6 text-green-600" />
                   <span className="ml-2 text-lg font-bold">
                     Agriculture Smart
                   </span>
                 </div>
-              </div>
+              </SheetTitle>
               <nav className="flex flex-col space-y-4">
                 {navItems.map((item, index) => (
                   <motion.div
