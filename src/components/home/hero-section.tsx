@@ -7,17 +7,17 @@ import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="w-full py-8 md:py-16 lg:py-20 bg-green-50">
-      <div className="container px-4 md:px-6">
+    <section className="w-full py-8 md:py-16 lg:py-10 bg-green-50">
+      <div className=" w-full px-4 md:px-6">
         <div className="grid gap-4 md:gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <motion.div
-            className="space-y-4"
+            className="space-y-4 w-fit mx-auto"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.h1
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter"
+              className="w-fit text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -70,7 +70,7 @@ export function HeroSection() {
               transition={{ duration: 0.3 }}
             >
               <Image
-                src="/placeholder.svg?height=550&width=550"
+                src="https://1wmtv4em9v.ufs.sh/f/GFdWNlbyPZoLbnMIIYra12exBhYqdvVlcUOtRnC9MNzkpAIZ"
                 width={550}
                 height={550}
                 alt="Agriculture Smart"

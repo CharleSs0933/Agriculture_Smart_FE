@@ -67,8 +67,8 @@ const itemVariants = {
 
 export function FeaturesHighlight() {
   return (
-    <section className="w-full py-6 md:py-8 lg:py-12 bg-gray-50">
-      <div className="container px-4 md:px-6">
+    <section className="w-full px-52 py-6 md:py-8 lg:py-12 bg-gray-50">
+      <div className="w-full px-4 md:px-6">
         <motion.div
           className="text-center mb-6 md:mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -84,7 +84,7 @@ export function FeaturesHighlight() {
           </p>
         </motion.div>
         <motion.div
-          className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4"
+          className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

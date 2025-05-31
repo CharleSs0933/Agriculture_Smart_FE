@@ -96,15 +96,15 @@ const itemVariants = {
 
 export function BenefitsSection() {
   return (
-    <section className="w-full py-8 md:py-12 lg:py-16">
-      <div className="container px-4 md:px-6">
+    <section className="w-full px-52 py-8 md:py-12 lg:py-16">
+      <div className="w-full px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <Tabs defaultValue="farmers" className="w-full max-w-4xl mx-auto">
+          <Tabs defaultValue="farmers" className="w-full">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">
                 Lợi ích cho các bên
