@@ -30,3 +30,17 @@ interface BlogPost {
   comments?: number;
   tags: string[];
 }
+
+interface AnalysisResult {
+  disease: string;
+  confidence: number;
+  symptoms: string[];
+  description: string;
+  treatment: string;
+  products: Array<{
+    name: string;
+    type: string;
+    description: string;
+    price: string;
+  }>;
+}
