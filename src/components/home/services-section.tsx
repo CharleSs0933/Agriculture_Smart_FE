@@ -54,7 +54,7 @@ const itemVariants = {
 
 export function ServicesSection() {
   return (
-    <section className="w-full px-52 py-8 md:py-12 lg:py-16">
+    <section className="w-full sm:px-20 md:px-36 lg:px-40 xl:px-52 py-8 md:py-12 lg:py-16">
       <div className=" px-4 md:px-6">
         <motion.div
           className="flex flex-col items-center justify-center space-y-4 text-center"

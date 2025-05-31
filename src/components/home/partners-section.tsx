@@ -35,7 +35,7 @@ const itemVariants = {
 
 export function PartnersSection() {
   return (
-    <section className="w-full px-52 py-4 md:py-6 lg:py-8 border-t border-b bg-white">
+    <section className="w-full sm:px-20 md:px-36 lg:px-40 xl:px-52 py-4 md:py-6 lg:py-8 border-t border-b bg-white">
       <div className="px-4 md:px-6">
         <motion.div
           className="text-center mb-4 md:mb-6"

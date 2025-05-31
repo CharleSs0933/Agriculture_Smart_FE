@@ -67,7 +67,7 @@ const itemVariants = {
 
 export function FeaturesHighlight() {
   return (
-    <section className="w-full px-52 py-6 md:py-8 lg:py-12 bg-gray-50">
+    <section className="w-full sm:px-20 md:px-36 lg:px-40 xl:px-52 py-6 md:py-8 lg:py-12 bg-gray-50">
       <div className="w-full px-4 md:px-6">
         <motion.div
           className="text-center mb-6 md:mb-8"
