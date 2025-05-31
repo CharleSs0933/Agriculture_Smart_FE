@@ -25,7 +25,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="px-4 lg:px-6 h-16 flex items-center border-b bg-white/80 backdrop-blur-md sticky top-0 z-50"
+      className="px-4 lg:px-6 py-4 h-16 flex items-center border-b bg-white/80 backdrop-blur-md sticky top-0 z-50"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
