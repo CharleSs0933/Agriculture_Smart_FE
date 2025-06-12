@@ -16,6 +16,7 @@ export const navItems = [
   { href: "/news", label: "Tin tức" },
   { href: "/blogs", label: "Blog nông dân" },
   { href: "/ai-diagnosis", label: "AI Chẩn đoán" },
+  { href: "/products", label: "Sản phẩm" },
   { href: "/support", label: "Hỗ trợ" },
   { href: "#", label: "Liên hệ" },
 ];
