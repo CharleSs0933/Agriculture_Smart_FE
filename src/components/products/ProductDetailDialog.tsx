@@ -17,14 +17,6 @@ import { formatCurrency } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-interface Review {
-  id: number;
-  user_name: string;
-  review_value: number;
-  review_message: string;
-  created_at: string;
-}
-
 interface ProductDetailDialogProps {
   product: Product;
   open: boolean;
@@ -36,44 +28,54 @@ const mockReviews: Record<number, Review[]> = {
   1: [
     {
       id: 1,
-      user_name: "Nguyễn Văn A",
-      review_value: 5,
-      review_message:
+      productId: 1,
+      userId: 1,
+      userName: "Nguyễn Văn A",
+      reviewValue: 5,
+      reviewMessage:
         "Phân bón rất tốt, cây trồng phát triển mạnh sau khi sử dụng. Sẽ mua lại!",
-      created_at: "2024-01-15T10:30:00.000Z",
+      createdAt: "2024-01-15T10:30:00.000Z",
     },
     {
       id: 2,
-      user_name: "Trần Thị B",
-      review_value: 4,
-      review_message: "Chất lượng ổn, giá cả hợp lý. Giao hàng nhanh.",
-      created_at: "2024-01-10T14:20:00.000Z",
+      userName: "Trần Thị B",
+      productId: 1,
+      userId: 1,
+      reviewValue: 4,
+      reviewMessage: "Chất lượng ổn, giá cả hợp lý. Giao hàng nhanh.",
+      createdAt: "2024-01-10T14:20:00.000Z",
     },
     {
       id: 3,
-      user_name: "Lê Văn C",
-      review_value: 5,
-      review_message: "Đã sử dụng 2 tháng, hiệu quả rất tốt. Khuyên dùng!",
-      created_at: "2024-01-05T09:15:00.000Z",
+      userName: "Lê Văn C",
+      productId: 1,
+      userId: 1,
+      reviewValue: 5,
+      reviewMessage: "Đã sử dụng 2 tháng, hiệu quả rất tốt. Khuyên dùng!",
+      createdAt: "2024-01-05T09:15:00.000Z",
     },
   ],
   2: [
     {
       id: 4,
-      user_name: "Phạm Văn D",
-      review_value: 4,
-      review_message: "Thuốc trừ sâu hiệu quả, an toàn cho môi trường.",
-      created_at: "2024-01-12T16:45:00.000Z",
+      userName: "Phạm Văn D",
+      productId: 1,
+      userId: 1,
+      reviewValue: 4,
+      reviewMessage: "Thuốc trừ sâu hiệu quả, an toàn cho môi trường.",
+      createdAt: "2024-01-12T16:45:00.000Z",
     },
   ],
   3: [
     {
       id: 5,
-      user_name: "Hoàng Thị E",
-      review_value: 5,
-      review_message:
+      userName: "Hoàng Thị E",
+      reviewValue: 5,
+      productId: 1,
+      userId: 1,
+      reviewMessage:
         "Hạt giống chất lượng cao, tỷ lệ nảy mầm 95%. Rất hài lòng!",
-      created_at: "2024-01-08T11:30:00.000Z",
+      createdAt: "2024-01-08T11:30:00.000Z",
     },
   ],
 };
@@ -92,7 +94,7 @@ export function ProductDetailDialog({
   const reviews = mockReviews[product.id] || [];
   const averageRating =
     reviews.length > 0
-      ? reviews.reduce((sum, review) => sum + review.review_value, 0) /
+      ? reviews.reduce((sum, review) => sum + review.reviewValue, 0) /
         reviews.length
       : 0;
 
@@ -161,7 +163,7 @@ export function ProductDetailDialog({
   const getRatingDistribution = () => {
     const distribution = [0, 0, 0, 0, 0];
     reviews.forEach((review) => {
-      distribution[review.review_value - 1]++;
+      distribution[review.reviewValue - 1]++;
     });
     return distribution.reverse();
   };
@@ -377,26 +379,26 @@ export function ProductDetailDialog({
                       <div className="flex items-start gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback>
-                            {review.user_name.charAt(0).toUpperCase()}
+                            {review.userName.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
 
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-medium">
-                              {review.user_name}
+                              {review.userName}
                             </span>
                             <div className="flex items-center gap-1">
-                              {renderStars(review.review_value)}
+                              {renderStars(review.reviewValue)}
                             </div>
                           </div>
 
                           <p className="text-gray-700 mb-2">
-                            {review.review_message}
+                            {review.reviewMessage}
                           </p>
 
                           <span className="text-xs text-gray-500">
-                            {new Date(review.created_at).toLocaleDateString(
+                            {new Date(review.createdAt).toLocaleDateString(
                               "vi-VN",
                               {
                                 year: "numeric",

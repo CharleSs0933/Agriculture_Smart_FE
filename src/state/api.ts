@@ -7,7 +7,15 @@ export const api = createApi({
   tagTypes: ["Products"],
   endpoints: (build) => ({
     getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
-      query: (queryParams) => `/products?${queryParams}`,
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return `/Product/public?${params.toString()}`;
+      },
       providesTags: ["Products"],
     }),
   }),

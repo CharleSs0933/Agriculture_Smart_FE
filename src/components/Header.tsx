@@ -3,10 +3,14 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +31,8 @@ import {
   PenTool,
 } from "lucide-react";
 
+import { useUser } from "@/hooks/userUser";
+
 const navItems = [
   { href: "/news", label: "Tin tức" },
   { href: "/blogs", label: "Blog nông dân" },
@@ -37,7 +43,7 @@ const navItems = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout } = useUser();
   const { items } = useCart();
 
   const cartItemsCount = items.reduce(
@@ -106,12 +112,8 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={user.avatar || "/placeholder.svg"}
-                    alt={user.name}
-                  />
                   <AvatarFallback>
-                    {user.name.charAt(0).toUpperCase()}
+                    {user.username.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -119,7 +121,7 @@ export function Header() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{user.name}</p>
+                  <p className="font-medium">{user.username}</p>
                   <p className="w-[200px] truncate text-sm text-muted-foreground">
                     {user.email}
                   </p>
@@ -159,12 +161,12 @@ export function Header() {
           </DropdownMenu>
         ) : (
           <div className="flex gap-2">
-            <Link href="/auth/login">
+            <Link href="/login">
               <Button variant="outline" size="sm">
                 Đăng nhập
               </Button>
             </Link>
-            <Link href="/auth/register">
+            <Link href="/register">
               <Button size="sm">Đăng ký</Button>
             </Link>
           </div>
@@ -180,7 +182,11 @@ export function Header() {
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+          <SheetTitle className="sr-only" />
+          <SheetContent
+            side="right"
+            className="w-[300px] sm:w-[400px] overflow-auto"
+          >
             <div className="flex flex-col space-y-4 mt-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -194,51 +200,16 @@ export function Header() {
               {user && (
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={user.avatar || "/placeholder.svg"}
-                      alt={user.name}
-                    />
                     <AvatarFallback>
-                      {user.name.charAt(0).toUpperCase()}
+                      {user.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{user.name}</p>
+                    <p className="font-medium">{user.username}</p>
                     <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
                 </div>
               )}
-
-              <nav className="flex flex-col space-y-4">
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <Link
-                      href={item.href}
-                      className="text-lg font-medium hover:text-green-600 transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                <Link
-                  href="/cart"
-                  className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Giỏ hàng
-                  {cartItemsCount > 0 && (
-                    <Badge className="ml-auto">{cartItemsCount}</Badge>
-                  )}
-                </Link>
-              </nav>
 
               <div className="pt-4 border-t">
                 {user ? (
@@ -292,6 +263,37 @@ export function Header() {
                   </div>
                 )}
               </div>
+
+              <nav className="flex flex-col space-y-4">
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Link
+                      href={item.href}
+                      className="text-lg font-medium hover:text-green-600 transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+
+                <Link
+                  href="/cart"
+                  className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  Giỏ hàng
+                  {cartItemsCount > 0 && (
+                    <Badge className="ml-auto">{cartItemsCount}</Badge>
+                  )}
+                </Link>
+              </nav>
             </div>
           </SheetContent>
         </Sheet>

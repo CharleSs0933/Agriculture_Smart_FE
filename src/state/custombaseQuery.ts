@@ -16,7 +16,24 @@ const customBaseQuery = async (
   });
 
   try {
-    const result = await baseQuery(args, api, extraOptions);
+    let result = await baseQuery(args, api, extraOptions);
+
+    if (result.error && result.error.status === 401) {
+      const refreshResult: any = await baseQuery(
+        {
+          url: "/auth/refresh-token",
+          method: "POST",
+        },
+        api,
+        extraOptions
+      );
+
+      if (refreshResult.data) {
+        result = await baseQuery(args, api, extraOptions);
+      } else {
+        toast.error("Session expired. Please log in again.");
+      }
+    }
 
     if (result.error) {
       const errorData = result.error.data as { message?: string } | undefined;

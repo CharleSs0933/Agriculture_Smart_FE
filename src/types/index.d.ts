@@ -77,25 +77,25 @@ interface CartItem {
   name: string;
   price: number;
   imageUrl: string;
-  category: string;
   quantity: number;
+  category: string;
+  sku: string;
 }
 
-interface ApiResponse<T> {
-  items: T[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
+interface Review {
+  id: number;
+  productId: number;
+  userId: number;
+  userName: string;
+  reviewValue: number;
+  reviewMessage: string;
+  createdAt: string;
 }
 
-interface ProductsQueryParams {
-  PageNumber?: number;
-  PageSize?: number;
-  Name?: string;
-  Description?: string;
-  CategoryName?: string;
-  SortByDiscount?: boolean;
+interface User {
+  id?: number;
+  username: string;
+  email: string;
+  avatar?: string;
+  role: "Farmer" | "Admin" | "Engineer";
 }

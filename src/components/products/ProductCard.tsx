@@ -86,7 +86,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
           )}
         </div>
 
-        <CardContent className="p-4">
+        <CardContent className="p-4 flex flex-col">
           <Badge variant="outline" className="mb-2">
             {product.category.name}
           </Badge>

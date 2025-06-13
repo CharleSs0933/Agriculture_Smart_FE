@@ -8,21 +8,11 @@ import {
   type ReactNode,
 } from "react";
 
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-  category: string;
-  sku: string;
-}
-
 interface CartContextType {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
+  removeItem: (id: number) => void;
+  updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
   itemCount: number;
   subtotal: number;
@@ -66,11 +56,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeItem = (id: string) => {
+  const removeItem = (id: number) => {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = (id: number, quantity: number) => {
     if (quantity < 1) return;
 
     setItems((prevItems) =>

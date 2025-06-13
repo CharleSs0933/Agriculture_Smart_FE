@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Search, Filter, SortAsc, Tag, Percent } from "lucide-react";
@@ -48,14 +47,6 @@ export function ProductFilter({
     setSelectedCategory("");
     setSortByDiscount(false);
   };
-
-  const popularTags = [
-    "Hạt giống",
-    "Phân bón",
-    "Thuốc BVTV",
-    "Dụng cụ",
-    "Máy móc",
-  ];
 
   return (
     <div className="space-y-6">
@@ -135,30 +126,6 @@ export function ProductFilter({
               <Percent className="h-4 w-4" />
               Ưu tiên sản phẩm giảm giá
             </label>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Popular Tags */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Tag className="h-4 w-4" />
-            Thẻ phổ biến
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {popularTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="cursor-pointer hover:bg-green-50"
-                onClick={() => setSearchTerm(tag)}
-              >
-                {tag}
-              </Badge>
-            ))}
           </div>
         </CardContent>
       </Card>
