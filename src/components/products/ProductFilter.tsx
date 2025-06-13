@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Search, Filter, SortAsc, Tag, Percent } from "lucide-react";
+import { Search, Filter, SortAsc, Percent } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 
@@ -23,9 +23,7 @@ export function ProductFilter({
   const [selectedCategory, setSelectedCategory] = useState(
     currentFilters.CategoryName || ""
   );
-  const [sortByDiscount, setSortByDiscount] = useState(
-    currentFilters.SortByDiscount || false
-  );
+  const [sortByDiscount, setSortByDiscount] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
@@ -33,7 +31,7 @@ export function ProductFilter({
     onFilterChange({
       Name: debouncedSearchTerm,
       CategoryName: selectedCategory,
-      SortByDiscount: sortByDiscount,
+      SortByDiscountPrice: sortByDiscount,
       PageNumber: 1, // Reset to first page when filters change
     });
   }, [debouncedSearchTerm, selectedCategory, sortByDiscount, onFilterChange]);
@@ -117,7 +115,7 @@ export function ProductFilter({
             <Switch
               id="sort-discount"
               checked={sortByDiscount}
-              onCheckedChange={setSortByDiscount}
+              onCheckedChange={() => setSortByDiscount((prev) => !prev)}
             />
             <label
               htmlFor="sort-discount"

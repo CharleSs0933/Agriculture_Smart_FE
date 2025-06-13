@@ -9,11 +9,11 @@ import { Trash2, Plus, Minus } from "lucide-react";
 import { useCart } from "@/contexts/cart-context";
 import { formatCurrency } from "@/lib/utils";
 
-interface CartItemProps {
+interface CartItemRowProps {
   item: CartItem;
 }
 
-export function CartItemRow({ item }: CartItemProps) {
+export function CartItemRow({ item }: CartItemRowProps) {
   const { updateQuantity, removeItem } = useCart();
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,21 +33,23 @@ export function CartItemRow({ item }: CartItemProps) {
     }
   };
 
+  const { product } = item;
+
   return (
     <div className="flex items-center py-4 border-b">
       <div className="w-20 h-20 relative flex-shrink-0">
         <Image
-          src={item.imageUrl || "/placeholder.svg"}
-          alt={item.name}
+          src={product.imageUrl || "/placeholder.svg"}
+          alt={product.name}
           fill
           className="object-cover rounded"
         />
       </div>
 
       <div className="ml-4 flex-1">
-        <h3 className="font-medium">{item.name}</h3>
-        <p className="text-sm text-gray-500">{item.category}</p>
-        <p className="font-semibold mt-1">{formatCurrency(item.price)}</p>
+        <h3 className="font-medium">{product.name}</h3>
+        <p className="text-sm text-gray-500">{product.category.name}</p>
+        <p className="font-semibold mt-1">{formatCurrency(item.unitPrice)}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -57,6 +59,7 @@ export function CartItemRow({ item }: CartItemProps) {
             size="icon"
             className="h-8 w-8 rounded-r-none"
             onClick={decrementQuantity}
+            disabled={item.quantity <= 1}
           >
             <Minus className="h-3 w-3" />
           </Button>
@@ -72,6 +75,7 @@ export function CartItemRow({ item }: CartItemProps) {
             size="icon"
             className="h-8 w-8 rounded-l-none"
             onClick={incrementQuantity}
+            disabled={item.quantity >= product.stock}
           >
             <Plus className="h-3 w-3" />
           </Button>
@@ -88,9 +92,7 @@ export function CartItemRow({ item }: CartItemProps) {
       </div>
 
       <div className="ml-4 text-right w-24">
-        <p className="font-semibold">
-          {formatCurrency(item.price * item.quantity)}
-        </p>
+        <p className="font-semibold">{formatCurrency(item.totalPrice)}</p>
       </div>
     </div>
   );

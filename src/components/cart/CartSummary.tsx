@@ -15,10 +15,11 @@ import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
 export function CartSummary() {
-  const { subtotal, itemCount } = useCart();
+  const { cart, itemCount } = useCart();
   const router = useRouter();
 
   // Calculate additional costs
+  const subtotal = cart?.totalAmount || 0;
   const shipping = subtotal > 500000 ? 0 : 30000;
   const tax = subtotal * 0.1; // 10% tax
   const total = subtotal + shipping + tax;

@@ -4,7 +4,7 @@ import customBaseQuery from "./custombaseQuery";
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "Reviews", "Cart"],
   endpoints: (build) => ({
     getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -18,7 +18,39 @@ export const api = createApi({
       },
       providesTags: ["Products"],
     }),
+
+    //#region  Review
+    getReviews: build.query<
+      { message: string; data: Review[] },
+      { productId: number }
+    >({
+      query: ({ productId }) => `/Review/product/${productId}`,
+      providesTags: ["Reviews"],
+    }),
+    //#endregion
+
+    //#region Cart
+    getCart: build.query<Cart, void>({
+      query: () => "/Cart",
+      providesTags: ["Cart"],
+    }),
+
+    addToCart: build.mutation<
+      CartItem,
+      { productId: number; quantity: number }
+    >({
+      query: ({ productId, quantity }) => ({
+        url: "/Cart",
+        method: "POST",
+        body: { productId, quantity },
+        credentials: "include",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    //#endregion
   }),
 });
 
-export const { useGetProductsQuery } = api;
+export const { useGetProductsQuery, useGetReviewsQuery, useAddToCartMutation } =
+  api;

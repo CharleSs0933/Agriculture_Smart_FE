@@ -19,7 +19,7 @@ const customBaseQuery = async (
     let result = await baseQuery(args, api, extraOptions);
 
     if (result.error && result.error.status === 401) {
-      const refreshResult: any = await baseQuery(
+      const refreshResult = await baseQuery(
         {
           url: "/auth/refresh-token",
           method: "POST",

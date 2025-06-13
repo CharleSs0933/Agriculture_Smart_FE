@@ -22,5 +22,5 @@ interface ProductsQueryParams {
   Name?: string;
   Description?: string;
   CategoryName?: string;
-  SortByDiscount?: boolean;
+  SortByDiscountPrice?: boolean;
 }

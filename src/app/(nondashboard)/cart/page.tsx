@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, ArrowLeft } from "lucide-react";
+import { ShoppingBag, ArrowLeft, Loader2 } from "lucide-react";
 import { useCart } from "@/contexts/cart-context";
 import { CartItemRow } from "@/components/cart/CartItem";
 import { CartSummary } from "@/components/cart/CartSummary";
 
 export default function CartPage() {
-  const { items, clearCart } = useCart();
+  const { cart, clearCart, isLoading, error } = useCart();
 
   return (
     <div className="px-4 md:px-6 py-8">
@@ -32,7 +32,23 @@ export default function CartPage() {
         <h1 className="text-3xl font-bold">Giỏ hàng của bạn</h1>
       </div>
 
-      {items.length === 0 ? (
+      {isLoading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+          <span className="ml-2">Đang tải giỏ hàng...</span>
+        </div>
+      ) : error ? (
+        <div className="text-center py-12">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <ShoppingBag className="h-12 w-12 text-red-400" />
+          </div>
+          <h2 className="text-2xl font-semibold mb-2">Có lỗi xảy ra</h2>
+          <p className="text-gray-500 mb-6">{error}</p>
+          <Button asChild className="bg-green-600 hover:bg-green-700">
+            <Link href="/products">Khám phá sản phẩm</Link>
+          </Button>
+        </div>
+      ) : !cart || !cart.cartItems || cart.cartItems.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="h-12 w-12 text-gray-400" />
@@ -53,7 +69,7 @@ export default function CartPage() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <ShoppingBag className="h-5 w-5" />
-                  Sản phẩm trong giỏ ({items.length})
+                  Sản phẩm trong giỏ ({cart.cartItems.length})
                 </CardTitle>
                 <Button
                   variant="outline"
@@ -66,7 +82,7 @@ export default function CartPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-0">
-                  {items.map((item) => (
+                  {cart.cartItems.map((item) => (
                     <CartItemRow key={item.id} item={item} />
                   ))}
                 </div>

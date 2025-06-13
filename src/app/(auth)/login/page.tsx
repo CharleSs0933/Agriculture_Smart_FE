@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Leaf, Eye, EyeOff, Loader2 } from "lucide-react";
-import { useLoginMutation } from "@/state/apiAuth";
-import { useAppDispatch } from "@/state/redux";
-import { setUser } from "@/state";
+
 import { useUser } from "@/hooks/userUser";
 
 export default function LoginPage() {
@@ -27,7 +24,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
   const { login, isLoginLoading } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
