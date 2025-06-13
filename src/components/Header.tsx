@@ -25,10 +25,7 @@ export function Header() {
     >
       <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
         <Link className="flex items-center justify-center" href="/">
-          <motion.div
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.6 }}
-          >
+          <motion.div transition={{ duration: 0.6 }}>
             <Leaf className="h-6 w-6 text-green-600" />
           </motion.div>
           <span className="ml-2 text-lg sm:text-xl font-bold">

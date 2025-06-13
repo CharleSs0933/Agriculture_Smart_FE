@@ -63,8 +63,8 @@ const NewsPage = () => {
                 chính sách mới, cảnh báo dịch bệnh và xu hướng thị trường.
               </p>
             </div>
-            <div className="w-full max-w-md">
-              <div className="relative">
+            <div className="w-full max-w-lg ">
+              <div className="relative bg-white rounded-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Tìm kiếm tin tức..."
@@ -80,7 +80,7 @@ const NewsPage = () => {
 
       {/* Featured News */}
       {featuredNews.length > 0 && (
-        <section className="w-full py-12 ">
+        <section className="w-full px-52 py-12 ">
           <div className=" px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
