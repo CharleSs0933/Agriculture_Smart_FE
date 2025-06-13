@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
+import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,11 +11,45 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Leaf, Menu } from "lucide-react";
-import { navItems } from "@/lib/constants";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Leaf,
+  Menu,
+  ShoppingCart,
+  User,
+  LogOut,
+  Settings,
+  FileText,
+  PenTool,
+} from "lucide-react";
+
+import { useUser } from "@/hooks/userUser";
+
+const navItems = [
+  { href: "/news", label: "Tin tức" },
+  { href: "/blogs", label: "Blog nông dân" },
+  { href: "/products", label: "Sản phẩm" },
+  { href: "/ai-diagnosis", label: "AI Chẩn đoán" },
+  { href: "/support", label: "Hỗ trợ" },
+];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useUser();
+  const { items } = useCart();
+
+  const cartItemsCount = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
     <motion.header
@@ -54,20 +89,89 @@ export function Header() {
         ))}
       </nav>
 
-      {/* Desktop Login Button */}
-      <motion.div
-        className="ml-4 lg:ml-6 hidden md:block"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Button size="sm">Đăng nhập</Button>
-      </motion.div>
+      {/* Desktop Actions */}
+      <div className="ml-4 lg:ml-6 hidden md:flex items-center gap-4">
+        {/* Cart Button */}
+        <Link href="/cart">
+          <Button variant="outline" size="sm" className="relative">
+            <ShoppingCart className="h-4 w-4" />
+            {cartItemsCount > 0 && (
+              <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                {cartItemsCount}
+              </Badge>
+            )}
+          </Button>
+        </Link>
+
+        {/* User Menu */}
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback>
+                    {user.username.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <div className="flex items-center justify-start gap-2 p-2">
+                <div className="flex flex-col space-y-1 leading-none">
+                  <p className="font-medium">{user.username}</p>
+                  <p className="w-[200px] truncate text-sm text-muted-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/profile">
+                  <User className="mr-2 h-4 w-4" />
+                  Hồ sơ cá nhân
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/blog/my-posts">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Bài viết của tôi
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/blog/create">
+                  <PenTool className="mr-2 h-4 w-4" />
+                  Viết bài mới
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Cài đặt
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Đăng xuất
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex gap-2">
+            <Link href="/login">
+              <Button variant="outline" size="sm">
+                Đăng nhập
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button size="sm">Đăng ký</Button>
+            </Link>
+          </div>
+        )}
+      </div>
 
       {/* Mobile Navigation */}
-      <div className="ml-auto md:hidden ">
+      <div className="ml-auto md:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="sm" className="p-2">
@@ -75,17 +179,88 @@ export function Header() {
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>
-
-          <SheetContent side="right" className="w-[300px] sm:w-[400px] p-4">
+          <SheetTitle className="sr-only" />
+          <SheetContent
+            side="right"
+            className="w-[300px] sm:w-[400px] overflow-auto"
+          >
             <div className="flex flex-col space-y-4 mt-6">
-              <SheetTitle className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <Leaf className="h-6 w-6 text-green-600" />
                   <span className="ml-2 text-lg font-bold">
                     Agriculture Smart
                   </span>
                 </div>
-              </SheetTitle>
+              </div>
+
+              {user && (
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback>
+                      {user.username.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium">{user.username}</p>
+                    <p className="text-sm text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-4 border-t">
+                {user ? (
+                  <div className="space-y-2">
+                    <Link
+                      href="/blog/my-posts"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        Bài viết của tôi
+                      </Button>
+                    </Link>
+                    <Link href="/blog/create" onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
+                        <PenTool className="mr-2 h-4 w-4" />
+                        Viết bài mới
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        logout();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Đăng xuất
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        Đăng nhập
+                      </Button>
+                    </Link>
+                    <Link
+                      href="/auth/register"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Button className="w-full">Đăng ký</Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
               <nav className="flex flex-col space-y-4">
                 {navItems.map((item, index) => (
                   <motion.div
@@ -103,12 +278,19 @@ export function Header() {
                     </Link>
                   </motion.div>
                 ))}
+
+                <Link
+                  href="/cart"
+                  className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  Giỏ hàng
+                  {cartItemsCount > 0 && (
+                    <Badge className="ml-auto">{cartItemsCount}</Badge>
+                  )}
+                </Link>
               </nav>
-              <div className="pt-4 border-t">
-                <Button className="w-full" onClick={() => setIsOpen(false)}>
-                  Đăng nhập
-                </Button>
-              </div>
             </div>
           </SheetContent>
         </Sheet>

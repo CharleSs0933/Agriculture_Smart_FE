@@ -1,12 +1,24 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import customBaseQuery from "./custombaseQuery";
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-  }),
+  baseQuery: customBaseQuery,
   reducerPath: "api",
-  tagTypes: [],
-  endpoints: () => ({}),
+  tagTypes: ["Products"],
+  endpoints: (build) => ({
+    getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return `/Product/public?${params.toString()}`;
+      },
+      providesTags: ["Products"],
+    }),
+  }),
 });
 
-export const {} = api;
+export const { useGetProductsQuery } = api;
