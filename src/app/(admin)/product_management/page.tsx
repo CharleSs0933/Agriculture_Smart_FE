@@ -356,11 +356,14 @@ export default function AdminProducts() {
                             />
                           </TableCell>
                           <TableCell>
-                            <Image
-                              src={product.imageUrl || "/placeholder.svg"}
-                              alt={product.name}
-                              className="h-12 w-12 rounded-lg object-cover"
-                            />
+                            <div className="relative">
+                              <Image
+                                src={product.imageUrl || "/placeholder.svg"}
+                                alt={product.name}
+                                className="h-12 w-12 rounded-lg object-cover"
+                                fill
+                              />
+                            </div>
                           </TableCell>
                           <TableCell className="max-w-[250px]">
                             <div className="space-y-1">

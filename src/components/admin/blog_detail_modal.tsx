@@ -95,10 +95,11 @@ export function BlogDetailModal({
           {/* Main Content */}
           <div className="md:col-span-2 space-y-6">
             {/* Featured Image */}
-            <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+            <div className="aspect-video relative bg-muted rounded-lg overflow-hidden">
               <Image
                 src="/placeholder.svg?height=400&width=600"
                 alt={post.title}
+                fill
                 className="w-full h-full object-cover"
               />
             </div>

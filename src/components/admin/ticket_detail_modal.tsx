@@ -181,11 +181,14 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
             {ticket.imageUrl && ticket.imageUrl !== "default.jpg" && (
               <div className="space-y-2">
                 <h4 className="font-semibold">Hình ảnh đính kèm</h4>
-                <Image
-                  src={`/placeholder.svg?height=300&width=400`}
-                  alt="Ticket image"
-                  className="rounded-lg border max-w-full h-auto"
-                />
+                <div className="relative">
+                  <Image
+                    src={`/placeholder.svg?height=300&width=400`}
+                    alt="Ticket image"
+                    className="rounded-lg border max-w-full h-auto"
+                    fill
+                  />
+                </div>
               </div>
             )}
           </div>
