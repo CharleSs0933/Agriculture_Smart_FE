@@ -31,20 +31,6 @@ interface BlogPost {
   tags: string[];
 }
 
-interface AnalysisResult {
-  disease: string;
-  confidence: number;
-  symptoms: string[];
-  description: string;
-  treatment: string;
-  products: Array<{
-    name: string;
-    type: string;
-    description: string;
-    price: string;
-  }>;
-}
-
 interface Category {
   id: number;
   name: string;
@@ -109,4 +95,13 @@ interface User {
   email: string;
   avatar?: string;
   role: "Farmer" | "Admin" | "Engineer";
+}
+
+interface AnalysisResult {
+  plant_name: string;
+  disease_name: string;
+  confidence: number;
+  symptoms: string[];
+  description: string;
+  treatment: string;
 }

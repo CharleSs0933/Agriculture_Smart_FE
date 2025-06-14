@@ -50,6 +50,7 @@ export const useUser = () => {
             role: res.role,
           })
         );
+        localStorage.setItem("token", res.token);
         router.push("/");
         toast.success("Login successfully");
       })
@@ -64,6 +65,7 @@ export const useUser = () => {
       .then(() => {
         setUser(null);
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       })
       .catch((error) => {
         console.log(error);

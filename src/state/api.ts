@@ -43,14 +43,57 @@ export const api = createApi({
         url: "/Cart",
         method: "POST",
         body: { productId, quantity },
-        credentials: "include",
       }),
       invalidatesTags: ["Cart"],
+    }),
+
+    clearCart: build.mutation<void, void>({
+      query: () => ({
+        url: "/Cart",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    updateQuantity: build.mutation<CartItem, { id: number; quantity: number }>({
+      query: ({ id, quantity }) => ({
+        url: `/Cart/items/${id}`,
+        method: "PUT",
+        body: { quantity },
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    deleteItem: build.mutation<void, number>({
+      query: (id) => ({
+        url: `/Cart/items/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    //#endregion
+
+    //#region Ticket
+    sendTicket: build.mutation<void, CreateTicketRequest>({
+      query: (ticket) => ({
+        url: "/Ticket/farmer",
+        method: "POST",
+        body: ticket,
+      }),
     }),
 
     //#endregion
   }),
 });
 
-export const { useGetProductsQuery, useGetReviewsQuery, useAddToCartMutation } =
-  api;
+export const {
+  useGetProductsQuery,
+  useGetReviewsQuery,
+  useAddToCartMutation,
+  useGetCartQuery,
+  useClearCartMutation,
+  useUpdateQuantityMutation,
+  useDeleteItemMutation,
+  useSendTicketMutation,
+} = api;

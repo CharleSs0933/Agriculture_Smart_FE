@@ -4,12 +4,25 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingBag, ArrowLeft, Loader2 } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
 import { CartItemRow } from "@/components/cart/CartItem";
 import { CartSummary } from "@/components/cart/CartSummary";
+import { useClearCartMutation, useGetCartQuery } from "@/state/api";
+import { toast } from "sonner";
 
 export default function CartPage() {
-  const { cart, clearCart, isLoading, error } = useCart();
+  const { data: cart, isLoading, isError } = useGetCartQuery();
+  const [clearCart] = useClearCartMutation();
+
+  const handleClearCart = async () => {
+    await clearCart()
+      .unwrap()
+      .then(() => {
+        toast.success("Đã xóa giỏ hàng");
+      })
+      .catch((error) => {
+        console.error("Failed to clear cart:", error);
+      });
+  };
 
   return (
     <div className="px-4 md:px-6 py-8">
@@ -37,13 +50,12 @@ export default function CartPage() {
           <Loader2 className="h-8 w-8 animate-spin text-green-600" />
           <span className="ml-2">Đang tải giỏ hàng...</span>
         </div>
-      ) : error ? (
+      ) : isError ? (
         <div className="text-center py-12">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="h-12 w-12 text-red-400" />
           </div>
           <h2 className="text-2xl font-semibold mb-2">Có lỗi xảy ra</h2>
-          <p className="text-gray-500 mb-6">{error}</p>
           <Button asChild className="bg-green-600 hover:bg-green-700">
             <Link href="/products">Khám phá sản phẩm</Link>
           </Button>
@@ -74,7 +86,7 @@ export default function CartPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={clearCart}
+                  onClick={handleClearCart}
                   className="text-red-500 hover:text-red-700"
                 >
                   Xóa tất cả
@@ -92,7 +104,7 @@ export default function CartPage() {
 
           {/* Cart Summary */}
           <div className="lg:col-span-1">
-            <CartSummary />
+            <CartSummary cart={cart} />
           </div>
         </div>
       )}

@@ -58,7 +58,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
                 src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
                 fill
-                className="object-cover transition-transform hover:scale-105"
+                className="object-contain transition-transform hover:scale-105"
               />
             </div>
           </button>

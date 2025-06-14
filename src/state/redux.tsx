@@ -8,19 +8,25 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import globalReducer from "@/state";
 import { api } from "@/state/api";
 import { apiAuth } from "./apiAuth";
+import { apiAI } from "./apiAI";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
   global: globalReducer,
   [api.reducerPath]: api.reducer,
   [apiAuth.reducerPath]: apiAuth.reducer,
+  [apiAI.reducerPath]: apiAI.reducer,
 });
 
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(api.middleware, apiAuth.middleware),
+      getDefaultMiddleware().concat(
+        api.middleware,
+        apiAuth.middleware,
+        apiAI.middleware
+      ),
   });
 };
 

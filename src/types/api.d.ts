@@ -24,3 +24,20 @@ interface ProductsQueryParams {
   CategoryName?: string;
   SortByDiscountPrice?: boolean;
 }
+
+interface AIAnalysis {
+  plant_name: string;
+  disease_name: string;
+  confidence: number;
+}
+
+interface CreateTicketRequest {
+  title: string;
+  category: string;
+  cropType: string;
+  location: string;
+  description: string;
+  priority: string;
+  phoneNumber: string;
+  imageUrl: string;
+}

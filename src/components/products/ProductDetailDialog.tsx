@@ -33,9 +33,14 @@ export function ProductDetailDialog({
   const [reviewMessage, setReviewMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: mockReviews } = useGetReviewsQuery({
-    productId: product.id,
-  });
+  const { data: mockReviews } = useGetReviewsQuery(
+    {
+      productId: product.id,
+    },
+    {
+      skip: !open,
+    }
+  );
 
   const reviews = mockReviews?.data || [];
 
