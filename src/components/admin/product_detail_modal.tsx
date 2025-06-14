@@ -20,31 +20,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  categoryId: number;
-  stock: number;
-  rating: number;
-  reviews: number;
-  imageUrl: string;
-  isActive: boolean;
-  sku: string;
-  discountPrice: number;
-  createdAt: string;
-  updatedAt: string;
-  category: {
-    id: number;
-    name: string;
-    description: string;
-    slug: string;
-    isActive: boolean;
-    createdAt: string;
-  };
-}
-
 interface ProductDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -301,7 +276,7 @@ export function ProductDetailModal({
         </div>
 
         {/* Statistics */}
-        {(product.rating > 0 || product.reviews > 0) && (
+        {product.rating > 0 && (
           <>
             <Separator />
             <Card>

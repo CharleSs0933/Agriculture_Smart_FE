@@ -20,10 +20,10 @@ import {
   Edit,
   ExternalLink,
 } from "lucide-react";
-import type { BlogPost } from "@/types";
+import Image from "next/image";
 
 interface BlogDetailModalProps {
-  post: BlogPost;
+  post: BlogPostApi;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -96,7 +96,7 @@ export function BlogDetailModal({
           <div className="md:col-span-2 space-y-6">
             {/* Featured Image */}
             <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-              <img
+              <Image
                 src="/placeholder.svg?height=400&width=600"
                 alt={post.title}
                 className="w-full h-full object-cover"
@@ -138,10 +138,7 @@ export function BlogDetailModal({
             {/* Status */}
             <div className="space-y-3">
               <h4 className="font-medium">Trạng thái</h4>
-              <Badge
-                variant={getStatusVariant(post.status) as any}
-                className="gap-2"
-              >
+              <Badge variant={getStatusVariant(post.status)} className="gap-2">
                 {getStatusIcon(post.status)}
                 {getStatusLabel(post.status)}
               </Badge>

@@ -56,6 +56,7 @@ interface NewsApiResponse {
   pageNumber: number;
   pageSize: number;
   totalPages: number;
+}
 interface AdminProductsQueryParams {
   PageNumber?: number;
   PageSize?: number;

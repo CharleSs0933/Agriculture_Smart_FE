@@ -22,7 +22,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FarmerDetailModal } from "@/components/admin/farmer_detail_modal";
 import { Pagination } from "@/components/admin/pagination";
-import type { Farmer } from "@/types";
 
 // Extended mock data with 20 farmers for pagination
 const mockFarmers: Farmer[] = [

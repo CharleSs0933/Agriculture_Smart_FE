@@ -47,7 +47,7 @@ interface Product {
   price: number;
   categoryId: number;
   stock: number;
-  rating?: number;
+  rating: number;
   reviews?: number;
   imageUrl: string;
   isActive: boolean;
@@ -97,6 +97,15 @@ interface User {
   role: "Farmer" | "Admin" | "Engineer";
 }
 
+interface AnalysisResult {
+  plant_name: string;
+  disease_name: string;
+  confidence: number;
+  symptoms: string[];
+  description: string;
+  treatment: string;
+}
+
 interface Farmer {
   id: number;
   userId: number;
@@ -112,7 +121,7 @@ interface Farmer {
   updatedAt: string;
 }
 
-export interface Engineer {
+interface Engineer {
   id: number;
   userId: number;
   userName: string;
@@ -147,7 +156,7 @@ interface Ticket {
   assignedEngineer?: Engineer;
 }
 
-interface BlogPost {
+interface BlogPostApi {
   id: number;
   title: string;
   slug: string;

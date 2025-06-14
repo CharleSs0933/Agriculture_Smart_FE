@@ -19,7 +19,6 @@ import {
   Clock,
   User,
 } from "lucide-react";
-import { Engineer } from "@/types";
 
 interface EngineerDetailModalProps {
   engineer: Engineer | null;

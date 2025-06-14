@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Ticket } from "@/types";
 
 interface TicketFormDialogProps {
   trigger: React.ReactNode;
@@ -131,7 +130,7 @@ export function TicketFormDialog({ trigger, ticket }: TicketFormDialogProps) {
               <Label htmlFor="priority">Độ ưu tiên *</Label>
               <Select
                 value={formData.priority}
-                onValueChange={(value) =>
+                onValueChange={(value: "low" | "medium" | "high" | "urgent") =>
                   setFormData({ ...formData, priority: value })
                 }
               >

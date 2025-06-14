@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -35,7 +35,7 @@ import { Pagination } from "@/components/admin/pagination";
 import { BlogDetailModal } from "@/components/admin/blog_detail_modal";
 import { BlogFormDialog } from "@/components/admin/blog_form_dialog";
 import { BulkActions } from "@/components/admin/bulk_actions";
-import type { BlogPost } from "@/types";
+import { mockPosts } from "@/lib/constants";
 
 export default function AdminBlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,90 +44,31 @@ export default function AdminBlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPostApi | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showFormDialog, setShowFormDialog] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [editingPost, setEditingPost] = useState<BlogPostApi | null>(null);
 
   // Mock data
-  const mockPosts: BlogPost[] = [
-    {
-      id: 1,
-      title: "Cách nhận biết và phòng trị bệnh đạo ôn lúa",
-      slug: "cach-nhan-biet-va-phong-tri-benh-dao-on-lua",
-      status: "published",
-      categoryName: "Bệnh cây trồng",
-      authorName: "Nguyễn Văn An",
-      createdAt: "2025-05-28T09:09:04.4115059",
-      publishedAt: "2025-06-02T09:09:04.4115059",
-      viewCount: 1250,
-    },
-    {
-      id: 2,
-      title: "Kỹ thuật trồng lúa bền vững theo phương pháp hữu cơ",
-      slug: "ky-thuat-trong-lua-ben-vung-theo-phuong-phap-huu-co",
-      status: "published",
-      categoryName: "Kỹ thuật canh tác",
-      authorName: "Trần Thị Bình",
-      createdAt: "2025-05-25T10:15:30.123456",
-      publishedAt: "2025-05-26T08:00:00.000000",
-      viewCount: 890,
-    },
-    {
-      id: 3,
-      title: "Ứng dụng IoT trong nông nghiệp thông minh",
-      slug: "ung-dung-iot-trong-nong-nghiep-thong-minh",
-      status: "draft",
-      categoryName: "Công nghệ",
-      authorName: "Lê Minh Cường",
-      createdAt: "2025-06-10T14:30:15.789012",
-      publishedAt: null,
-      viewCount: 0,
-    },
-    {
-      id: 4,
-      title: "Phương pháp tưới tiêu hiệu quả cho cây trồng",
-      slug: "phuong-phap-tuoi-tieu-hieu-qua-cho-cay-trong",
-      status: "published",
-      categoryName: "Kỹ thuật canh tác",
-      authorName: "Phạm Văn Đức",
-      createdAt: "2025-06-05T16:45:22.345678",
-      publishedAt: "2025-06-06T07:30:00.000000",
-      viewCount: 567,
-    },
-    {
-      id: 5,
-      title: "Cách chọn giống lúa phù hợp với từng vùng miền",
-      slug: "cach-chon-giong-lua-phu-hop-voi-tung-vung-mien",
-      status: "archived",
-      categoryName: "Giống cây trồng",
-      authorName: "Hoàng Thị Em",
-      createdAt: "2025-04-20T11:20:45.567890",
-      publishedAt: "2025-04-22T09:15:00.000000",
-      viewCount: 2340,
-    },
-  ];
 
-  const categories = Array.from(
-    new Set(mockPosts.map((post) => post.categoryName))
-  );
+  const categories = mockPosts
+    ? Array.from(new Set(mockPosts.map((post) => post.categoryName)))
+    : [];
 
   // Filter and search logic
-  const filteredPosts = useMemo(() => {
-    return mockPosts.filter((post) => {
-      const matchesSearch =
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.categoryName.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPosts = mockPosts.filter((post) => {
+    const matchesSearch =
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.categoryName.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === "all" || post.status === statusFilter;
-      const matchesCategory =
-        categoryFilter === "all" || post.categoryName === categoryFilter;
+    const matchesStatus =
+      statusFilter === "all" || post.status === statusFilter;
+    const matchesCategory =
+      categoryFilter === "all" || post.categoryName === categoryFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory;
-    });
-  }, [mockPosts, searchTerm, statusFilter, categoryFilter]);
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
 
   // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / pageSize);
@@ -189,16 +130,6 @@ export default function AdminBlogPage() {
     });
   };
 
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   const handleSelectPost = (postId: number, checked: boolean) => {
     if (checked) {
       setSelectedPosts([...selectedPosts, postId]);
@@ -220,12 +151,12 @@ export default function AdminBlogPage() {
     // Implement bulk actions here
   };
 
-  const handleViewPost = (post: BlogPost) => {
+  const handleViewPost = (post: BlogPostApi) => {
     setSelectedPost(post);
     setShowDetailModal(true);
   };
 
-  const handleEditPost = (post: BlogPost) => {
+  const handleEditPost = (post: BlogPostApi) => {
     setEditingPost(post);
     setShowFormDialog(true);
   };
@@ -412,7 +343,7 @@ export default function AdminBlogPage() {
                       </td>
                       <td className="p-4">
                         <Badge
-                          variant={getStatusVariant(post.status) as any}
+                          variant={getStatusVariant(post.status)}
                           className="gap-1"
                         >
                           {getStatusIcon(post.status)}

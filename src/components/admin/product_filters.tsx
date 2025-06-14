@@ -48,7 +48,10 @@ export function ProductFilters({
 }: ProductFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (
+    key: string,
+    value: string | undefined | boolean
+  ) => {
     const newFilters = { ...filters, [key]: value };
     onFiltersChange(newFilters);
   };

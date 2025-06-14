@@ -24,13 +24,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Upload, X, Eye } from "lucide-react";
-import type { BlogPost } from "@/types";
+import Image from "next/image";
 
 interface BlogFormDialogProps {
-  post?: BlogPost | null;
+  post?: BlogPostApi | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (post: Partial<BlogPost>) => void;
+  onSave: (post: Partial<BlogPostApi>) => void;
 }
 
 export function BlogFormDialog({
@@ -43,7 +43,7 @@ export function BlogFormDialog({
     title: "",
     content: "",
     categoryName: "",
-    status: "draft" as const,
+    status: "draft" as "draft" | "published" | "archived",
     featuredImage: "",
   });
 
@@ -197,7 +197,7 @@ export function BlogFormDialog({
                 <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6">
                   {formData.featuredImage ? (
                     <div className="relative">
-                      <img
+                      <Image
                         src={formData.featuredImage || "/placeholder.svg"}
                         alt="Featured"
                         className="w-full h-48 object-cover rounded-lg"
@@ -256,9 +256,9 @@ export function BlogFormDialog({
                   <Label htmlFor="status">Trạng thái</Label>
                   <Select
                     value={formData.status}
-                    onValueChange={(value: any) =>
-                      setFormData((prev) => ({ ...prev, status: value }))
-                    }
+                    onValueChange={(
+                      value: "draft" | "published" | "archived"
+                    ) => setFormData((prev) => ({ ...prev, status: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -308,9 +308,7 @@ export function BlogFormDialog({
                     </Badge>
                     <Badge
                       variant={
-                        formData.status === "published"
-                          ? "success"
-                          : "secondary"
+                        formData.status === "draft" ? "success" : "secondary"
                       }
                     >
                       {getStatusLabel(formData.status)}

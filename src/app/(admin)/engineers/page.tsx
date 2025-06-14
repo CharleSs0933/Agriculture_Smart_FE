@@ -22,7 +22,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EngineerDetailModal } from "@/components/admin/engineer_detail_modal";
 import { Pagination } from "@/components/admin/pagination";
-import type { Engineer } from "@/types";
 
 // Extended mock data with 16 engineers for pagination
 const mockEngineers: Engineer[] = [

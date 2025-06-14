@@ -56,52 +56,6 @@ const styles = `
 `;
 
 // Define the Ticket type
-type Ticket = {
-  id: number;
-  title: string;
-  category: string;
-  cropType: string;
-  location: string;
-  description: string;
-  priority: string;
-  contactMethod: string;
-  phoneNumber: string;
-  imageUrl: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  resolvedAt: string | null;
-  farmerId: number;
-  assignedEngineerId: number | null;
-  farmer?: {
-    id: number;
-    userId: number;
-    userName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    farmLocation: string;
-    farmSize: number;
-    cropTypes: string;
-    farmingExperienceYears: number;
-    createdAt: string;
-    updatedAt: string;
-  };
-  assignedEngineer?: {
-    id: number;
-    userId: number;
-    userName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-    specialization: string;
-    experienceYears: number;
-    certification: string;
-    bio: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-};
 
 const mockTickets: Ticket[] = [
   {

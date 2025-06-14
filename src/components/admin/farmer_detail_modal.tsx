@@ -18,7 +18,6 @@ import {
   Wheat,
   Clock,
 } from "lucide-react";
-import { Farmer } from "@/types";
 
 interface FarmerDetailModalProps {
   farmer: Farmer | null;

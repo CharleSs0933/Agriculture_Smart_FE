@@ -33,7 +33,7 @@ import { toast } from "sonner";
 interface ProductFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  product?: any;
+  product: Product | null;
   onSave: () => void;
 }
 

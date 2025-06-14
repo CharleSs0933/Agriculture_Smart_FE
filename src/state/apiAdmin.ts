@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customBaseQuery from "./custombaseQuery";
-import { Farmer, Product } from "@/types";
 
 export const apiAdmin = createApi({
   baseQuery: customBaseQuery,

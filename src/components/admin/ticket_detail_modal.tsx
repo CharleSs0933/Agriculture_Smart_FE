@@ -26,7 +26,7 @@ import {
   UserPlus,
   MessageSquare,
 } from "lucide-react";
-import type { Ticket } from "@/types";
+import Image from "next/image";
 
 interface TicketDetailModalProps {
   ticket: Ticket;
@@ -181,7 +181,7 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
             {ticket.imageUrl && ticket.imageUrl !== "default.jpg" && (
               <div className="space-y-2">
                 <h4 className="font-semibold">Hình ảnh đính kèm</h4>
-                <img
+                <Image
                   src={`/placeholder.svg?height=300&width=400`}
                   alt="Ticket image"
                   className="rounded-lg border max-w-full h-auto"

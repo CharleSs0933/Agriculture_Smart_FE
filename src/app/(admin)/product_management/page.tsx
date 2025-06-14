@@ -39,10 +39,9 @@ import { ProductFormDialog } from "@/components/admin/product_form_dialog";
 import { ProductFilters } from "@/components/admin/product_filters";
 import { ProductDetailModal } from "@/components/admin/product_detail_modal";
 import { Pagination } from "@/components/admin/pagination";
-import type { Product } from "@/types";
 import { useGetAdminProductsQuery } from "@/state/apiAdmin";
-import { toast } from "sonner";
 import { useDebounce } from "@/hooks/use-debounce";
+import Image from "next/image";
 
 export default function AdminProducts() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -94,7 +93,6 @@ export default function AdminProducts() {
     data: productsResponse,
     isLoading,
     isError,
-    error,
   } = useGetAdminProductsQuery(queryParams);
 
   const formatPrice = (price: number) => {
@@ -208,11 +206,6 @@ export default function AdminProducts() {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <p className="text-red-600 mb-2">Có lỗi xảy ra khi tải dữ liệu</p>
-          <p className="text-sm text-muted-foreground">
-            {error && "data" in error
-              ? (error.data as any)?.message
-              : "Lỗi không xác định"}
-          </p>
         </div>
       </div>
     );
@@ -363,7 +356,7 @@ export default function AdminProducts() {
                             />
                           </TableCell>
                           <TableCell>
-                            <img
+                            <Image
                               src={product.imageUrl || "/placeholder.svg"}
                               alt={product.name}
                               className="h-12 w-12 rounded-lg object-cover"
