@@ -5,10 +5,11 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 import { ProductDetailDialog } from "./ProductDetailDialog";
+import { useAddToCartMutation } from "@/state/api";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
@@ -16,8 +17,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, featured = false }: ProductCardProps) {
-  const { addItem } = useCart();
   const [showDetail, setShowDetail] = useState(false);
+  const [addItem, { isLoading }] = useAddToCartMutation();
 
   const hasDiscount =
     product.discountPrice !== null &&
@@ -32,15 +33,15 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
       )
     : 0;
 
-  const handleAddToCart = () => {
-    addItem({
-      id: String(product.id),
-      name: product.name,
-      price: displayPrice,
-      imageUrl: product.imageUrl,
-      category: product.category.name,
-      sku: product.sku,
-    });
+  const handleAddToCart = async () => {
+    await addItem({ productId: product.id, quantity: 1 })
+      .unwrap()
+      .then(() => {
+        toast.success("Đã thêm vào giỏ hàng");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -57,7 +58,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
                 src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
                 fill
-                className="object-cover transition-transform hover:scale-105"
+                className="object-contain transition-transform hover:scale-105"
               />
             </div>
           </button>
@@ -114,11 +115,11 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
         <CardFooter className="p-4 pt-0">
           <Button
             className="w-full bg-green-600 hover:bg-green-700"
-            disabled={!(product.stock > 0 && product.isActive)}
+            disabled={!(product.stock > 0 && product.isActive) || isLoading}
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
-            Thêm vào giỏ
+            {isLoading ? "Đang tạo đơn hàng..." : "Thêm với giỏ hàng"}
           </Button>
         </CardFooter>
       </Card>

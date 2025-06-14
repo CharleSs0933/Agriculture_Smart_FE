@@ -24,25 +24,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Upload,
-  X,
-  Send,
-  CheckCircle,
-  AlertCircle,
-  Camera,
-} from "lucide-react";
+import { X, Send, CheckCircle, AlertCircle, Phone } from "lucide-react";
 import Image from "next/image";
+import { useSendTicketMutation } from "@/state/api";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 interface TicketFormProps {
   trigger?: React.ReactNode;
   defaultTitle?: string;
   defaultDescription?: string;
-  defaultImages?: string[];
+  defaultImage?: string;
   aiDiagnosisData?: {
-    disease: string;
+    plant_name: string;
+    disease_name: string;
     confidence: number;
-    symptoms: string[];
     image: string;
   };
 }
@@ -51,79 +46,57 @@ export function TicketForm({
   trigger,
   defaultTitle = "",
   defaultDescription = "",
-  defaultImages = [],
+  defaultImage = "",
   aiDiagnosisData,
 }: TicketFormProps) {
   const [open, setOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateTicketRequest>({
     title: defaultTitle,
     description: defaultDescription,
     category: "",
     priority: "medium",
     cropType: "",
     location: "",
-    contactMethod: "email",
+    phoneNumber: "",
+    imageUrl: "",
   });
 
-  const [images, setImages] = useState<string[]>(defaultImages);
-  const [dragActive, setDragActive] = useState(false);
+  const [sendTicket, { isLoading }] = useSendTicketMutation();
 
-  const handleInputChange = (field: string, value: string) => {
+  const [image, setImage] = useState<string>(defaultImage);
+
+  const handleInputChange = (
+    field: keyof CreateTicketRequest,
+    value: string
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = (files: FileList | null) => {
-    if (!files) return;
-
-    Array.from(files).forEach((file) => {
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            setImages((prev) => [...prev, e.target!.result as string]);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  };
-
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleImageUpload(e.dataTransfer.files);
-    }
+  const removeImage = () => {
+    setImage("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // Upload images first
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    const ticketData = {
+      ...formData,
+      imageUrl: image,
+    };
+
+    // TODO: Replace with actual API call
+    await sendTicket(ticketData)
+      .unwrap()
+      .then(() => {
+        setIsSubmitted(true);
+      })
+      .catch((error) => {
+        console.log("Error creating ticket:", error);
+      });
 
     // Reset form after 3 seconds
     setTimeout(() => {
@@ -136,9 +109,10 @@ export function TicketForm({
         priority: "medium",
         cropType: "",
         location: "",
-        contactMethod: "email",
+        phoneNumber: "",
+        imageUrl: "",
       });
-      setImages([]);
+      setImage("");
     }, 3000);
   };
 
@@ -169,8 +143,8 @@ export function TicketForm({
             <CheckCircle className="h-16 w-16 text-green-600" />
             <h3 className="text-lg font-semibold">Gửi yêu cầu thành công!</h3>
             <p className="text-gray-500 text-center">
-              Ticket #AG{Math.floor(Math.random() * 10000)} đã được tạo. Kỹ sư
-              nông nghiệp sẽ phản hồi trong vòng 24 giờ.
+              Ticket đã được tạo. Kỹ sư nông nghiệp sẽ phản hồi trong vòng 24
+              giờ.
             </p>
           </div>
         ) : (
@@ -181,7 +155,7 @@ export function TicketForm({
                 <AlertCircle className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-blue-800">
                   <strong>Kết quả AI chẩn đoán:</strong>{" "}
-                  {aiDiagnosisData.disease}
+                  {aiDiagnosisData.plant_name} - {aiDiagnosisData.disease_name}
                   (Độ tin cậy: {aiDiagnosisData.confidence}%)
                 </AlertDescription>
               </Alert>
@@ -210,15 +184,17 @@ export function TicketForm({
                     <SelectValue placeholder="Chọn danh mục" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="disease">Bệnh cây trồng</SelectItem>
-                    <SelectItem value="pest">Sâu hại</SelectItem>
-                    <SelectItem value="nutrition">
+                    <SelectItem value="Bệnh cây trồng">
+                      Bệnh cây trồng
+                    </SelectItem>
+                    <SelectItem value="Sâu hại">Sâu hại</SelectItem>
+                    <SelectItem value="Dinh dưỡng">
                       Dinh dưỡng cây trồng
                     </SelectItem>
-                    <SelectItem value="soil">Đất trồng</SelectItem>
-                    <SelectItem value="irrigation">Tưới tiêu</SelectItem>
-                    <SelectItem value="harvest">Thu hoạch</SelectItem>
-                    <SelectItem value="other">Khác</SelectItem>
+                    <SelectItem value="Đất đai">Đất đai</SelectItem>
+                    <SelectItem value="Tưới tiêu">Tưới tiêu</SelectItem>
+                    <SelectItem value="Thu hoạch">Thu hoạch</SelectItem>
+                    <SelectItem value="Khác">Khác</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -226,25 +202,27 @@ export function TicketForm({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="cropType">Loại cây trồng</Label>
+                <Label htmlFor="cropType">Loại cây trồng *</Label>
                 <Input
                   id="cropType"
-                  placeholder="Ví dụ: Lúa, Ngô, Cà phê..."
+                  placeholder="Ví dụ: Lúa, Ngô, Cà phê, Rau màu..."
                   value={formData.cropType}
                   onChange={(e) =>
                     handleInputChange("cropType", e.target.value)
                   }
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Vị trí</Label>
+                <Label htmlFor="location">Vị trí *</Label>
                 <Input
                   id="location"
-                  placeholder="Tỉnh/Thành phố"
+                  placeholder="Ví dụ: Ruộng A1, Ấp 2, Xã Tân Hiệp"
                   value={formData.location}
                   onChange={(e) =>
                     handleInputChange("location", e.target.value)
                   }
+                  required
                 />
               </div>
             </div>
@@ -265,7 +243,7 @@ export function TicketForm({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="priority">Mức độ ưu tiên</Label>
+                <Label htmlFor="priority">Mức độ ưu tiên *</Label>
                 <Select
                   value={formData.priority}
                   onValueChange={(value) =>
@@ -284,89 +262,69 @@ export function TicketForm({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contactMethod">Phương thức liên hệ</Label>
-                <Select
-                  value={formData.contactMethod}
-                  onValueChange={(value) =>
-                    handleInputChange("contactMethod", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="phone">Điện thoại</SelectItem>
-                    <SelectItem value="both">Cả hai</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="phoneNumber">Số điện thoại *</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    id="phoneNumber"
+                    placeholder="0909123456"
+                    value={formData.phoneNumber}
+                    onChange={(e) =>
+                      handleInputChange("phoneNumber", e.target.value)
+                    }
+                    className="pl-10"
+                    pattern="[0-9]{10,11}"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
             {/* Image Upload */}
-            <div className="space-y-2">
-              <Label>Hình ảnh minh họa</Label>
-              <div
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                  dragActive
-                    ? "border-green-500 bg-green-50"
-                    : "border-gray-300"
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-2">
-                  Kéo thả hình ảnh vào đây hoặc click để chọn
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    document.getElementById("image-upload")?.click()
-                  }
-                >
-                  <Camera className="h-4 w-4 mr-2" />
-                  Chọn hình ảnh
-                </Button>
-                <input
-                  id="image-upload"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleImageUpload(e.target.files)}
+
+            {image ? (
+              <div className="">
+                <div className="relative group">
+                  <Image
+                    src={image || "/placeholder.svg"}
+                    alt={`Image`}
+                    width={100}
+                    height={100}
+                    className="w-full  object-cover rounded border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeImage()}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>Hình ảnh minh họa</Label>
+                <UploadDropzone
+                  endpoint={"imageUploader"}
+                  content={{
+                    label: "Kéo thả hình ảnh vào đây hoặc click để chọn",
+                  }}
+                  appearance={{
+                    button: {
+                      color: "black",
+                    },
+                  }}
+                  className="border-2 border-dashed rounded-lg p-6 text-center transition-colors "
+                  onClientUploadComplete={(res) => {
+                    if (res?.[0]?.url) {
+                      setImage(res[0].url);
+                    }
+                  }}
                 />
               </div>
-
-              {images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative group">
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`Upload ${index + 1}`}
-                        width={100}
-                        height={100}
-                        className="w-full h-20 object-cover rounded border"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => removeImage(index)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            )}
 
             <DialogFooter>
               <Button
@@ -378,10 +336,10 @@ export function TicketForm({
               </Button>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isLoading}
                 className="bg-green-600 hover:bg-green-700"
               >
-                {isSubmitting ? (
+                {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                     Đang gửi...

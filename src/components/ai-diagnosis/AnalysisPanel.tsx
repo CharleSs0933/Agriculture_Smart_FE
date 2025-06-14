@@ -11,7 +11,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, Leaf, Bug } from "lucide-react";
 
 interface AnalysisPanelProps {
   file: File | null;
@@ -66,13 +66,39 @@ export function AnalysisPanel({
 
         {results && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{results.disease}</h3>
-              <Badge variant="outline" className="bg-green-50">
-                Độ tin cậy: {results.confidence}%
-              </Badge>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-center gap-2">
+                <Leaf className="h-5 w-5 text-green-600" />
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Loại cây</p>
+                  <p className="font-semibold capitalize">
+                    {results.plant_name}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Bug className="h-5 w-5 text-red-600" />
+                <div>
+                  <p className="text-sm font-medium text-gray-500">
+                    Bệnh được phát hiện
+                  </p>
+                  <p className="font-semibold capitalize">
+                    {results.disease_name}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-500">Độ tin cậy</p>
+                <Badge variant="outline" className="bg-green-50">
+                  {results.confidence.toFixed(1)}%
+                </Badge>
+              </div>
             </div>
+
             <Separator />
+
             <div>
               <h4 className="text-sm font-medium mb-2 flex items-center">
                 <AlertCircle className="h-4 w-4 mr-1 text-amber-500" />

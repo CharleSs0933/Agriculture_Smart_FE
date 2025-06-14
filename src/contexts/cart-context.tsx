@@ -9,86 +9,210 @@ import {
 } from "react";
 
 interface CartContextType {
-  items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  cart: Cart | null;
+  isLoading: boolean;
+  error: string | null;
+  addItem: (product: Product, quantity?: number) => void;
+  removeItem: (itemId: number) => void;
+  updateQuantity: (itemId: number, quantity: number) => void;
   clearCart: () => void;
   itemCount: number;
-  subtotal: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Mock user ID for demo purposes
+const MOCK_USER_ID = 1;
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Load cart from localStorage on initial render
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
+    const fetchCart = async () => {
+      setIsLoading(true);
       try {
-        setItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error("Failed to parse cart from localStorage:", error);
+        // In a real app, this would be an API call
+        const savedCart = localStorage.getItem("cart");
+
+        if (savedCart) {
+          setCart(JSON.parse(savedCart));
+        } else {
+          // Initialize empty cart
+          const newCart: Cart = {
+            id: Date.now(), // In real app, this would come from API
+            userId: MOCK_USER_ID,
+            totalAmount: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            cartItems: [],
+          };
+          setCart(newCart);
+          localStorage.setItem("cart", JSON.stringify(newCart));
+        }
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+        setError("Không thể tải giỏ hàng. Vui lòng thử lại sau.");
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+
+    fetchCart();
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(items));
-  }, [items]);
+    if (cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === newItem.id);
+  const addItem = (product: Product, quantity = 1) => {
+    if (!cart) return;
 
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === newItem.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
+    setCart((prevCart) => {
+      if (!prevCart) return prevCart;
+
+      const existingItemIndex = prevCart.cartItems.findIndex(
+        (item) => item.productId === product.id
+      );
+
+      let updatedItems: CartItem[];
+
+      if (existingItemIndex >= 0) {
+        // Update existing item
+        const existingItem = prevCart.cartItems[existingItemIndex];
+        const newQuantity = existingItem.quantity + quantity;
+        const newTotalPrice = product.price * newQuantity;
+
+        updatedItems = [...prevCart.cartItems];
+        updatedItems[existingItemIndex] = {
+          ...existingItem,
+          quantity: newQuantity,
+          totalPrice: newTotalPrice,
+          updatedAt: new Date().toISOString(),
+        };
       } else {
-        return [...prevItems, { ...newItem, quantity: 1 }];
+        // Add new item
+        const newItem: CartItem = {
+          id: Date.now(), // In real app, this would come from API
+          cartId: prevCart.id,
+          productId: product.id,
+          quantity: quantity,
+          unitPrice: product.price,
+          totalPrice: product.price * quantity,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          product: product,
+        };
+
+        updatedItems = [...prevCart.cartItems, newItem];
       }
+
+      // Calculate new total
+      const newTotalAmount = updatedItems.reduce(
+        (sum, item) => sum + item.totalPrice,
+        0
+      );
+
+      return {
+        ...prevCart,
+        cartItems: updatedItems,
+        totalAmount: newTotalAmount,
+        updatedAt: new Date().toISOString(),
+      };
     });
   };
 
-  const removeItem = (id: number) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const removeItem = (itemId: number) => {
+    if (!cart) return;
+
+    setCart((prevCart) => {
+      if (!prevCart) return prevCart;
+
+      const updatedItems = prevCart.cartItems.filter(
+        (item) => item.id !== itemId
+      );
+
+      // Calculate new total
+      const newTotalAmount = updatedItems.reduce(
+        (sum, item) => sum + item.totalPrice,
+        0
+      );
+
+      return {
+        ...prevCart,
+        cartItems: updatedItems,
+        totalAmount: newTotalAmount,
+        updatedAt: new Date().toISOString(),
+      };
+    });
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity < 1) return;
+  const updateQuantity = (itemId: number, quantity: number) => {
+    if (!cart || quantity < 1) return;
 
-    setItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
+    setCart((prevCart) => {
+      if (!prevCart) return prevCart;
+
+      const updatedItems = prevCart.cartItems.map((item) => {
+        if (item.id === itemId) {
+          return {
+            ...item,
+            quantity: quantity,
+            totalPrice: item.unitPrice * quantity,
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return item;
+      });
+
+      // Calculate new total
+      const newTotalAmount = updatedItems.reduce(
+        (sum, item) => sum + item.totalPrice,
+        0
+      );
+
+      return {
+        ...prevCart,
+        cartItems: updatedItems,
+        totalAmount: newTotalAmount,
+        updatedAt: new Date().toISOString(),
+      };
+    });
   };
 
   const clearCart = () => {
-    setItems([]);
+    if (!cart) return;
+
+    setCart({
+      ...cart,
+      cartItems: [],
+      totalAmount: 0,
+      updatedAt: new Date().toISOString(),
+    });
   };
 
-  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
-
-  const subtotal = items.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  // Calculate total number of items
+  const itemCount =
+    cart && cart.cartItems
+      ? cart.cartItems.reduce((sum, item) => sum + item.quantity, 0)
+      : 0;
 
   return (
     <CartContext.Provider
       value={{
-        items,
+        cart,
+        isLoading,
+        error,
         addItem,
         removeItem,
         updateQuantity,
         clearCart,
         itemCount,
-        subtotal,
       }}
     >
       {children}

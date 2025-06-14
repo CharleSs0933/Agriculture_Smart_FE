@@ -12,10 +12,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Star, ShoppingCart, Package, Calendar, User } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useGetReviewsQuery } from "@/state/api";
 
 interface ProductDetailDialogProps {
   product: Product;
@@ -23,75 +23,27 @@ interface ProductDetailDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-// Mock reviews data
-const mockReviews: Record<number, Review[]> = {
-  1: [
-    {
-      id: 1,
-      productId: 1,
-      userId: 1,
-      userName: "Nguyễn Văn A",
-      reviewValue: 5,
-      reviewMessage:
-        "Phân bón rất tốt, cây trồng phát triển mạnh sau khi sử dụng. Sẽ mua lại!",
-      createdAt: "2024-01-15T10:30:00.000Z",
-    },
-    {
-      id: 2,
-      userName: "Trần Thị B",
-      productId: 1,
-      userId: 1,
-      reviewValue: 4,
-      reviewMessage: "Chất lượng ổn, giá cả hợp lý. Giao hàng nhanh.",
-      createdAt: "2024-01-10T14:20:00.000Z",
-    },
-    {
-      id: 3,
-      userName: "Lê Văn C",
-      productId: 1,
-      userId: 1,
-      reviewValue: 5,
-      reviewMessage: "Đã sử dụng 2 tháng, hiệu quả rất tốt. Khuyên dùng!",
-      createdAt: "2024-01-05T09:15:00.000Z",
-    },
-  ],
-  2: [
-    {
-      id: 4,
-      userName: "Phạm Văn D",
-      productId: 1,
-      userId: 1,
-      reviewValue: 4,
-      reviewMessage: "Thuốc trừ sâu hiệu quả, an toàn cho môi trường.",
-      createdAt: "2024-01-12T16:45:00.000Z",
-    },
-  ],
-  3: [
-    {
-      id: 5,
-      userName: "Hoàng Thị E",
-      reviewValue: 5,
-      productId: 1,
-      userId: 1,
-      reviewMessage:
-        "Hạt giống chất lượng cao, tỷ lệ nảy mầm 95%. Rất hài lòng!",
-      createdAt: "2024-01-08T11:30:00.000Z",
-    },
-  ],
-};
-
 export function ProductDetailDialog({
   product,
   open,
   onOpenChange,
 }: ProductDetailDialogProps) {
-  const { addItem } = useCart();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewMessage, setReviewMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const reviews = mockReviews[product.id] || [];
+  const { data: mockReviews } = useGetReviewsQuery(
+    {
+      productId: product.id,
+    },
+    {
+      skip: !open,
+    }
+  );
+
+  const reviews = mockReviews?.data || [];
+
   const averageRating =
     reviews.length > 0
       ? reviews.reduce((sum, review) => sum + review.reviewValue, 0) /
@@ -110,14 +62,14 @@ export function ProductDetailDialog({
     : 0;
 
   const handleAddToCart = () => {
-    addItem({
-      id: String(product.id),
-      name: product.name,
-      price: displayPrice,
-      imageUrl: product.imageUrl,
-      category: product.category.name,
-      sku: product.sku,
-    });
+    // addItem({
+    //   id: product.id,
+    //   name: product.name,
+    //   price: displayPrice,
+    //   imageUrl: product.imageUrl,
+    //   category: product.category.name,
+    //   sku: product.sku,
+    // });
   };
 
   const handleSubmitReview = async () => {
@@ -170,7 +122,7 @@ export function ProductDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-[90vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             {product.name}

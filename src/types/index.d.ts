@@ -31,20 +31,6 @@ interface BlogPost {
   tags: string[];
 }
 
-interface AnalysisResult {
-  disease: string;
-  confidence: number;
-  symptoms: string[];
-  description: string;
-  treatment: string;
-  products: Array<{
-    name: string;
-    type: string;
-    description: string;
-    price: string;
-  }>;
-}
-
 interface Category {
   id: number;
   name: string;
@@ -72,14 +58,25 @@ interface Product {
   category: Category;
 }
 
+interface Cart {
+  id: number;
+  userId: number;
+  totalAmount: number;
+  createdAt: string;
+  updatedAt: string;
+  cartItems: CartItem[];
+}
+
 interface CartItem {
   id: number;
-  name: string;
-  price: number;
-  imageUrl: string;
+  cartId: number;
+  productId: number;
   quantity: number;
-  category: string;
-  sku: string;
+  unitPrice: number;
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+  product: Product;
 }
 
 interface Review {

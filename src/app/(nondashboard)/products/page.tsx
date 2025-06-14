@@ -12,7 +12,7 @@ export default function ProductsPage() {
     Name: "",
     Description: "",
     CategoryName: "",
-    SortByDiscount: false,
+    SortByDiscountPrice: false,
   });
 
   const { data: productsData, isLoading } = useGetProductsQuery(filters);

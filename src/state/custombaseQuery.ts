@@ -5,11 +5,16 @@ import { toast } from "sonner";
 const customBaseQuery = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
-  extraOptions: Record<string, unknown>
+  extraOptions: any
 ) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
     prepareHeaders: async (headers) => {
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
       return headers;
     },
     credentials: "include",
@@ -19,7 +24,7 @@ const customBaseQuery = async (
     let result = await baseQuery(args, api, extraOptions);
 
     if (result.error && result.error.status === 401) {
-      const refreshResult: any = await baseQuery(
+      const refreshResult = await baseQuery(
         {
           url: "/auth/refresh-token",
           method: "POST",

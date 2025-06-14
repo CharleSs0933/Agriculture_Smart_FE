@@ -5,7 +5,7 @@ import { Product } from "@/types";
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "Reviews", "Cart"],
   endpoints: (build) => ({
     getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -19,7 +19,82 @@ export const api = createApi({
       },
       providesTags: ["Products"],
     }),
+
+    //#region  Review
+    getReviews: build.query<
+      { message: string; data: Review[] },
+      { productId: number }
+    >({
+      query: ({ productId }) => `/Review/product/${productId}`,
+      providesTags: ["Reviews"],
+    }),
+    //#endregion
+
+    //#region Cart
+    getCart: build.query<Cart, void>({
+      query: () => "/Cart",
+      providesTags: ["Cart"],
+    }),
+
+    addToCart: build.mutation<
+      CartItem,
+      { productId: number; quantity: number }
+    >({
+      query: ({ productId, quantity }) => ({
+        url: "/Cart",
+        method: "POST",
+        body: { productId, quantity },
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    clearCart: build.mutation<void, void>({
+      query: () => ({
+        url: "/Cart",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    updateQuantity: build.mutation<CartItem, { id: number; quantity: number }>({
+      query: ({ id, quantity }) => ({
+        url: `/Cart/items/${id}`,
+        method: "PUT",
+        body: { quantity },
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    deleteItem: build.mutation<void, number>({
+      query: (id) => ({
+        url: `/Cart/items/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    //#endregion
+
+    //#region Ticket
+    sendTicket: build.mutation<void, CreateTicketRequest>({
+      query: (ticket) => ({
+        url: "/Ticket/farmer",
+        method: "POST",
+        body: ticket,
+      }),
+    }),
+
+    //#endregion
   }),
 });
 
-export const { useGetProductsQuery } = api;
+export const {
+  useGetProductsQuery,
+  useGetReviewsQuery,
+  useAddToCartMutation,
+  useGetCartQuery,
+  useClearCartMutation,
+  useUpdateQuantityMutation,
+  useDeleteItemMutation,
+  useSendTicketMutation,
+} = api;
