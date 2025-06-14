@@ -3,7 +3,6 @@
 import { BlogGrid } from "@/components/blogs/BlogGrid";
 import { BlogHero } from "@/components/blogs/BlogHero";
 import { BlogSidebar } from "@/components/blogs/BlogSidebar";
-import { FeaturedPosts } from "@/components/blogs/FeaturedPosts";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { blogPosts } from "@/lib/constants";
 import { useState } from "react";
@@ -12,7 +11,6 @@ const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const featuredPosts = blogPosts.filter((post) => post.featured);
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -28,7 +26,6 @@ const BlogPage = () => {
   return (
     <main>
       <BlogHero searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <FeaturedPosts posts={featuredPosts} />
 
       <section className="w-full py-12 bg-gray-50">
         <div className="px-4 md:px-6">

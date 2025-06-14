@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Plus, Minus } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
 import { formatCurrency } from "@/lib/utils";
 import { useDeleteItemMutation, useUpdateQuantityMutation } from "@/state/api";
 

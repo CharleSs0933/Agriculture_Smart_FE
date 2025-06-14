@@ -123,3 +123,30 @@ interface Ticket {
   farmerId: number;
   assignedEngineerId: number | null;
 }
+
+interface News {
+  id: number;
+  title: string;
+  excerpt: string;
+  content?: string;
+  author: string;
+  publishedAt: string;
+  categoryId: number;
+  categoryName: string;
+  featured: boolean;
+  urgent: boolean;
+  tags: string;
+  source: string;
+  imageUrl: string;
+  viewCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface NewsCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  isActive: boolean;
+}

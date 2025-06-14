@@ -11,15 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Upload, Camera, Leaf } from "lucide-react";
+import { Upload, Leaf } from "lucide-react";
 
 interface ImageUploadProps {
-  file: File | null;
   preview: string | null;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function ImageUpload({ file, preview, onFileChange }: ImageUploadProps) {
+export function ImageUpload({ preview, onFileChange }: ImageUploadProps) {
   return (
     <Card className="border-2 border-dashed border-gray-200 bg-white">
       <CardHeader>

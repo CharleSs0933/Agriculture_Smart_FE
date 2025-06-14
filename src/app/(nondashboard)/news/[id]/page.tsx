@@ -59,7 +59,8 @@ const newsArticle: NewsArticle = {
   author: "Ban Biên tập",
   publishedAt: "2024-01-20",
   category: "Chính sách",
-  image: "/placeholder.svg?height=400&width=800",
+  image:
+    "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcrAZxxbzaFsz5juXgEZKcWkbvBifGpJ1R4YyL",
   views: 5420,
   featured: true,
   urgent: true,

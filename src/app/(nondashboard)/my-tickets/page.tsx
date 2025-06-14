@@ -20,64 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@/hooks/userUser";
-
-// Mock data - sẽ thay thế bằng API call
-const mockTickets: Ticket[] = [
-  {
-    id: 1,
-    title: "Lá lúa bị vàng và héo",
-    category: "Sâu bệnh",
-    cropType: "Lúa",
-    location: "Ruộng A1, Ấp 2, Xã Tân Hiệp",
-    description:
-      "Lá lúa của tôi bắt đầu vàng từ gốc và lan dần lên trên, có vẻ như bị bệnh đạo ôn. Cần tư vấn cách xử lý.",
-    priority: "high",
-    phoneNumber: "0909123456",
-    imageUrl: "default.jpg",
-    status: "open",
-    createdAt: "2025-06-10T08:30:00Z",
-    updatedAt: "2025-06-10T08:30:00Z",
-    resolvedAt: null,
-    farmerId: 1,
-    assignedEngineerId: null,
-  },
-  {
-    id: 2,
-    title: "Cây cà chua không ra hoa",
-    category: "Sinh trưởng",
-    cropType: "Rau màu",
-    location: "Vườn B2, Ấp 3, Xã Tân Trụ",
-    description:
-      "Cây cà chua đã trồng được 2 tháng nhưng chỉ ra lá, không thấy nụ hoa. Đất đã bón phân đầy đủ.",
-    priority: "medium",
-    phoneNumber: "0909234567",
-    imageUrl: "default.jpg",
-    status: "in_progress",
-    createdAt: "2025-06-09T14:15:00Z",
-    updatedAt: "2025-06-11T10:20:00Z",
-    resolvedAt: null,
-    farmerId: 1,
-    assignedEngineerId: 3,
-  },
-  {
-    id: 3,
-    title: "Đất bị chua, cây trồng sinh trưởng kém",
-    category: "Đất đai",
-    cropType: "Rau màu",
-    location: "Ruộng E1, Ấp 5, Xã Tân Trụ",
-    description:
-      "Đất trồng rau của tôi có vẻ bị chua, cây trồng sinh trưởng chậm, lá vàng. Cần tư vấn cách cải tạo đất.",
-    priority: "medium",
-    phoneNumber: "0909012345",
-    imageUrl: "default.jpg",
-    status: "resolved",
-    createdAt: "2025-06-08T09:45:00Z",
-    updatedAt: "2025-06-11T16:30:00Z",
-    resolvedAt: "2025-06-11T16:30:00Z",
-    farmerId: 1,
-    assignedEngineerId: 2,
-  },
-];
+import { useGetTicketsQuery } from "@/state/api";
 
 interface TicketFiltersType {
   status: string;
@@ -88,9 +31,7 @@ interface TicketFiltersType {
 
 export default function MyTicketsPage() {
   const { user } = useUser();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<Ticket[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [filters, setFilters] = useState<TicketFiltersType>({
     status: "all",
@@ -99,33 +40,11 @@ export default function MyTicketsPage() {
     search: "",
   });
 
-  // Fetch tickets
-  useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        setIsLoading(true);
-        // TODO: Replace with actual API call
-        // const response = await fetch(`/api/users/${user?.id}/tickets`)
-        // const data = await response.json()
-
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setTickets(mockTickets);
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (user) {
-      fetchTickets();
-    }
-  }, [user]);
+  const { data: tickets, isLoading } = useGetTicketsQuery();
 
   // Apply filters
   useEffect(() => {
-    let filtered = tickets;
+    let filtered = tickets || [];
 
     if (filters.status !== "all") {
       filtered = filtered.filter((ticket) => ticket.status === filters.status);
@@ -233,7 +152,7 @@ export default function MyTicketsPage() {
 
       {/* Stats */}
       <TicketStats
-        tickets={tickets}
+        tickets={tickets || []}
         onStatusFilter={(status) => setFilters((prev) => ({ ...prev, status }))}
       />
 

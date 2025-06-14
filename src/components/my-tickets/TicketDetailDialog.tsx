@@ -18,6 +18,7 @@ import {
   FileText,
   ExternalLink,
 } from "lucide-react";
+import Image from "next/image";
 
 interface TicketDetailDialogProps {
   ticket: Ticket;
@@ -167,7 +168,7 @@ export function TicketDetailDialog({
           {ticket.imageUrl && ticket.imageUrl !== "default.jpg" && (
             <div>
               <h3 className="font-semibold mb-3">Hình ảnh đính kèm</h3>
-              <img
+              <Image
                 src={ticket.imageUrl || "/placeholder.svg"}
                 alt="Ticket attachment"
                 className="max-w-full h-auto rounded-lg border"

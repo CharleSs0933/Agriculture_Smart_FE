@@ -61,9 +61,9 @@ export function TicketStats({ tickets, onStatusFilter }: TicketStatsProps) {
             className="cursor-pointer hover:shadow-md transition-shadow"
             onClick={() => onStatusFilter(item.filter)}
           >
-            <CardContent className="p-6">
+            <CardContent className="p-4">
               <div
-                className={`inline-flex items-center justify-center w-12 h-12 rounded-lg ${item.bgColor} mb-4`}
+                className={`inline-flex items-center justify-center w-12 h-4 rounded-lg ${item.bgColor} mb-4`}
               >
                 <Icon className={`h-6 w-6 ${item.color}`} />
               </div>

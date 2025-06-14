@@ -31,7 +31,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Ban Biên tập",
     publishedAt: "2024-01-20",
     category: "Chính sách",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcrAZxxbzaFsz5juXgEZKcWkbvBifGpJ1R4YyL",
     views: 5420,
     featured: true,
     urgent: true,
@@ -47,7 +48,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Phòng Tin tức",
     publishedAt: "2024-01-18",
     category: "Cảnh báo",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcjISm6WoVzUG9Inu86sNw41qlWfBKgD2RyOcC",
     views: 3210,
     featured: true,
     urgent: true,
@@ -63,7 +65,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Bộ phận Thị trường",
     publishedAt: "2024-01-16",
     category: "Thị trường",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgc10jvNuFy1sSQilrF4BMAD8wR5Go0PqdLJgUc",
     views: 2890,
     featured: false,
     urgent: false,
@@ -79,7 +82,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Ban Khoa học",
     publishedAt: "2024-01-14",
     category: "Nghiên cứu",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgchwwcKsqXq6bTnydlB1NAcLUoWHFkrEsiwfgD",
     views: 1750,
     featured: false,
     urgent: false,
@@ -95,7 +99,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Phòng Thời tiết",
     publishedAt: "2024-01-12",
     category: "Thời tiết",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgc8bQktBaK9ejhSULYQpfo2CPixnaFrgDcbG8m",
     views: 4320,
     featured: true,
     urgent: false,
@@ -111,7 +116,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Ban Tổ chức",
     publishedAt: "2024-01-10",
     category: "Sự kiện",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcvExZneY13IXcKmhk2N8YwtDM4g7UbG0TsujS",
     views: 1420,
     featured: false,
     urgent: false,
@@ -127,7 +133,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Phòng Đào tạo",
     publishedAt: "2024-01-08",
     category: "Đào tạo",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgczWZclihOPkB29lioZgw36NU4vGfY8LHJnMTV",
     views: 980,
     featured: false,
     urgent: false,
@@ -143,7 +150,8 @@ export const newsArticles: NewsArticle[] = [
     author: "Phòng Thống kê",
     publishedAt: "2024-01-05",
     category: "Thị trường",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcR8CVSvbzBD9Epy4t7HlIWqG5CbegSwQZk3Fs",
     views: 2150,
     featured: false,
     urgent: false,
@@ -219,7 +227,8 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2024-01-15",
     updatedAt: "2024-01-15",
     category: "Xu hướng",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcSB5MvGr5LGj7qKJTyfuisnoMP0kODgcvYSX9",
     views: 1250,
     featured: true,
     tags: ["IoT", "AI", "Công nghệ", "Thông minh"],
@@ -291,7 +300,8 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2024-01-12",
     updatedAt: "2024-01-12",
     category: "Cây lương thực",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcWLNwhKs6sMOUVjIabqFECHZkLdNr1mhyS5DA",
     views: 980,
     featured: true,
     tags: ["Lúa", "Hữu cơ", "Kỹ thuật", "Thu hoạch"],
@@ -355,7 +365,8 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2024-01-10",
     updatedAt: "2024-01-10",
     category: "Cây công nghiệp",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcpZZUq9IuS05shag14TMBArbJQyt9GK3mU7l6",
     views: 756,
     featured: false,
     tags: ["Cà phê", "Arabica", "Chất lượng", "Xuất khẩu"],
@@ -408,7 +419,8 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2024-01-08",
     updatedAt: "2024-01-08",
     category: "Xu hướng",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcDY0opKBhkqR97VxPlu2b30vFtJe8gjCrpTQO",
     views: 642,
     featured: false,
     tags: ["Bền vững", "Tuần hoàn", "Môi trường", "Tương lai"],
@@ -463,7 +475,8 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2024-01-05",
     updatedAt: "2024-01-05",
     category: "Rau màu",
-    image: "/placeholder.svg?height=300&width=500",
+    image:
+      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcNfV8TeD0dS2k8Auza6TX45RoiJs9DIhOUrQP",
     views: 1100,
     featured: false,
     tags: ["Rau sạch", "Hydroponics", "Nhà kính", "Thủy canh"],

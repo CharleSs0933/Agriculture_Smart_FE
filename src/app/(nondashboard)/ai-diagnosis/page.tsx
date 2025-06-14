@@ -91,11 +91,7 @@ export default function AIDiagnosis() {
 
       <div className="px-4 md:px-6 py-8">
         <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8">
-          <ImageUpload
-            file={file}
-            preview={preview}
-            onFileChange={handleFileChange}
-          />
+          <ImageUpload preview={preview} onFileChange={handleFileChange} />
 
           <AnalysisPanel
             file={file}

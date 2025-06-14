@@ -5,9 +5,8 @@ import { NewsFilter } from "@/components/news/NewsFilter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { newsArticles, newsCategories } from "@/lib/constants";
-import { Calendar, Globe, Search } from "lucide-react";
+import { Calendar, Globe } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -17,8 +16,6 @@ const NewsPage = () => {
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "popular">(
     "newest"
   );
-
-  const featuredNews = newsArticles.filter((article) => article.featured);
 
   const filteredNews = newsArticles.filter((article) => {
     const matchesSearch =
@@ -63,46 +60,9 @@ const NewsPage = () => {
                 chính sách mới, cảnh báo dịch bệnh và xu hướng thị trường.
               </p>
             </div>
-            <div className="w-full max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Tìm kiếm tin tức..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </section>
-
-      {/* Featured News */}
-      {featuredNews.length > 0 && (
-        <section className="w-full py-12 ">
-          <div className=" px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-                Tin tức nổi bật
-              </h2>
-              <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed">
-                Những thông tin quan trọng nhất trong tuần về chính sách và thị
-                trường nông nghiệp.
-              </p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {featuredNews.map((article) => (
-                <NewsCard
-                  key={article.id}
-                  article={article}
-                  variant="featured"
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Main News Content */}
       <section className="w-full py-12 bg-gray-50">

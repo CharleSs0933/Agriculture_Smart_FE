@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const apiAI = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://6b20-171-243-49-47.ngrok-free.app",
+    baseUrl: "https://4e3b-171-243-49-47.ngrok-free.app",
     prepareHeaders: (headers) => {
       return headers;
     },

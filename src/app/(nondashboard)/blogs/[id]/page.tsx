@@ -76,7 +76,8 @@ const blogPost: BlogPost = {
   publishedAt: "2024-01-15",
   updatedAt: "2024-01-15",
   category: "Xu hướng",
-  image: "/placeholder.svg?height=400&width=800",
+  image:
+    "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcSB5MvGr5LGj7qKJTyfuisnoMP0kODgcvYSX9",
   views: 1250,
   likes: 45,
   comments: 12,
@@ -98,7 +99,7 @@ export default function BlogDetailPage() {
     <main>
       <div className=" mx-auto px-4 py-6">
         <div className="flex items-center gap-4 mb-6">
-          <Link href="/blog">
+          <Link href="/blogs">
             <Button variant="outline" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Quay lại blog

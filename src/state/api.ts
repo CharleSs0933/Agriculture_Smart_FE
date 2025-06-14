@@ -4,8 +4,9 @@ import customBaseQuery from "./custombaseQuery";
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
-  tagTypes: ["Products", "Reviews", "Cart"],
+  tagTypes: ["Products", "Reviews", "Cart", "Tickets", "News"],
   endpoints: (build) => ({
+    //#region Product
     getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
         const params = new URLSearchParams();
@@ -18,6 +19,7 @@ export const api = createApi({
       },
       providesTags: ["Products"],
     }),
+    //#endregion
 
     //#region  Review
     getReviews: build.query<
@@ -81,8 +83,36 @@ export const api = createApi({
         method: "POST",
         body: ticket,
       }),
+      invalidatesTags: ["Tickets"],
     }),
 
+    getTickets: build.query<Ticket[], void>({
+      query: () => "/Ticket/user",
+      providesTags: ["Tickets"],
+    }),
+    //#endregion
+
+    //#region News
+    getNews: build.query<NewsApiResponse, NewsQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return `/News/search?${params.toString()}`;
+      },
+      providesTags: ["News"],
+    }),
+
+    getNewsCategories: build.query<
+      { message: string; data: NewsCategory[] },
+      void
+    >({
+      query: () => "/News/categories",
+      providesTags: ["News"],
+    }),
     //#endregion
   }),
 });
@@ -96,4 +126,7 @@ export const {
   useUpdateQuantityMutation,
   useDeleteItemMutation,
   useSendTicketMutation,
+  useGetTicketsQuery,
+  useGetNewsQuery,
+  useGetNewsCategoriesQuery,
 } = api;

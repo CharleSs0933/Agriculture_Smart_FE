@@ -41,3 +41,19 @@ interface CreateTicketRequest {
   phoneNumber: string;
   imageUrl: string;
 }
+
+interface NewsQueryParams {
+  page?: number;
+  pageSize?: number;
+  title?: string;
+  author?: string;
+  categoryId?: number;
+}
+
+interface NewsApiResponse {
+  data: News[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+}

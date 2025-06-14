@@ -49,7 +49,7 @@ export function TicketFilters({
 
   return (
     <Card className="mb-8">
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {/* Search */}
           <div className="relative">
@@ -67,7 +67,7 @@ export function TicketFilters({
             value={filters.status}
             onValueChange={(value) => handleFilterChange("status", value)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Trạng thái" />
             </SelectTrigger>
             <SelectContent>
@@ -83,7 +83,7 @@ export function TicketFilters({
             value={filters.priority}
             onValueChange={(value) => handleFilterChange("priority", value)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Độ ưu tiên" />
             </SelectTrigger>
             <SelectContent>
@@ -99,7 +99,7 @@ export function TicketFilters({
             value={filters.category}
             onValueChange={(value) => handleFilterChange("category", value)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Danh mục" />
             </SelectTrigger>
             <SelectContent>
