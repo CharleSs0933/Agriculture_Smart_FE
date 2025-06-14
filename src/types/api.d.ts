@@ -24,3 +24,13 @@ interface ProductsQueryParams {
   CategoryName?: string;
   SortByDiscount?: boolean;
 }
+
+interface AdminProductsQueryParams {
+  PageNumber?: number;
+  PageSize?: number;
+  Name?: string;
+  Description?: string;
+  CategoryName?: string;
+  IsActive?: boolean;
+  SortByDiscountPrice?: boolean;
+}
