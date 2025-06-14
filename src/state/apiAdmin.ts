@@ -1,11 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customBaseQuery from "./custombaseQuery";
-import { Product } from "@/types";
+import { Farmer, Product } from "@/types";
 
 export const apiAdmin = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "apiAdmin",
-  tagTypes: ["Products"],
+  tagTypes: ["Products", "Farmers"],
   endpoints: (build) => ({
     getAdminProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -37,11 +37,14 @@ export const apiAdmin = createApi({
       invalidatesTags: ["Products"],
     }),
 
-    updateProduct: build.mutation<Product, Partial<Product>>({
-      query: (product) => ({
-        url: `Product/admin/${product.id}`,
+    updateProduct: build.mutation<
+      Product,
+      { id: number | string; data: Partial<Product> }
+    >({
+      query: ({ id, data }) => ({
+        url: `Product/admin/${id}`,
         method: "PUT",
-        body: product,
+        body: data,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Products", id }],
     }),
@@ -54,25 +57,20 @@ export const apiAdmin = createApi({
       invalidatesTags: ["Products"],
     }),
 
-    bulkDeleteProducts: build.mutation<void, number[]>({
-      query: (ids) => ({
-        url: "Product/admin/bulk-delete",
-        method: "DELETE",
-        body: { ids },
-      }),
-      invalidatesTags: ["Products"],
-    }),
-
-    bulkUpdateProductStatus: build.mutation<
-      void,
-      { ids: number[]; isActive: boolean }
-    >({
-      query: ({ ids, isActive }) => ({
-        url: "Product/admin/bulk-status",
-        method: "PUT",
-        body: { ids, isActive },
-      }),
-      invalidatesTags: ["Products"],
+    getFarmer: build.query<ApiResponse<Farmer>, FarmerQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return {
+          url: `Farmers?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Farmers"],
     }),
   }),
 });
@@ -84,6 +82,7 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
-  useBulkDeleteProductsMutation,
-  useBulkUpdateProductStatusMutation,
+
+  //Farmer
+  useGetFarmerQuery,
 } = apiAdmin;

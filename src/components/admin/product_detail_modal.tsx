@@ -9,7 +9,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, Package, Star, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Calendar,
+  Package,
+  Star,
+  TrendingUp,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 
 interface Product {
@@ -41,12 +49,16 @@ interface ProductDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product: Product | null;
+  onEdit?: (product: Product) => void;
+  onDelete?: (product: Product) => void;
 }
 
 export function ProductDetailModal({
   open,
   onOpenChange,
   product,
+  onEdit,
+  onDelete,
 }: ProductDetailModalProps) {
   if (!product) return null;
 
@@ -79,7 +91,7 @@ export function ProductDetailModal({
   };
 
   const discount =
-    product.discountPrice < product.price
+    product.discountPrice && product.discountPrice < product.price
       ? Math.round(
           ((product.price - product.discountPrice) / product.price) * 100
         )
@@ -89,7 +101,32 @@ export function ProductDetailModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="min-w-4xl max-w-7xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl">{product.name}</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-2xl">{product.name}</DialogTitle>
+            <div className="flex gap-2">
+              {onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(product)}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Chỉnh sửa
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDelete(product)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Xóa
+                </Button>
+              )}
+            </div>
+          </div>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

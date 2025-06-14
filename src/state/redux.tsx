@@ -9,6 +9,7 @@ import globalReducer from "@/state";
 import { api } from "@/state/api";
 import { apiAuth } from "./apiAuth";
 import { apiAdmin } from "./apiAdmin";
+import { apiAI } from "./apiAI";
 
 /* REDUX STORE */
 const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   [apiAuth.reducerPath]: apiAuth.reducer,
   [apiAdmin.reducerPath]: apiAdmin.reducer,
+  [apiAI.reducerPath]: apiAI.reducer,
 });
 
 export const makeStore = () => {
@@ -25,7 +27,8 @@ export const makeStore = () => {
       getDefaultMiddleware().concat(
         api.middleware,
         apiAuth.middleware,
-        apiAdmin.middleware
+        apiAdmin.middleware,
+        apiAI.middleware
       ),
   });
 };

@@ -18,55 +18,64 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Filter, X } from "lucide-react";
 
 interface ProductFiltersProps {
-  onFiltersChange: (filters: any) => void;
+  filters: {
+    categoryName: string;
+    isActive: boolean | undefined;
+    sortByDiscountPrice: boolean;
+  };
+  onFiltersChange: (filters: {
+    categoryName: string;
+    isActive: boolean | undefined;
+    sortByDiscountPrice: boolean;
+  }) => void;
 }
 
 const categories = [
-  { id: 1, name: "Phân bón" },
-  { id: 2, name: "Thuốc BVTV" },
-  { id: 3, name: "Giống cây trồng" },
-  { id: 4, name: "Dụng cụ nông nghiệp" },
-  { id: 5, name: "Máy móc" },
+  { name: "Phân bón" },
+  { name: "Thuốc BVTV" },
+  { name: "Hạt giống" },
+  { name: "Dụng cụ nông nghiệp" },
+  { name: "Máy móc" },
 ];
 
-export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
-  const [filters, setFilters] = useState({
-    category: "",
-    priceRange: [0, 2000000],
-    inStock: false,
-    isActive: false,
-    minRating: 0,
-  });
+export function ProductFilters({
+  filters,
+  onFiltersChange,
+}: ProductFiltersProps) {
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleFilterChange = (key: string, value: any) => {
     const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
     onFiltersChange(newFilters);
   };
 
   const clearFilters = () => {
     const defaultFilters = {
-      category: "",
-      priceRange: [0, 2000000],
-      inStock: false,
-      isActive: false,
-      minRating: 0,
+      categoryName: "",
+      isActive: undefined,
+      sortByDiscountPrice: false,
     };
-    setFilters(defaultFilters);
     onFiltersChange(defaultFilters);
   };
 
+  const hasActiveFilters =
+    filters.categoryName ||
+    filters.isActive !== undefined ||
+    filters.sortByDiscountPrice;
+
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="relative">
           <Filter className="mr-2 h-4 w-4" />
           Lọc nâng cao
+          {hasActiveFilters && (
+            <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full" />
+          )}
         </Button>
       </SheetTrigger>
       <SheetContent className="p-5">
@@ -81,8 +90,10 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
           <div className="space-y-2">
             <Label>Danh mục</Label>
             <Select
-              value={filters.category}
-              onValueChange={(value) => handleFilterChange("category", value)}
+              value={filters.categoryName}
+              onValueChange={(value) =>
+                handleFilterChange("categoryName", value === "all" ? "" : value)
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Tất cả danh mục" />
@@ -90,7 +101,7 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
               <SelectContent>
                 <SelectItem value="all">Tất cả danh mục</SelectItem>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
+                  <SelectItem key={category.name} value={category.name}>
                     {category.name}
                   </SelectItem>
                 ))}
@@ -99,36 +110,27 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
           </div>
 
           <div className="space-y-2">
-            <Label>Khoảng giá (VND)</Label>
-            <Slider
-              value={filters.priceRange}
-              onValueChange={(value) => handleFilterChange("priceRange", value)}
-              max={2000000}
-              step={50000}
-              className="w-full"
-            />
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>{filters.priceRange[0].toLocaleString()}</span>
-              <span>{filters.priceRange[1].toLocaleString()}</span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Đánh giá tối thiểu</Label>
+            <Label>Trạng thái</Label>
             <Select
-              value={filters.minRating.toString()}
+              value={
+                filters.isActive === undefined
+                  ? "all"
+                  : filters.isActive.toString()
+              }
               onValueChange={(value) =>
-                handleFilterChange("minRating", Number(value))
+                handleFilterChange(
+                  "isActive",
+                  value === "all" ? undefined : value === "true"
+                )
               }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Tất cả đánh giá" />
+                <SelectValue placeholder="Tất cả trạng thái" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="0">Tất cả đánh giá</SelectItem>
-                <SelectItem value="3">3 sao trở lên</SelectItem>
-                <SelectItem value="4">4 sao trở lên</SelectItem>
-                <SelectItem value="4.5">4.5 sao trở lên</SelectItem>
+                <SelectItem value="all">Tất cả trạng thái</SelectItem>
+                <SelectItem value="true">Đang bán</SelectItem>
+                <SelectItem value="false">Ngừng bán</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -136,24 +138,13 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Switch
-                id="inStock"
-                checked={filters.inStock}
+                id="sortByDiscountPrice"
+                checked={filters.sortByDiscountPrice}
                 onCheckedChange={(checked) =>
-                  handleFilterChange("inStock", checked)
+                  handleFilterChange("sortByDiscountPrice", checked)
                 }
               />
-              <Label htmlFor="inStock">Chỉ hiển thị sản phẩm còn hàng</Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="isActive"
-                checked={filters.isActive}
-                onCheckedChange={(checked) =>
-                  handleFilterChange("isActive", checked)
-                }
-              />
-              <Label htmlFor="isActive">Chỉ hiển thị sản phẩm đang bán</Label>
+              <Label htmlFor="sortByDiscountPrice">Sắp xếp theo giá giảm</Label>
             </div>
           </div>
 

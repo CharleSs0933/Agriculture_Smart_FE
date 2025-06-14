@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -37,17 +37,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ProductFormDialog } from "@/components/admin/product_form_dialog";
 import { ProductFilters } from "@/components/admin/product_filters";
-import { BulkActions } from "@/components/admin/bulk_actions";
 import { ProductDetailModal } from "@/components/admin/product_detail_modal";
 import { Pagination } from "@/components/admin/pagination";
-import { Product } from "@/types";
-import {
-  useBulkDeleteProductsMutation,
-  useBulkUpdateProductStatusMutation,
-  useDeleteProductMutation,
-  useGetAdminProductsQuery,
-} from "@/state/apiAdmin";
+import type { Product } from "@/types";
+import { useGetAdminProductsQuery } from "@/state/apiAdmin";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function AdminProducts() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,25 +53,41 @@ export default function AdminProducts() {
   const [detailProduct, setDetailProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
-  const [filters, setFilters] = useState<AdminProductsQueryParams>({
-    PageNumber: currentPage,
-    PageSize: 10,
-    Name: "",
-    Description: "",
-    CategoryName: "",
-    IsActive: true,
-    SortByDiscountPrice: false,
+  const [filters, setFilters] = useState({
+    categoryName: "",
+    isActive: undefined as boolean | undefined,
+    sortByDiscountPrice: false,
   });
 
-  // // Build query parameters
-  // const queryParams: ProductsQueryParams = {
-  //   PageNumber: currentPage,
-  //   PageSize: 12,
-  //   Name: "",
-  //   Description: "",
-  //   CategoryName: "",
-  //   SortByDiscount: false,
-  // };
+  // Debounce search term to avoid too many API calls
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  // Build query parameters matching backend interface
+  const queryParams: AdminProductsQueryParams = useMemo(() => {
+    const params: AdminProductsQueryParams = {
+      PageNumber: currentPage,
+      PageSize: pageSize,
+    };
+
+    // Add search terms
+    if (debouncedSearchTerm) {
+      params.Name = debouncedSearchTerm;
+      params.Description = debouncedSearchTerm;
+    }
+
+    // Add filters
+    if (filters.categoryName) {
+      params.CategoryName = filters.categoryName;
+    }
+    if (filters.isActive !== undefined) {
+      params.IsActive = filters.isActive;
+    }
+    if (filters.sortByDiscountPrice) {
+      params.SortByDiscountPrice = filters.sortByDiscountPrice;
+    }
+
+    return params;
+  }, [currentPage, pageSize, debouncedSearchTerm, filters]);
 
   // API Hooks
   const {
@@ -84,15 +95,7 @@ export default function AdminProducts() {
     isLoading,
     isError,
     error,
-  } = useGetAdminProductsQuery(filters);
-
-  console.log("data", productsResponse);
-
-  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
-  const [bulkDeleteProducts, { isLoading: isBulkDeleting }] =
-    useBulkDeleteProductsMutation();
-  const [bulkUpdateStatus, { isLoading: isBulkUpdating }] =
-    useBulkUpdateProductStatusMutation();
+  } = useGetAdminProductsQuery(queryParams);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -129,7 +132,7 @@ export default function AdminProducts() {
     setSelectedProducts([]);
   };
 
-  const handleFiltersChange = (newFilters: Partial<ProductsQueryParams>) => {
+  const handleFiltersChange = (newFilters: typeof filters) => {
     setFilters(newFilters);
     setCurrentPage(1);
     setSelectedProducts([]);
@@ -151,28 +154,6 @@ export default function AdminProducts() {
     }
   };
 
-  const handleBulkAction = async (action: string, items: number[]) => {
-    try {
-      switch (action) {
-        case "activate":
-          await bulkUpdateStatus({ ids: items, isActive: true }).unwrap();
-          toast.success(`Đã kích hoạt ${items.length} sản phẩm`);
-          break;
-        case "deactivate":
-          await bulkUpdateStatus({ ids: items, isActive: false }).unwrap();
-          toast.success(`Đã vô hiệu hóa ${items.length} sản phẩm`);
-          break;
-        case "delete":
-          await bulkDeleteProducts(items).unwrap();
-          toast.success(`Đã xóa ${items.length} sản phẩm`);
-          break;
-      }
-      setSelectedProducts([]);
-    } catch (error) {
-      console.error("Bulk action error:", error);
-    }
-  };
-
   const handleEditProduct = (product: Product) => {
     setEditingProduct(product);
     setShowProductForm(true);
@@ -182,24 +163,6 @@ export default function AdminProducts() {
     setDetailProduct(product);
     setShowDetailModal(true);
   };
-
-  const handleDeleteProduct = (product: Product) => {
-    setDeletingProduct(product);
-    setShowDeleteDialog(true);
-  };
-
-  // const confirmDeleteProduct = async () => {
-  //   if (deletingProduct) {
-  //     try {
-  //       await deleteProduct(deletingProduct.id).unwrap()
-  //       toast.success("Đã xóa sản phẩm thành công")
-  //       setDeletingProduct(null)
-  //       setShowDeleteDialog(false)
-  //     } catch (error) {
-  //       console.error("Delete error:", error)
-  //     }
-  //   }
-  // }
 
   const exportToCSV = () => {
     if (!productsResponse?.items) return;
@@ -283,15 +246,6 @@ export default function AdminProducts() {
         </div>
       </div>
 
-      {selectedProducts.length > 0 && (
-        <BulkActions
-          selectedItems={selectedProducts}
-          onBulkAction={handleBulkAction}
-          onClearSelection={() => setSelectedProducts([])}
-          isLoading={isBulkDeleting || isBulkUpdating}
-        />
-      )}
-
       <Card>
         <CardHeader>
           <CardTitle>Danh sách sản phẩm</CardTitle>
@@ -309,13 +263,16 @@ export default function AdminProducts() {
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Tìm kiếm theo tên, SKU hoặc danh mục..."
+                placeholder="Tìm kiếm theo tên hoặc mô tả sản phẩm..."
                 className="pl-8"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <ProductFilters onFiltersChange={handleFiltersChange} />
+            <ProductFilters
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+            />
           </div>
 
           <div className="rounded-md border overflow-hidden">
@@ -361,7 +318,10 @@ export default function AdminProducts() {
                             <div className="h-12 w-12 bg-muted animate-pulse rounded-lg" />
                           </TableCell>
                           <TableCell>
-                            <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                            <div className="space-y-2">
+                              <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                              <div className="h-3 w-24 bg-muted animate-pulse rounded" />
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="h-4 w-16 bg-muted animate-pulse rounded" />
@@ -441,11 +401,12 @@ export default function AdminProducts() {
                               <p className="font-medium text-sm">
                                 {formatPrice(product.price)}
                               </p>
-                              {product.discountPrice < product.price && (
-                                <p className="text-xs text-green-600">
-                                  Giảm: {formatPrice(product.discountPrice)}
-                                </p>
-                              )}
+                              {product.discountPrice &&
+                                product.discountPrice < product.price && (
+                                  <p className="text-xs text-green-600">
+                                    Giảm: {formatPrice(product.discountPrice)}
+                                  </p>
+                                )}
                             </div>
                           </TableCell>
                           <TableCell>
@@ -500,10 +461,7 @@ export default function AdminProducts() {
                                   <Edit className="mr-2 h-4 w-4" />
                                   Chỉnh sửa
                                 </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-red-600"
-                                  onClick={() => handleDeleteProduct(product)}
-                                >
+                                <DropdownMenuItem className="text-red-600">
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   Xóa
                                 </DropdownMenuItem>
@@ -556,7 +514,6 @@ export default function AdminProducts() {
         onOpenChange={setShowDetailModal}
         product={detailProduct}
         onEdit={handleEditProduct}
-        onDelete={handleDeleteProduct}
       />
     </div>
   );

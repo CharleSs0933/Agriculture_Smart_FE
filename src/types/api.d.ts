@@ -51,3 +51,8 @@ interface AdminProductsQueryParams {
   IsActive?: boolean;
   SortByDiscountPrice?: boolean;
 }
+
+interface FarmerQueryParams {
+  pageIndex?: number;
+  pageSize?: number;
+}

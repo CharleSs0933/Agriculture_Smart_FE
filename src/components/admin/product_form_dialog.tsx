@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,12 +24,17 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Upload } from "lucide-react";
+import {
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} from "@/state/apiAdmin";
+import { toast } from "sonner";
 
 interface ProductFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product?: any;
-  onSave: (product: any) => void;
+  onSave: () => void;
 }
 
 const categories = [
@@ -37,6 +42,7 @@ const categories = [
   { id: 2, name: "Thuốc BVTV", slug: "thuoc-bvtv" },
   { id: 3, name: "Giống cây trồng", slug: "giong-cay-trong" },
   { id: 4, name: "Dụng cụ nông nghiệp", slug: "dung-cu-nong-nghiep" },
+  { id: 5, name: "Máy móc", slug: "may-moc" },
 ];
 
 export function ProductFormDialog({
@@ -46,32 +52,74 @@ export function ProductFormDialog({
   onSave,
 }: ProductFormDialogProps) {
   const [formData, setFormData] = useState({
-    name: product?.name || "",
-    description: product?.description || "",
-    price: product?.price || 0,
-    discountPrice: product?.discountPrice || 0,
-    categoryId: product?.categoryId || "",
-    stock: product?.stock || 0,
-    sku: product?.sku || "",
-    isActive: product?.isActive ?? true,
-    imageUrl: product?.imageUrl || "",
+    name: "",
+    description: "",
+    price: 0,
+    discountPrice: 0,
+    categoryId: "",
+    stock: 0,
+    sku: "",
+    isActive: true,
+    imageUrl: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+
+  useEffect(() => {
+    if (product) {
+      setFormData({
+        name: product.name || "",
+        description: product.description || "",
+        price: product.price || 0,
+        discountPrice: product.discountPrice || 0,
+        categoryId: product.categoryId?.toString() || "",
+        stock: product.stock || 0,
+        sku: product.sku || "",
+        isActive: product.isActive ?? true,
+        imageUrl: product.imageUrl || "",
+      });
+    } else {
+      setFormData({
+        name: "",
+        description: "",
+        price: 0,
+        discountPrice: 0,
+        categoryId: "",
+        stock: 0,
+        sku: "",
+        isActive: true,
+        imageUrl: "",
+      });
+    }
+  }, [product, open]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...product,
-      ...formData,
-      id: product?.id || Date.now(),
-      rating: product?.rating || 0,
-      reviews: product?.reviews || 0,
-      createdAt: product?.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      category:
-        categories.find((c) => c.id === Number(formData.categoryId)) ||
-        categories[0],
-    });
-    onOpenChange(false);
+
+    try {
+      const productData = {
+        ...formData,
+        categoryId: Number(formData.categoryId),
+        price: Number(formData.price),
+        discountPrice: Number(formData.discountPrice),
+        stock: Number(formData.stock),
+      };
+
+      if (product) {
+        await updateProduct({ id: product.id, data: productData }).unwrap();
+        toast.success("Cập nhật sản phẩm thành công");
+      } else {
+        await createProduct(productData).unwrap();
+        toast.success("Thêm sản phẩm thành công");
+      }
+
+      onSave();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Save product error:", error);
+      toast.error("Có lỗi xảy ra khi lưu sản phẩm");
+    }
   };
 
   return (
@@ -172,7 +220,7 @@ export function ProductFormDialog({
             <Select
               value={formData.categoryId.toString()}
               onValueChange={(value) =>
-                setFormData({ ...formData, categoryId: Number(value) })
+                setFormData({ ...formData, categoryId: value })
               }
             >
               <SelectTrigger>
@@ -224,7 +272,13 @@ export function ProductFormDialog({
             >
               Hủy
             </Button>
-            <Button type="submit">{product ? "Cập nhật" : "Thêm mới"}</Button>
+            <Button type="submit" disabled={isCreating || isUpdating}>
+              {isCreating || isUpdating
+                ? "Đang xử lý..."
+                : product
+                ? "Cập nhật"
+                : "Thêm mới"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
