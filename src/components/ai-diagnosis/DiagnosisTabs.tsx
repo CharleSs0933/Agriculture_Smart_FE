@@ -265,7 +265,7 @@ Các triệu chứng quan sát được:
 ${results.symptoms.map((s) => `• ${s}`).join("\n")}
 
 Xin cảm ơn!`}
-              defaultImages={preview ? [preview] : []}
+              defaultImage={preview ? preview : ""}
               aiDiagnosisData={{
                 plant_name: results.plant_name,
                 disease_name: results.disease_name,

@@ -24,23 +24,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Upload,
-  X,
-  Send,
-  CheckCircle,
-  AlertCircle,
-  Camera,
-  Phone,
-} from "lucide-react";
+import { X, Send, CheckCircle, AlertCircle, Phone } from "lucide-react";
 import Image from "next/image";
 import { useSendTicketMutation } from "@/state/api";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 interface TicketFormProps {
   trigger?: React.ReactNode;
   defaultTitle?: string;
   defaultDescription?: string;
-  defaultImages?: string[];
+  defaultImage?: string;
   aiDiagnosisData?: {
     plant_name: string;
     disease_name: string;
@@ -53,13 +46,11 @@ export function TicketForm({
   trigger,
   defaultTitle = "",
   defaultDescription = "",
-  defaultImages = [],
+  defaultImage = "",
   aiDiagnosisData,
 }: TicketFormProps) {
   const [open, setOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [createdTicketId, setCreatedTicketId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState<CreateTicketRequest>({
     title: defaultTitle,
@@ -72,9 +63,9 @@ export function TicketForm({
     imageUrl: "",
   });
 
-  const [] = useSendTicketMutation();
+  const [sendTicket, { isLoading }] = useSendTicketMutation();
 
-  const [images, setImages] = useState<string[]>(defaultImages);
+  const [image, setImage] = useState<string>(defaultImage);
 
   const handleInputChange = (
     field: keyof CreateTicketRequest,
@@ -83,69 +74,29 @@ export function TicketForm({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = (files: FileList | null) => {
-    if (!files) return;
-
-    Array.from(files).forEach((file) => {
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            setImages((prev) => [...prev, e.target!.result as string]);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  };
-
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const uploadImages = async (): Promise<string> => {
-    if (images.length === 0) return "default.jpg";
-
-    // TODO: Implement actual image upload to your storage service
-    // For now, return a mock URL
-    return "uploaded-image.jpg";
+  const removeImage = () => {
+    setImage("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    try {
-      // Upload images first
-      const imageUrl = await uploadImages();
+    // Upload images first
 
-      const ticketData = {
-        ...formData,
-        imageUrl,
-      };
+    const ticketData = {
+      ...formData,
+      imageUrl: image,
+    };
 
-      // TODO: Replace with actual API call
-      const response = await fetch("/api/tickets", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(ticketData),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setCreatedTicketId(result.id);
+    // TODO: Replace with actual API call
+    await sendTicket(ticketData)
+      .unwrap()
+      .then(() => {
         setIsSubmitted(true);
-      } else {
-        throw new Error("Failed to create ticket");
-      }
-    } catch (error) {
-      console.error("Error creating ticket:", error);
-      // Handle error - show toast notification
-    } finally {
-      setIsSubmitting(false);
-    }
+      })
+      .catch((error) => {
+        console.log("Error creating ticket:", error);
+      });
 
     // Reset form after 3 seconds
     setTimeout(() => {
@@ -161,8 +112,7 @@ export function TicketForm({
         phoneNumber: "",
         imageUrl: "",
       });
-      setImages([]);
-      setCreatedTicketId(null);
+      setImage("");
     }, 3000);
   };
 
@@ -193,9 +143,8 @@ export function TicketForm({
             <CheckCircle className="h-16 w-16 text-green-600" />
             <h3 className="text-lg font-semibold">Gửi yêu cầu thành công!</h3>
             <p className="text-gray-500 text-center">
-              Ticket #
-              {createdTicketId || "AG" + Math.floor(Math.random() * 10000)} đã
-              được tạo. Kỹ sư nông nghiệp sẽ phản hồi trong vòng 24 giờ.
+              Ticket đã được tạo. Kỹ sư nông nghiệp sẽ phản hồi trong vòng 24
+              giờ.
             </p>
           </div>
         ) : (
@@ -332,61 +281,50 @@ export function TicketForm({
             </div>
 
             {/* Image Upload */}
-            <div className="space-y-2">
-              <Label>Hình ảnh minh họa</Label>
-              <div
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors `}
-              >
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-2">
-                  Kéo thả hình ảnh vào đây hoặc click để chọn
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    document.getElementById("image-upload")?.click()
-                  }
-                >
-                  <Camera className="h-4 w-4 mr-2" />
-                  Chọn hình ảnh
-                </Button>
-                <input
-                  id="image-upload"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleImageUpload(e.target.files)}
+
+            {image ? (
+              <div className="">
+                <div className="relative group">
+                  <Image
+                    src={image || "/placeholder.svg"}
+                    alt={`Image`}
+                    width={100}
+                    height={100}
+                    className="w-full  object-cover rounded border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => removeImage()}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>Hình ảnh minh họa</Label>
+                <UploadDropzone
+                  endpoint={"imageUploader"}
+                  content={{
+                    label: "Kéo thả hình ảnh vào đây hoặc click để chọn",
+                  }}
+                  appearance={{
+                    button: {
+                      color: "black",
+                    },
+                  }}
+                  className="border-2 border-dashed rounded-lg p-6 text-center transition-colors "
+                  onClientUploadComplete={(res) => {
+                    if (res?.[0]?.url) {
+                      setImage(res[0].url);
+                    }
+                  }}
                 />
               </div>
-
-              {images.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
-                  {images.map((image, index) => (
-                    <div key={index} className="relative group">
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`Upload ${index + 1}`}
-                        width={100}
-                        height={100}
-                        className="w-full h-20 object-cover rounded border"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => removeImage(index)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            )}
 
             <DialogFooter>
               <Button
@@ -398,10 +336,10 @@ export function TicketForm({
               </Button>
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isLoading}
                 className="bg-green-600 hover:bg-green-700"
               >
-                {isSubmitting ? (
+                {isLoading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                     Đang gửi...
