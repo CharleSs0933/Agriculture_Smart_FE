@@ -29,6 +29,7 @@ import {
   Settings,
   FileText,
   PenTool,
+  Ticket,
 } from "lucide-react";
 
 import { useUser } from "@/hooks/userUser";
@@ -127,6 +128,12 @@ export function Header() {
                 <Link href="/profile">
                   <User className="mr-2 h-4 w-4" />
                   Hồ sơ cá nhân
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/my-tickets">
+                  <Ticket className="mr-2 h-4 w-4" />
+                  Ticket của tôi
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>

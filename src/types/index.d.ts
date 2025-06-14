@@ -105,3 +105,21 @@ interface AnalysisResult {
   description: string;
   treatment: string;
 }
+
+interface Ticket {
+  id: number;
+  title: string;
+  category: string;
+  cropType: string;
+  location: string;
+  description: string;
+  priority: "low" | "medium" | "high";
+  phoneNumber: string;
+  imageUrl: string;
+  status: "open" | "in_progress" | "resolved";
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt: string | null;
+  farmerId: number;
+  assignedEngineerId: number | null;
+}
