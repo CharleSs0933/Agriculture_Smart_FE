@@ -56,4 +56,17 @@ interface NewsApiResponse {
   pageNumber: number;
   pageSize: number;
   totalPages: number;
+interface AdminProductsQueryParams {
+  PageNumber?: number;
+  PageSize?: number;
+  Name?: string;
+  Description?: string;
+  CategoryName?: string;
+  IsActive?: boolean;
+  SortByDiscountPrice?: boolean;
+}
+
+interface FarmerQueryParams {
+  pageIndex?: number;
+  pageSize?: number;
 }

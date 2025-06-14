@@ -97,15 +97,35 @@ interface User {
   role: "Farmer" | "Admin" | "Engineer";
 }
 
-interface AnalysisResult {
-  plant_name: string;
-  disease_name: string;
-  confidence: number;
-  symptoms: string[];
-  description: string;
-  treatment: string;
+interface Farmer {
+  id: number;
+  userId: number;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  farmLocation: string;
+  farmSize: number;
+  cropTypes: string;
+  farmingExperienceYears: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
+export interface Engineer {
+  id: number;
+  userId: number;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  specialization: string;
+  experienceYears: number;
+  certification: string;
+  bio: string;
+  createdAt: string;
+  updatedAt: string;
+}
 interface Ticket {
   id: number;
   title: string;
@@ -113,15 +133,47 @@ interface Ticket {
   cropType: string;
   location: string;
   description: string;
-  priority: "low" | "medium" | "high";
+  priority: "low" | "medium" | "high" | "urgent";
+  contactMethod: string;
   phoneNumber: string;
   imageUrl: string;
-  status: "open" | "in_progress" | "resolved";
+  status: "open" | "assigned" | "in_progress" | "resolved" | "closed";
   createdAt: string;
   updatedAt: string;
   resolvedAt: string | null;
   farmerId: number;
   assignedEngineerId: number | null;
+  farmer?: Farmer;
+  assignedEngineer?: Engineer;
+}
+
+interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  categoryName: string;
+  authorName: string;
+  createdAt: string;
+  publishedAt: string | null;
+  viewCount: number;
+}
+
+interface BlogPostDetail {
+  id: number;
+  title: string;
+  content: string;
+  featuredImage: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  viewCount: number;
+  categoryName: string;
+  categoryId: number;
+  authorName: string;
+  authorId: number;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string | null;
 }
 
 interface News {

@@ -58,7 +58,7 @@ const itemVariants = {
 
 export function TestimonialsSection() {
   return (
-    <section className="w-full px-52 py-6 md:py-10 lg:py-16">
+    <section className="w-full sm:px-20 md:px-36 lg:px-40 xl:px-52 py-6 md:py-10 lg:py-16">
       <div className=" px-4 md:px-6">
         <motion.div
           className="text-center mb-8"
@@ -84,15 +84,16 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial, index) => (
             <motion.div key={index} variants={itemVariants}>
               <motion.div
+                className="h-full"
                 whileHover={{ scale: 1.02, y: -5 }}
                 transition={{ duration: 0.3 }}
               >
                 <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardContent className="p-4 md:p-6">
+                  <CardContent className="h-full p-4 md:p-6 ">
                     <div className="flex items-center mb-4">
                       <Quote className="h-6 w-6 md:h-8 md:w-8 text-green-600 opacity-50" />
                     </div>
-                    <p className="text-gray-700 mb-4 italic text-sm md:text-base">
+                    <p className="text-gray-700 mb-4 italic text-sm md:text-base overflow-ellipsis line-clamp-4">
                       {testimonial.content}
                     </p>
                     <div className="flex items-center mb-3">
