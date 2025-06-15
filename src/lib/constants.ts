@@ -951,7 +951,7 @@ export const plantDiseases: Record<
   >
 > = {
   Tomato: {
-    Lateblight: {
+    "Late blight": {
       symptoms: [
         "Các đốm nước màu nâu sẫm trên lá và thân",
         "Lá và quả có thể bị thối và chuyển màu nâu",
@@ -962,7 +962,7 @@ export const plantDiseases: Record<
       treatment:
         "Loại bỏ cây bệnh, dùng thuốc trừ nấm chứa đồng/mancozeb, không trồng gần khoai tây, đảm bảo thông thoáng.",
     },
-    Earlyblight: {
+    "Early blight": {
       symptoms: [
         "Đốm tròn màu nâu trên lá với các vòng đồng tâm",
         "Lá bị vàng xung quanh đốm",
@@ -973,7 +973,7 @@ export const plantDiseases: Record<
       treatment:
         "Cắt lá bệnh, dùng thuốc trừ nấm, luân canh, bón phân cân đối.",
     },
-    Septoria_leafspot: {
+    "Septoria leafspot": {
       symptoms: [
         "Các đốm nhỏ hình tròn, viền sẫm trên lá",
         "Lá vàng và rụng sớm",
@@ -984,7 +984,7 @@ export const plantDiseases: Record<
       treatment:
         "Loại bỏ lá nhiễm, tưới gốc, thông thoáng, dùng thuốc trừ nấm, luân canh.",
     },
-    Tomato_Yellow_Leaf_CurlVirus: {
+    "Tomato Yellow Leaf Curl Virus": {
       symptoms: [
         "Lá xoăn, vàng",
         "Cây còi cọc, phát triển chậm",
@@ -995,7 +995,7 @@ export const plantDiseases: Record<
       treatment:
         "Phòng bọ phấn trắng, sử dụng bẫy vàng hoặc thuốc BVTV, dùng giống kháng, tiêu hủy cây bệnh.",
     },
-    Bacterial_spot: {
+    "Bacterial spot": {
       symptoms: [
         "Đốm nhỏ màu sẫm trên lá, thân, quả",
         "Đốm ướt, lan rộng",
@@ -1006,7 +1006,7 @@ export const plantDiseases: Record<
       treatment:
         "Tránh tưới lá, dùng thuốc chứa đồng, vệ sinh nông cụ, giống kháng.",
     },
-    Tomato_mosaic_virus: {
+    "Tomato mosaic virus": {
       symptoms: [
         "Lá có vân đốm xanh đậm nhạt xen kẽ, méo",
         "Cây còi cọc",
@@ -1017,7 +1017,7 @@ export const plantDiseases: Record<
       treatment:
         "Tiêu hủy cây bệnh, vệ sinh dụng cụ, dùng giống kháng, không hút thuốc khi chăm sóc.",
     },
-    LeafMold: {
+    "Leaf Mold": {
       symptoms: [
         "Đốm vàng trên mặt lá trên",
         "Mặt dưới có lớp mốc xanh ô-liu",
@@ -1028,7 +1028,7 @@ export const plantDiseases: Record<
       treatment:
         "Đảm bảo thông gió, cắt lá bệnh, dùng thuốc trừ nấm, luân canh.",
     },
-    Target_Spot: {
+    "Target Spot": {
       symptoms: [
         "Đốm nâu tròn trên lá, thân, quả",
         "Trung tâm lõm như hình mắt",
@@ -1039,7 +1039,7 @@ export const plantDiseases: Record<
       treatment:
         "Tiêu hủy phần bệnh, dùng thuốc trừ nấm, thông thoáng, giảm độ ẩm.",
     },
-    Spider_mites: {
+    "Spider mites Two-spotted spider mite": {
       symptoms: [
         "Lá vàng nhạt đến đồng",
         "Mạng tơ nhỏ dưới lá",
@@ -1051,7 +1051,7 @@ export const plantDiseases: Record<
     },
   },
   Grape: {
-    Leafblight: {
+    "Leaf blight (Isariopsis Leaf Spot)": {
       symptoms: [
         "Đốm nâu đen trên lá",
         "Lá vàng, khô và rụng",
@@ -1062,12 +1062,12 @@ export const plantDiseases: Record<
       treatment:
         "Loại bỏ lá nhiễm, thông thoáng vườn, thuốc trừ nấm, luân canh.",
     },
-    Blackrot: {
+    "Black rot": {
       symptoms: ["Đốm nâu/đen trên lá và quả, quả co lại", "Quả khô cứng, đen"],
       description: "Phoma viticola gây black rot, phá huỷ quả nho và lá.",
       treatment: "Cắt bỏ quả/ lá bệnh, thông thoáng, thuốc trừ nấm.",
     },
-    Esca_BlackMeasles: {
+    "Esca (Black Measles)": {
       symptoms: ["Vết đốm đen trên cuống quả", "Quả nổ, rụng, lá bị tàn"],
       description:
         "Esca là bệnh do nhiều nấm (tổn thương gỗ), gây black measles trên quả.",
@@ -1075,7 +1075,7 @@ export const plantDiseases: Record<
     },
   },
   Orange: {
-    Haunglongbing_Citrus_greening: {
+    "Haunglongbing (Citrus greening)": {
       symptoms: ["Lá vàng không đồng đều (zebra)", "Quả xanh, thơm kém"],
       description:
         "HLB do vi khuẩn Candidatus Liberibacter spp. và lây truyền bởi bọ xít khế.",
@@ -1083,7 +1083,7 @@ export const plantDiseases: Record<
     },
   },
   Squash: {
-    Powdery_mildew: {
+    "Powdery mildew": {
       symptoms: ["Lớp bột trắng trên mặt lá", "Lá vàng, khô"],
       description:
         "Bột trắng do nấm khô lên bề mặt lá, phát triển nhanh khi khô ấm.",
@@ -1092,13 +1092,13 @@ export const plantDiseases: Record<
     },
   },
   Potato: {
-    Lateblight: {
+    "Late blight": {
       symptoms: ["Đốm nước trên lá/tubers, mốc trắng", "Thối nhũn"],
       description:
         "Phytophthora infestans gây Late blight, phá hủy khoai tây lá và củ.",
       treatment: "Cắt bỏ cây bệnh, thuốc trừ nấm, không để ẩm đọng.",
     },
-    Earlyblight: {
+    "Early blight": {
       symptoms: ["Đốm tròn nâu với vòng đồng tâm trên lá", "Lá vàng rụng"],
       description:
         "Alternaria solani gây Early blight trên khoai tây và cà chua.",
@@ -1106,7 +1106,7 @@ export const plantDiseases: Record<
     },
   },
   Corn: {
-    Northern_Leaf_Blight: {
+    "Northern Leaf Blight": {
       symptoms: ["Đốm dài nâu xám trên lá", "Lá khô lớn"],
       description:
         "Setosphaeria turcica gây Northern leaf blight khi khí hậu mát ẩm.",
