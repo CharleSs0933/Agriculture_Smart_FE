@@ -4,7 +4,14 @@ import customBaseQuery from "./custombaseQuery";
 export const api = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "api",
-  tagTypes: ["Products", "Reviews", "Cart", "Tickets", "News"],
+  tagTypes: [
+    "Products",
+    "Reviews",
+    "Cart",
+    "Tickets",
+    "News",
+    "NewsCategories",
+  ],
   endpoints: (build) => ({
     //#region Product
     getProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
@@ -93,7 +100,7 @@ export const api = createApi({
     //#endregion
 
     //#region News
-    getNews: build.query<NewsApiResponse, NewsQueryParams>({
+    getAllNews: build.query<ApiResponse<News>, NewsQueryParams>({
       query: (queryParams) => {
         const params = new URLSearchParams();
         Object.entries(queryParams).forEach(([key, value]) => {
@@ -106,12 +113,17 @@ export const api = createApi({
       providesTags: ["News"],
     }),
 
+    getNews: build.query<{ message: string; data: News }, number>({
+      query: (id) => `/News/${id}`,
+      providesTags: ["News"],
+    }),
+
     getNewsCategories: build.query<
       { message: string; data: NewsCategory[] },
       void
     >({
-      query: () => "/News/categories",
-      providesTags: ["News"],
+      query: () => "/NewsCategory",
+      providesTags: ["NewsCategories"],
     }),
     //#endregion
   }),
@@ -129,4 +141,5 @@ export const {
   useGetTicketsQuery,
   useGetNewsQuery,
   useGetNewsCategoriesQuery,
+  useGetAllNewsQuery,
 } = api;

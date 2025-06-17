@@ -32,7 +32,6 @@ const customBaseQuery = async (
         api,
         extraOptions
       );
-
       if (refreshResult.data) {
         result = await baseQuery(args, api, extraOptions);
       } else {

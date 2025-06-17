@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface ProductPaginationProps {
+interface PaginationProps {
   currentPage: number;
   totalPages: number;
   hasPreviousPage: boolean;
@@ -11,13 +12,13 @@ interface ProductPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export function ProductPagination({
+export function Pagination({
   currentPage,
   totalPages,
   hasPreviousPage,
   hasNextPage,
   onPageChange,
-}: ProductPaginationProps) {
+}: PaginationProps) {
   const getVisiblePages = () => {
     const delta = 2;
     const range = [];

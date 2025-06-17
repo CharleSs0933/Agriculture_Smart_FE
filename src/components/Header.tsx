@@ -38,7 +38,7 @@ const navItems = [
   { href: "/news", label: "Tin tức" },
   { href: "/blogs", label: "Blog nông dân" },
   { href: "/products", label: "Sản phẩm" },
-  { href: "/ai-diagnosis", label: "AI Chẩn đoán" },
+  { href: "/ai-diagnosis", label: "AI Chuẩn đoán" },
   { href: "/support", label: "Hỗ trợ" },
 ];
 

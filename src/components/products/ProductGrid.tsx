@@ -2,8 +2,8 @@
 
 import { ProductCard } from "@/components/products/ProductCard";
 import { ProductFilter } from "@/components/products/ProductFilter";
-import { ProductPagination } from "@/components/products/ProductPagination";
 import { Leaf } from "lucide-react";
+import { Pagination } from "../Pagination";
 
 interface ProductGridProps {
   productsData: ApiResponse<Product>;
@@ -70,7 +70,7 @@ export function ProductGrid({
       </div>
 
       {totalPages > 1 && (
-        <ProductPagination
+        <Pagination
           currentPage={pageNumber}
           totalPages={totalPages}
           hasPreviousPage={hasPreviousPage}

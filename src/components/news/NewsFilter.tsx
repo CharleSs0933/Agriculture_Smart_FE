@@ -1,171 +1,182 @@
 "use client";
 
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Search, Filter, X, Calendar, TrendingUp } from "lucide-react";
-import { newsCategories } from "@/lib/constants";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Search, Filter } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { Skeleton } from "../ui/skeleton";
 
 interface NewsFilterProps {
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
-  selectedCategory: string;
-  onCategoryChange: (category: string) => void;
-  sortBy: string;
-  onSortChange: (sort: "newest" | "oldest" | "popular") => void;
+  categories: { message: string; data: NewsCategory[] } | undefined;
+  onFilterChange: (filters: NewsQueryParams) => void;
+  currentFilters: NewsQueryParams;
 }
 
-const popularTags = [
-  "Chính sách",
-  "Hỗ trợ",
-  "Dịch bệnh",
-  "Xuất khẩu",
-  "Thời tiết",
-  "Nghiên cứu",
-  "Đào tạo",
-  "Thị trường",
-];
+export const NewsFilterSkeleton = () => {
+  return (
+    <div className="space-y-6">
+      {/* Search Skeleton */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-1/3" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-10 w-full rounded-md" />
+        </CardContent>
+      </Card>
+
+      {/* Author Search Skeleton */}
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-6 w-1/2" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-10 w-full rounded-md" />
+        </CardContent>
+      </Card>
+
+      {/* Categories Skeleton */}
+      <Card>
+        <CardHeader className="pb-3">
+          <Skeleton className="h-6 w-1/3" />
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <Skeleton key={idx} className="h-10 w-full rounded-md" />
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Clear Filter Skeleton */}
+      <Skeleton className="h-10 w-full rounded-md" />
+    </div>
+  );
+};
 
 export function NewsFilter({
-  searchTerm,
-  onSearchChange,
-  selectedCategory,
-  onCategoryChange,
-  sortBy,
-  onSortChange,
+  categories,
+  onFilterChange,
+  currentFilters,
 }: NewsFilterProps) {
-  const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(currentFilters.title || "");
+  const [searchAuthorTerm, setAuthorSearchTerm] = useState(
+    currentFilters.author || ""
+  );
+  const [selectedCategory, setSelectedCategory] = useState<number | undefined>(
+    currentFilters.categoryId || undefined
+  );
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchAuthorTerm = useDebounce(searchAuthorTerm, 500);
+
+  useEffect(() => {
+    onFilterChange({
+      title: debouncedSearchTerm,
+      categoryId: selectedCategory,
+      author: debouncedSearchAuthorTerm,
+      page: 1, // Reset to first page when filters change
+    });
+  }, [
+    debouncedSearchTerm,
+    selectedCategory,
+    debouncedSearchAuthorTerm,
+    onFilterChange,
+  ]);
+
+  const handleCategoryChange = (categoryId: number | undefined) => {
+    setSelectedCategory(categoryId);
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setAuthorSearchTerm("");
+    setSelectedCategory(undefined);
+  };
 
   return (
-    <div className="space-y-4">
-      {/* Search and Sort */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            placeholder="Tìm kiếm tin tức..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <div className="flex gap-2">
-          <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className="w-40">
-              <SelectValue placeholder="Sắp xếp" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Mới nhất
-                </div>
-              </SelectItem>
-              <SelectItem value="oldest">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Cũ nhất
-                </div>
-              </SelectItem>
-              <SelectItem value="popular">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4" />
-                  Phổ biến
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="h-4 w-4 mr-2" />
-            Bộ lọc
-          </Button>
-        </div>
-      </div>
+    <div className="space-y-6">
+      {/* Search */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            Tìm kiếm
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Tìm kiếm tin tức..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Quick Category Filters */}
-      <div className="flex flex-wrap gap-2">
-        {newsCategories.map((category) => (
-          <Button
-            key={category.value}
-            variant={
-              selectedCategory === category.value ? "default" : "outline"
-            }
-            size="sm"
-            onClick={() => onCategoryChange(category.value)}
-            className="text-xs"
-          >
-            {category.name}
-          </Button>
-        ))}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Search className="h-4 w-4" />
+            Tìm kiếm tác giả
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Tìm kiếm tác giả..."
+              value={searchAuthorTerm}
+              onChange={(e) => setAuthorSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-      {/* Advanced Filters */}
-      {showFilters && (
-        <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-          {/* Popular Tags */}
-          <div>
-            <h4 className="font-medium mb-2">Thẻ tag phổ biến</h4>
-            <div className="flex flex-wrap gap-2">
-              {popularTags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="cursor-pointer hover:bg-blue-50"
-                  onClick={() => onSearchChange(tag)}
+      {/* Categories */}
+      {categories && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              Danh mục
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Button
+                variant={selectedCategory === undefined ? "default" : "outline"}
+                className="w-full justify-start"
+                onClick={() => handleCategoryChange(undefined)}
+              >
+                Tất cả sản phẩm
+              </Button>
+              {categories.data.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={
+                    selectedCategory === category.id ? "default" : "outline"
+                  }
+                  className="w-full justify-start"
+                  onClick={() => handleCategoryChange(category.id)}
                 >
-                  {tag}
-                </Badge>
+                  {category.name}
+                </Button>
               ))}
             </div>
-          </div>
-
-          {/* Date Range */}
-          <div>
-            <h4 className="font-medium mb-2">Thời gian</h4>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={() => {}}>
-                Hôm nay
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => {}}>
-                Tuần này
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => {}}>
-                Tháng này
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => {}}>
-                3 tháng qua
-              </Button>
-            </div>
-          </div>
-
-          {/* Clear Filters */}
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                onSearchChange("");
-                onCategoryChange("all");
-                onSortChange("newest");
-              }}
-            >
-              <X className="h-4 w-4 mr-2" />
-              Xóa bộ lọc
-            </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
+
+      {/* Clear Filters */}
+      <Button variant="outline" className="w-full" onClick={handleClearFilters}>
+        Xóa bộ lọc
+      </Button>
     </div>
   );
 }

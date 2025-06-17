@@ -8,7 +8,7 @@ import { useGetProductsQuery } from "@/state/api";
 export default function ProductsPage() {
   const [filters, setFilters] = useState<ProductsQueryParams>({
     PageNumber: 1,
-    PageSize: 12,
+    PageSize: 2,
     Name: "",
     Description: "",
     CategoryName: "",
@@ -25,7 +25,7 @@ export default function ProductsPage() {
   );
 
   const handlePageChange = useCallback((page: number) => {
-    setFilters((prev) => ({ ...prev, pageNumber: page }));
+    setFilters((prev) => ({ ...prev, PageNumber: page }));
   }, []);
 
   // Extract unique categories from products

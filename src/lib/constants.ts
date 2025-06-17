@@ -1,11 +1,6 @@
 import {
-  AlertTriangle,
   Apple,
-  BookOpen,
-  Briefcase,
-  Calendar,
   Coffee,
-  Globe,
   Leaf,
   Sprout,
   TrendingUp,
@@ -464,156 +459,6 @@ export const sidebarItems = [
       },
     ],
   },
-];
-
-export const newsArticles: NewsArticle[] = [
-  {
-    id: "1",
-    title: "Chính phủ công bố gói hỗ trợ 10.000 tỷ đồng cho nông nghiệp 2024",
-    excerpt:
-      "Thủ tướng Chính phủ vừa ký quyết định phê duyệt gói hỗ trợ tín dụng ưu đãi 10.000 tỷ đồng nhằm thúc đẩy phát triển nông nghiệp bền vững.",
-    content: "",
-    author: "Ban Biên tập",
-    publishedAt: "2024-01-20",
-    category: "Chính sách",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcrAZxxbzaFsz5juXgEZKcWkbvBifGpJ1R4YyL",
-    views: 5420,
-    featured: true,
-    urgent: true,
-    tags: ["Chính sách", "Hỗ trợ", "Tín dụng", "Nông nghiệp"],
-    source: "Bộ Nông nghiệp và Phát triển Nông thôn",
-  },
-  {
-    id: "2",
-    title: "Cảnh báo dịch bệnh cúm gia cầm H5N1 tại các tỉnh phía Bắc",
-    excerpt:
-      "Cục Thú y khuyến cáo các tỉnh phía Bắc tăng cường biện pháp phòng chống dịch bệnh cúm gia cầm H5N1 sau khi phát hiện ổ dịch mới.",
-    content: "",
-    author: "Phòng Tin tức",
-    publishedAt: "2024-01-18",
-    category: "Cảnh báo",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcjISm6WoVzUG9Inu86sNw41qlWfBKgD2RyOcC",
-    views: 3210,
-    featured: true,
-    urgent: true,
-    tags: ["Dịch bệnh", "Gia cầm", "Cảnh báo", "Phòng chống"],
-    source: "Cục Thú y",
-  },
-  {
-    id: "3",
-    title: "Giá lúa gạo xuất khẩu tăng mạnh trong quý I/2024",
-    excerpt:
-      "Theo báo cáo của Hiệp hội Lương thực Việt Nam, giá lúa gạo xuất khẩu đã tăng 15% so với cùng kỳ năm trước nhờ nhu cầu thế giới tăng cao.",
-    content: "",
-    author: "Bộ phận Thị trường",
-    publishedAt: "2024-01-16",
-    category: "Thị trường",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgc10jvNuFy1sSQilrF4BMAD8wR5Go0PqdLJgUc",
-    views: 2890,
-    featured: false,
-    urgent: false,
-    tags: ["Xuất khẩu", "Lúa gạo", "Giá cả", "Thị trường"],
-    source: "Hiệp hội Lương thực Việt Nam",
-  },
-  {
-    id: "4",
-    title: "Nghiên cứu mới: Giống lúa ST25 kháng hạn được công nhận quốc tế",
-    excerpt:
-      "Viện Cây lương thực và Cây thực phẩm vừa công bố thành công trong việc phát triển giống lúa ST25 có khả năng kháng hạn cao.",
-    content: "",
-    author: "Ban Khoa học",
-    publishedAt: "2024-01-14",
-    category: "Nghiên cứu",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgchwwcKsqXq6bTnydlB1NAcLUoWHFkrEsiwfgD",
-    views: 1750,
-    featured: false,
-    urgent: false,
-    tags: ["Nghiên cứu", "Giống lúa", "Kháng hạn", "ST25"],
-    source: "Viện Cây lương thực và Cây thực phẩm",
-  },
-  {
-    id: "5",
-    title: "Dự báo thời tiết: Đợt rét đậm kéo dài đến cuối tháng 1",
-    excerpt:
-      "Trung tâm Dự báo Khí tượng Thủy văn Quốc gia cảnh báo đợt rét đậm, rét hại sẽ kéo dài đến cuối tháng 1, ảnh hưởng đến sản xuất nông nghiệp.",
-    content: "",
-    author: "Phòng Thời tiết",
-    publishedAt: "2024-01-12",
-    category: "Thời tiết",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgc8bQktBaK9ejhSULYQpfo2CPixnaFrgDcbG8m",
-    views: 4320,
-    featured: true,
-    urgent: false,
-    tags: ["Thời tiết", "Rét đậm", "Dự báo", "Nông nghiệp"],
-    source: "Trung tâm Dự báo Khí tượng Thủy văn Quốc gia",
-  },
-  {
-    id: "6",
-    title: "Hội nghị quốc tế về nông nghiệp bền vững sẽ diễn ra tại Hà Nội",
-    excerpt:
-      "Hội nghị quốc tế về nông nghiệp bền vững và an ninh lương thực sẽ được tổ chức tại Hà Nội từ ngày 15-17/2/2024.",
-    content: "",
-    author: "Ban Tổ chức",
-    publishedAt: "2024-01-10",
-    category: "Sự kiện",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcvExZneY13IXcKmhk2N8YwtDM4g7UbG0TsujS",
-    views: 1420,
-    featured: false,
-    urgent: false,
-    tags: ["Hội nghị", "Quốc tế", "Bền vững", "An ninh lương thực"],
-    source: "Bộ Nông nghiệp và Phát triển Nông thôn",
-  },
-  {
-    id: "7",
-    title: "Chương trình đào tạo nông dân ứng dụng công nghệ 4.0",
-    excerpt:
-      "Bộ Nông nghiệp và Phát triển Nông thôn phối hợp với các trường đại học triển khai chương trình đào tạo nông dân về công nghệ 4.0.",
-    content: "",
-    author: "Phòng Đào tạo",
-    publishedAt: "2024-01-08",
-    category: "Đào tạo",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgczWZclihOPkB29lioZgw36NU4vGfY8LHJnMTV",
-    views: 980,
-    featured: false,
-    urgent: false,
-    tags: ["Đào tạo", "Công nghệ 4.0", "Nông dân", "Ứng dụng"],
-    source: "Bộ Nông nghiệp và Phát triển Nông thôn",
-  },
-  {
-    id: "8",
-    title: "Thị trường nông sản hữu cơ Việt Nam tăng trưởng 25% năm 2023",
-    excerpt:
-      "Báo cáo thống kê cho thấy thị trường nông sản hữu cơ Việt Nam đạt mức tăng trưởng 25% trong năm 2023, vượt xa kỳ vọng.",
-    content: "",
-    author: "Phòng Thống kê",
-    publishedAt: "2024-01-05",
-    category: "Thị trường",
-    image:
-      "https://s3zs55b05y.ufs.sh/f/mwEfFzLmOdgcR8CVSvbzBD9Epy4t7HlIWqG5CbegSwQZk3Fs",
-    views: 2150,
-    featured: false,
-    urgent: false,
-    tags: ["Hữu cơ", "Thống kê", "Tăng trưởng", "Thị trường"],
-    source: "Tổng cục Thống kê",
-  },
-];
-
-export const newsCategories = [
-  { name: "Tất cả", value: "all", icon: Globe },
-  { name: "Chính sách", value: "Chính sách", icon: Briefcase },
-  { name: "Thị trường", value: "Thị trường", icon: TrendingUp },
-  { name: "Cảnh báo", value: "Cảnh báo", icon: AlertTriangle },
-  { name: "Nghiên cứu", value: "Nghiên cứu", icon: BookOpen },
-  { name: "Thời tiết", value: "Thời tiết", icon: Globe },
-  { name: "Sự kiện", value: "Sự kiện", icon: Calendar },
-  { name: "Đào tạo", value: "Đào tạo", icon: BookOpen },
 ];
 
 export const blogPosts: BlogPost[] = [
@@ -1112,13 +957,13 @@ export const plantDiseases: Record<
         "Setosphaeria turcica gây Northern leaf blight khi khí hậu mát ẩm.",
       treatment: "Trồng giống kháng, luân canh, thuốc trừ nấm.",
     },
-    Cercospora_Gray_leafspot: {
+    "Cercospora Gray leafspot": {
       symptoms: ["Đốm hình chữ nhật/bầu dục màu nâu xám", "Có viền viền vàng"],
       description:
         "Cercospora zeae-maydis gây gray leaf spot, gặp trong điều kiện nhiệt ẩm.",
       treatment: "Giống kháng, luân canh, thuốc trừ nấm.",
     },
-    Commonrust: {
+    "Common rust": {
       symptoms: ["Các nốt gỉ đỏ/nâu lồi trên lá", "Lá vàng khi nặng"],
       description:
         "Puccinia sorghi gây rối dãy gỉ phổ biến trong điều kiện ẩm nóng.",

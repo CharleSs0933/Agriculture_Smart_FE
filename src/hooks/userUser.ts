@@ -101,6 +101,14 @@ export const useUser = () => {
       });
   };
 
+  const clearUser = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
+    router.push("/login");
+  };
+
   const isLogged = !!user;
 
   return {
@@ -113,5 +121,6 @@ export const useUser = () => {
     isLogoutLoading,
     register,
     isRegisterLoading,
+    clearUser,
   };
 };
