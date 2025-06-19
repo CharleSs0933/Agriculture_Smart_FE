@@ -15,7 +15,7 @@ export default function CheckoutPage() {
   // Redirect to cart if no items
   useEffect(() => {
     if (!isLoading && (!cart || cart.cartItems.length === 0)) {
-      router.push("/cart");
+      router.push("/user/cart");
     }
   }, [cart, isLoading, router]);
 
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
           Trang chủ
         </Link>
         <span>/</span>
-        <Link href="/cart" className="hover:text-green-600">
+        <Link href="/user/cart" className="hover:text-green-600">
           Giỏ hàng
         </Link>
         <span>/</span>
@@ -53,7 +53,7 @@ export default function CheckoutPage() {
 
       <div className="flex items-center gap-4 mb-8">
         <Button variant="outline" asChild>
-          <Link href="/cart">
+          <Link href="/user/cart">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Quay lại giỏ hàng
           </Link>

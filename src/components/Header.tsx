@@ -86,7 +86,7 @@ export function Header() {
       {/* Desktop Actions */}
       <div className="ml-4 lg:ml-6 hidden md:flex items-center gap-4">
         {/* Cart Button */}
-        <Link href="/cart">
+        <Link href="/user/cart">
           <Button variant="outline" size="sm" className="relative">
             <ShoppingCart className="h-4 w-4" />
             {/* {itemCount > 0 && (
