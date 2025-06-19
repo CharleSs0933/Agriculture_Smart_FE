@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-// import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import {
   Leaf,
   Menu,
@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 
 import { useUser } from "@/hooks/userUser";
+import { useGetCartCountQuery } from "@/state/api";
 
 const navItems = [
   { href: "/news", label: "Tin tức" },
@@ -44,6 +45,9 @@ const navItems = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useUser();
+  const { data: itemCount, isLoading } = useGetCartCountQuery(undefined, {
+    skip: !user,
+  });
 
   return (
     <motion.header
@@ -89,11 +93,11 @@ export function Header() {
         <Link href="/user/cart">
           <Button variant="outline" size="sm" className="relative">
             <ShoppingCart className="h-4 w-4" />
-            {/* {itemCount > 0 && (
+            {!isLoading && itemCount && itemCount > 0 ? (
               <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                 {itemCount}
               </Badge>
-            )} */}
+            ) : null}
           </Button>
         </Link>
 

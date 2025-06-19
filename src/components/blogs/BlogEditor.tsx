@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { X, Eye, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { RichTextEditor } from "./RichTextEditor";
+import { RichTextEditor } from "../RichTextEditor";
 import { useGetBlogByIdQuery, useGetBlogsCategoryQuery } from "@/state/api";
 import { UploadDropzone } from "@/lib/uploadthing";
 

@@ -439,7 +439,7 @@ export const sidebarItems = [
       },
       {
         title: "Blog",
-        url: "/admin/blog_management",
+        url: "/admin/blogs",
         icon: FileText,
       },
       {

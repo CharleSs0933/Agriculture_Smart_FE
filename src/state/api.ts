@@ -8,6 +8,7 @@ export const api = createApi({
     "Products",
     "Reviews",
     "Cart",
+    "CartCount",
     "Tickets",
     "News",
     "NewsCategories",
@@ -46,6 +47,11 @@ export const api = createApi({
       providesTags: ["Cart"],
     }),
 
+    getCartCount: build.query<number, void>({
+      query: () => "/Cart/count",
+      providesTags: ["CartCount"],
+    }),
+
     addToCart: build.mutation<
       CartItem,
       { productId: number; quantity: number }
@@ -55,7 +61,7 @@ export const api = createApi({
         method: "POST",
         body: { productId, quantity },
       }),
-      invalidatesTags: ["Cart"],
+      invalidatesTags: ["Cart", "CartCount"],
     }),
 
     clearCart: build.mutation<void, void>({
@@ -63,7 +69,7 @@ export const api = createApi({
         url: "/Cart",
         method: "DELETE",
       }),
-      invalidatesTags: ["Cart"],
+      invalidatesTags: ["Cart", "CartCount"],
     }),
 
     updateQuantity: build.mutation<CartItem, { id: number; quantity: number }>({
@@ -72,7 +78,7 @@ export const api = createApi({
         method: "PUT",
         body: { quantity },
       }),
-      invalidatesTags: ["Cart"],
+      invalidatesTags: ["Cart", "CartCount"],
     }),
 
     deleteItem: build.mutation<void, number>({
@@ -80,7 +86,7 @@ export const api = createApi({
         url: `/Cart/items/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Cart"],
+      invalidatesTags: ["Cart", "CartCount"],
     }),
 
     //#endregion
@@ -243,6 +249,7 @@ export const {
   useGetBlogByIdQuery,
   useCreateOrderMutation,
   useCreatePaymentMutation,
+  useGetCartCountQuery,
   useGetMyBlogsQuery,
   useCreateBlogMutation,
   useUpdateBlogMutation,
