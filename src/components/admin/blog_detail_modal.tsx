@@ -23,7 +23,7 @@ import {
 import Image from "next/image";
 
 interface BlogDetailModalProps {
-  post: BlogPostApi;
+  post: BlogPost;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

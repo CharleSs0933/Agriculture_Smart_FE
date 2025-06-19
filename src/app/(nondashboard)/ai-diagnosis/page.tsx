@@ -79,7 +79,7 @@ export default function AIDiagnosis() {
 
       toast.success("Phân tích hình ảnh hoàn tất");
     } catch (error) {
-      console.error("Analysis error:", error);
+      console.log("Analysis error:", error);
 
       toast.error("Có lỗi xảy ra khi phân tích hình ảnh. Vui lòng thử lại.");
     }

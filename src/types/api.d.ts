@@ -50,12 +50,22 @@ interface NewsQueryParams {
   categoryId?: number;
 }
 
-interface NewsApiResponse {
-  data: News[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
+interface BlogsQueryParams {
+  pageNumber?: number;
+  pageSize?: number;
+  title?: string;
+  author?: string;
+  categoryId?: number;
+  status?: "published" | "draft" | "archived";
+}
+
+interface BlogFormParams {
+  categoryId: number;
+  title: string;
+  content: string;
+  featuredImage: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
 }
 interface AdminProductsQueryParams {
   PageNumber?: number;

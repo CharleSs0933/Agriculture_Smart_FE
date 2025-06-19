@@ -27,10 +27,10 @@ import { Upload, X, Eye } from "lucide-react";
 import Image from "next/image";
 
 interface BlogFormDialogProps {
-  post?: BlogPostApi | null;
+  post?: BlogPost | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (post: Partial<BlogPostApi>) => void;
+  onSave: (post: Partial<BlogPost>) => void;
 }
 
 export function BlogFormDialog({
@@ -134,7 +134,7 @@ export function BlogFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-[90vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {post ? "Chỉnh sửa bài viết" : "Tạo bài viết mới"}

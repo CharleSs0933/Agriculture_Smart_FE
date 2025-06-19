@@ -1,65 +1,74 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Filter } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { Filter, Search } from "lucide-react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 
-interface NewsFilterProps {
-  categories: { message: string; data: NewsCategory[] } | undefined;
-  onFilterChange: (filters: NewsQueryParams) => void;
-  currentFilters: NewsQueryParams;
+interface BlogFilterProps {
+  categories: BlogCategory[] | undefined;
+  onFilterChange: (filters: BlogsQueryParams) => void;
+  currentFilters: BlogsQueryParams;
 }
 
-export const NewsFilterSkeleton = () => {
+export function BlogFilterSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="sticky top-16 space-y-6">
       {/* Search Skeleton */}
       <Card>
         <CardHeader>
-          <Skeleton className="h-6 w-1/3" />
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Skeleton className="h-4 w-4 rounded-full" />
+            <Skeleton className="h-5 w-24" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-10 w-full rounded-md" />
+          <Skeleton className="h-10 w-full" />
         </CardContent>
       </Card>
 
-      {/* Author Search Skeleton */}
+      {/* Author Skeleton */}
       <Card>
         <CardHeader>
-          <Skeleton className="h-6 w-1/2" />
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Skeleton className="h-4 w-4 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-10 w-full rounded-md" />
+          <Skeleton className="h-10 w-full" />
         </CardContent>
       </Card>
 
-      {/* Categories Skeleton */}
+      {/* Category Skeleton */}
       <Card>
-        <CardHeader className="pb-3">
-          <Skeleton className="h-6 w-1/3" />
+        <CardHeader className="text-lg flex items-center gap-2">
+          <Skeleton className="h-4 w-4 rounded-full" />
+          <Skeleton className="h-5 w-20" />
         </CardHeader>
-        <CardContent className="space-y-2">
-          {Array.from({ length: 5 }).map((_, idx) => (
-            <Skeleton key={idx} className="h-10 w-full rounded-md" />
-          ))}
+        <CardContent>
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <Skeleton key={idx} className="h-10 w-full" />
+            ))}
+          </div>
         </CardContent>
       </Card>
 
-      {/* Clear Filter Skeleton */}
-      <Skeleton className="h-10 w-full rounded-md" />
+      {/* Clear Filters Skeleton */}
+      <Skeleton className="h-10 w-full" />
     </div>
   );
-};
+}
 
-export function NewsFilter({
+export function BlogFilter({
   categories,
   onFilterChange,
   currentFilters,
-}: NewsFilterProps) {
+}: BlogFilterProps) {
   const [searchTerm, setSearchTerm] = useState(currentFilters.title || "");
   const [searchAuthorTerm, setAuthorSearchTerm] = useState(
     currentFilters.author || ""
@@ -76,7 +85,7 @@ export function NewsFilter({
       title: debouncedSearchTerm,
       categoryId: selectedCategory,
       author: debouncedSearchAuthorTerm,
-      page: 1, // Reset to first page when filters change
+      pageNumber: 1, // Reset to first page when filters change
     });
   }, [
     debouncedSearchTerm,
@@ -109,7 +118,7 @@ export function NewsFilter({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Tìm kiếm tin tức..."
+              placeholder="Tìm kiếm bài viết..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -138,14 +147,11 @@ export function NewsFilter({
         </CardContent>
       </Card>
 
-      {/* Categories */}
       {categories && (
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              Danh mục
-            </CardTitle>
+          <CardHeader className="text-lg flex items-center gap-2">
+            <Filter className="h-4 w-4" />
+            <CardTitle>Danh mục</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -156,7 +162,7 @@ export function NewsFilter({
               >
                 Tất cả sản phẩm
               </Button>
-              {categories.data.map((category) => (
+              {categories.map((category) => (
                 <Button
                   key={category.id}
                   variant={

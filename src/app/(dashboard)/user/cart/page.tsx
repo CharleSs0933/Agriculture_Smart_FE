@@ -20,7 +20,7 @@ export default function CartPage() {
         toast.success("Đã xóa giỏ hàng");
       })
       .catch((error) => {
-        console.error("Failed to clear cart:", error);
+        console.log("Failed to clear cart:", error);
       });
   };
 

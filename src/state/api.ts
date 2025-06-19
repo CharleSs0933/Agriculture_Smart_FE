@@ -11,6 +11,8 @@ export const api = createApi({
     "Tickets",
     "News",
     "NewsCategories",
+    "Blogs",
+    "BlogsCategories",
   ],
   endpoints: (build) => ({
     //#region Product
@@ -126,6 +128,99 @@ export const api = createApi({
       providesTags: ["NewsCategories"],
     }),
     //#endregion
+
+    //#region Blogs
+    getAllBlogs: build.query<ApiResponse<BlogPost>, BlogsQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return `/Blog/search?${params.toString()}`;
+      },
+      providesTags: ["Blogs"],
+    }),
+
+    getMyBlogs: build.query<ApiResponse<BlogPost>, BlogsQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return `/Blog/my-blogs?${params.toString()}`;
+      },
+      providesTags: ["Blogs"],
+    }),
+
+    getBlogBySlug: build.query<BlogPostDetail, string>({
+      query: (slug) => `/Blog/slug/${slug}`,
+      providesTags: ["Blogs"],
+    }),
+
+    getBlogById: build.query<BlogPostDetail, number>({
+      query: (id) => `/Blog/${id}`,
+      providesTags: ["Blogs"],
+    }),
+
+    getBlogsCategory: build.query<BlogCategory[], void>({
+      query: () => "/BlogCategory",
+      providesTags: ["BlogsCategories"],
+    }),
+
+    createBlog: build.mutation<BlogPost, BlogFormParams>({
+      query: (blog) => ({
+        url: "/Blog",
+        method: "POST",
+        body: blog,
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
+
+    updateBlog: build.mutation<
+      BlogPost,
+      { id: number; formData: BlogFormParams }
+    >({
+      query: ({ id, formData }) => ({
+        url: `/Blog/${id}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Blogs"],
+    }),
+
+    //#endregion
+
+    // #region Orders
+    createOrder: build.mutation<
+      Order,
+      {
+        shippingAddress: string;
+        paymentMethod: "cod" | "bank_transfer" | "wallet";
+      }
+    >({
+      query: ({ shippingAddress, paymentMethod }) => ({
+        url: "/Order",
+        method: "POST",
+        body: { shippingAddress, paymentMethod },
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+
+    createPayment: build.mutation<
+      { paymentUrl: string },
+      { orderId: number; fullName: string }
+    >({
+      query: ({ orderId, fullName }) => ({
+        url: "/Payment/create-payment",
+        method: "POST",
+        body: { orderId, fullName },
+      }),
+    }),
+    //#endregion
   }),
 });
 
@@ -142,4 +237,13 @@ export const {
   useGetNewsQuery,
   useGetNewsCategoriesQuery,
   useGetAllNewsQuery,
+  useGetAllBlogsQuery,
+  useGetBlogsCategoryQuery,
+  useGetBlogBySlugQuery,
+  useGetBlogByIdQuery,
+  useCreateOrderMutation,
+  useCreatePaymentMutation,
+  useGetMyBlogsQuery,
+  useCreateBlogMutation,
+  useUpdateBlogMutation,
 } = api;

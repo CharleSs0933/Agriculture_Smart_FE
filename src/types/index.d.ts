@@ -14,23 +14,6 @@ interface NewsArticle {
   source: string;
 }
 
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  category: string;
-  image: string;
-  views: number;
-  featured: boolean;
-  publishedAt: string;
-  updatedAt: string;
-  likes?: number;
-  comments?: number;
-  tags: string[];
-}
-
 interface Category {
   id: number;
   name: string;
@@ -156,7 +139,14 @@ interface Ticket {
   assignedEngineer?: Engineer;
 }
 
-interface BlogPostApi {
+interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  isActive: boolean;
+}
+interface BlogPost {
   id: number;
   title: string;
   slug: string;
@@ -210,4 +200,32 @@ interface NewsCategory {
   slug: string;
   description?: string;
   isActive: boolean;
+}
+
+interface OrderItem {
+  id: number;
+  orderId: number;
+  productId: number;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+  product: Product;
+}
+
+interface Order {
+  id: number;
+  userId: number;
+  orderNumber: string;
+  totalAmount: number;
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  shippingAddress: string;
+  paymentMethod: "cod" | "bank_transfer" | "wallet";
+  paymentStatus: "pending" | "paid" | "failed";
+  paidAt: string;
+  createdAt: string;
+  updatedAt: string;
+  totalItems: number;
+  userName: string;
+  userEmail: string;
+  orderItems: OrderItem[];
 }

@@ -2,13 +2,12 @@
 
 import { useState, useCallback } from "react";
 import { ProductGrid } from "@/components/products/ProductGrid";
-import { CartProvider } from "@/contexts/cart-context";
 import { useGetProductsQuery } from "@/state/api";
 
 export default function ProductsPage() {
   const [filters, setFilters] = useState<ProductsQueryParams>({
     PageNumber: 1,
-    PageSize: 2,
+    PageSize: 10,
     Name: "",
     Description: "",
     CategoryName: "",
@@ -70,35 +69,32 @@ export default function ProductsPage() {
   }
 
   return (
-    <CartProvider>
-      <main className="flex-1">
-        <div className="bg-green-50 py-12">
-          <div className="px-4 md:px-6">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Sản phẩm nông nghiệp
-              </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl mt-4">
-                Khám phá bộ sưu tập đầy đủ các sản phẩm nông nghiệp chất lượng
-                cao từ phân bón, thuốc BVTV đến hạt giống và công cụ nông
-                nghiệp.
-              </p>
-            </div>
+    <main className="flex-1">
+      <div className="bg-green-50 py-12">
+        <div className="px-4 md:px-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Sản phẩm nông nghiệp
+            </h1>
+            <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl mt-4">
+              Khám phá bộ sưu tập đầy đủ các sản phẩm nông nghiệp chất lượng cao
+              từ phân bón, thuốc BVTV đến hạt giống và công cụ nông nghiệp.
+            </p>
           </div>
         </div>
+      </div>
 
-        <div className="px-4 md:px-6 py-8">
-          {productsData && (
-            <ProductGrid
-              productsData={productsData}
-              categories={categories}
-              onFilterChange={handleFilterChange}
-              onPageChange={handlePageChange}
-              currentFilters={filters}
-            />
-          )}
-        </div>
-      </main>
-    </CartProvider>
+      <div className="px-4 md:px-6 py-8">
+        {productsData && (
+          <ProductGrid
+            productsData={productsData}
+            categories={categories}
+            onFilterChange={handleFilterChange}
+            onPageChange={handlePageChange}
+            currentFilters={filters}
+          />
+        )}
+      </div>
+    </main>
   );
 }

@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
-import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import {
   Leaf,
   Menu,
@@ -45,7 +44,6 @@ const navItems = [
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useUser();
-  const { itemCount } = useCart();
 
   return (
     <motion.header
@@ -91,11 +89,11 @@ export function Header() {
         <Link href="/cart">
           <Button variant="outline" size="sm" className="relative">
             <ShoppingCart className="h-4 w-4" />
-            {itemCount > 0 && (
+            {/* {itemCount > 0 && (
               <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
                 {itemCount}
               </Badge>
-            )}
+            )} */}
           </Button>
         </Link>
 
@@ -128,21 +126,15 @@ export function Header() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/my-tickets">
+                <Link href="/user/my-tickets">
                   <Ticket className="mr-2 h-4 w-4" />
                   Ticket của tôi
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/blog/my-posts">
+                <Link href="/user/my-posts">
                   <FileText className="mr-2 h-4 w-4" />
                   Bài viết của tôi
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/blog/create">
-                  <PenTool className="mr-2 h-4 w-4" />
-                  Viết bài mới
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -282,15 +274,15 @@ export function Header() {
                 ))}
 
                 <Link
-                  href="/cart"
+                  href="/user/cart"
                   className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
                   onClick={() => setIsOpen(false)}
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Giỏ hàng
-                  {itemCount > 0 && (
+                  {/* {itemCount > 0 && (
                     <Badge className="ml-auto">{itemCount}</Badge>
-                  )}
+                  )} */}
                 </Link>
               </nav>
             </div>

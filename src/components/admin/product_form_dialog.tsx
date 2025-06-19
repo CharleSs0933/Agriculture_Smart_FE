@@ -117,7 +117,7 @@ export function ProductFormDialog({
       onSave();
       onOpenChange(false);
     } catch (error) {
-      console.error("Save product error:", error);
+      console.log("Save product error:", error);
       toast.error("Có lỗi xảy ra khi lưu sản phẩm");
     }
   };

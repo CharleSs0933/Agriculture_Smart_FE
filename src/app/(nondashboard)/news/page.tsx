@@ -97,7 +97,7 @@ const NewsPage = () => {
         <div className=" px-4 md:px-6">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Sidebar */}
-            <div className="lg:w-1/4">
+            <div className="lg:w-1/4 ">
               <NewsFilter
                 categories={newsCategoriesData}
                 currentFilters={filters}

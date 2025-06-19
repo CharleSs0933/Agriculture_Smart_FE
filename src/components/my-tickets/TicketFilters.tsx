@@ -22,11 +22,13 @@ interface TicketFilters {
 interface TicketFiltersProps {
   filters: TicketFilters;
   onFiltersChange: (filters: TicketFilters) => void;
+  categories: string[];
 }
 
 export function TicketFilters({
   filters,
   onFiltersChange,
+  categories,
 }: TicketFiltersProps) {
   const handleFilterChange = (key: keyof TicketFilters, value: string) => {
     onFiltersChange({ ...filters, [key]: value });
@@ -104,11 +106,12 @@ export function TicketFilters({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Tất cả danh mục</SelectItem>
-              <SelectItem value="Sâu bệnh">Sâu bệnh</SelectItem>
-              <SelectItem value="Đất đai">Đất đai</SelectItem>
-              <SelectItem value="Phân bón">Phân bón</SelectItem>
-              <SelectItem value="Sinh trưởng">Sinh trưởng</SelectItem>
-              <SelectItem value="Khác">Khác</SelectItem>
+              {categories &&
+                categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>

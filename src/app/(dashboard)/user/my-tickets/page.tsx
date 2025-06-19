@@ -130,6 +130,10 @@ export default function MyTicketsPage() {
     );
   }
 
+  const categories = [
+    ...new Set(tickets?.map((ticket) => ticket.category) || []),
+  ];
+
   return (
     <div className=" mx-auto px-4 py-8">
       {/* Header */}
@@ -157,7 +161,11 @@ export default function MyTicketsPage() {
       />
 
       {/* Filters */}
-      <TicketFilters filters={filters} onFiltersChange={setFilters} />
+      <TicketFilters
+        filters={filters}
+        onFiltersChange={setFilters}
+        categories={categories}
+      />
 
       {/* Tickets Grid */}
       {isLoading ? (

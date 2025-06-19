@@ -44,10 +44,10 @@ export default function AdminBlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedPosts, setSelectedPosts] = useState<number[]>([]);
-  const [selectedPost, setSelectedPost] = useState<BlogPostApi | null>(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showFormDialog, setShowFormDialog] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPostApi | null>(null);
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
 
   // Mock data
 
@@ -151,12 +151,12 @@ export default function AdminBlogPage() {
     // Implement bulk actions here
   };
 
-  const handleViewPost = (post: BlogPostApi) => {
+  const handleViewPost = (post: BlogPost) => {
     setSelectedPost(post);
     setShowDetailModal(true);
   };
 
-  const handleEditPost = (post: BlogPostApi) => {
+  const handleEditPost = (post: BlogPost) => {
     setEditingPost(post);
     setShowFormDialog(true);
   };

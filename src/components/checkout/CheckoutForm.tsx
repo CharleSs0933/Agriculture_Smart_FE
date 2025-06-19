@@ -7,31 +7,32 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
-import { CreditCard, Truck, MapPin, CheckCircle } from "lucide-react";
-import { useGetCartQuery } from "@/state/api";
+import { CreditCard, Truck, MapPin } from "lucide-react";
+import {
+  useCreateOrderMutation,
+  useCreatePaymentMutation,
+  useGetCartQuery,
+} from "@/state/api";
 
 export function CheckoutForm() {
   const { data: cart } = useGetCartQuery();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    district: "",
-    note: "",
+  const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
+  const [createPayment, { isLoading: isCreatingPayment }] =
+    useCreatePaymentMutation();
+
+  const [formData, setFormData] = useState<{
+    shippingAddress: string;
+    paymentMethod: "cod" | "bank_transfer" | "wallet";
+  }>({
+    shippingAddress: "",
     paymentMethod: "cod",
   });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
 
   // Safe access to cart items and totals
   const cartItems = cart?.cartItems || [];
@@ -48,43 +49,36 @@ export function CheckoutForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      setIsSubmitting(false);
-      setIsCompleted(true);
-
-      // Redirect to success page after a delay
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
+      await createOrder({
+        shippingAddress: formData.shippingAddress,
+        paymentMethod: formData.paymentMethod,
+      })
+        .unwrap()
+        .then(async (res) => {
+          if (res.paymentMethod === "bank_transfer") {
+            await createPayment({
+              orderId: res.id,
+              fullName: res.userName,
+            })
+              .unwrap()
+              .then((res) => {
+                window.location.href = res.paymentUrl;
+              })
+              .catch((error) => {
+                console.log("Error creating payment", error);
+              });
+          }
+          router.push("/checkout/success");
+        });
     } catch (error) {
-      console.error("Checkout error:", error);
-      setIsSubmitting(false);
+      console.log("Checkout error:", error);
       // Handle error - could show toast notification here
     }
   };
-
-  if (isCompleted) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-          <CheckCircle className="h-8 w-8 text-green-600" />
-        </div>
-        <h2 className="text-2xl font-bold mb-2">Đặt hàng thành công!</h2>
-        <p className="text-gray-600 mb-6 max-w-md">
-          Cảm ơn bạn đã đặt hàng. Chúng tôi đã gửi email xác nhận đơn hàng đến{" "}
-          {formData.email}.
-        </p>
-        <Button onClick={() => router.push("/products")}>
-          Tiếp tục mua sắm
-        </Button>
-      </div>
-    );
-  }
 
   // Show message if no items in cart
   if (cartItems.length === 0) {
@@ -118,17 +112,17 @@ export function CheckoutForm() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="address">Địa chỉ *</Label>
+                  <Label htmlFor="shippingAddress">Địa chỉ *</Label>
                   <Input
-                    id="address"
-                    value={formData.address}
+                    id="shippingAddress"
+                    value={formData.shippingAddress}
                     onChange={(e) =>
-                      handleInputChange("address", e.target.value)
+                      handleInputChange("shippingAddress", e.target.value)
                     }
                     required
                   />
                 </div>
-
+                {/* 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">Tỉnh/Thành phố *</Label>
@@ -163,7 +157,7 @@ export function CheckoutForm() {
                     onChange={(e) => handleInputChange("note", e.target.value)}
                     placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay địa điểm giao hàng chi tiết"
                   />
-                </div>
+                </div> */}
               </div>
             </CardContent>
           </Card>
@@ -257,9 +251,9 @@ export function CheckoutForm() {
               <Button
                 type="submit"
                 className="w-full bg-green-600 hover:bg-green-700"
-                disabled={isSubmitting}
+                disabled={isCreating || isCreatingPayment}
               >
-                {isSubmitting ? (
+                {isCreating || isCreatingPayment ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                     Đang xử lý...
