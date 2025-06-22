@@ -7,7 +7,6 @@ import {
   Wheat,
   BarChart3,
   Package,
-  Users,
   ShoppingCart,
   FileText,
   MessageSquare,
