@@ -1,3 +1,4 @@
+import { Engineer } from "./index";
 interface LoginResponse {
   token: string;
   expiration: string;
@@ -78,6 +79,16 @@ interface AdminProductsQueryParams {
 }
 
 interface FarmerQueryParams {
-  pageIndex?: number;
+  pageNumber?: number;
   pageSize?: number;
+  farmLocation?: string;
+  farmSize?: number;
+  cropTypes?: string;
+}
+
+interface EngineerQueryParams {
+  pageNumber?: number;
+  pageSize?: number;
+  specialization?: string;
+  experienceYears?: number;
 }

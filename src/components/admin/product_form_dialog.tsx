@@ -56,7 +56,7 @@ export function ProductFormDialog({
     description: "",
     price: 0,
     discountPrice: 0,
-    categoryId: "",
+    categoryId: 0,
     stock: 0,
     sku: "",
     isActive: true,
@@ -73,7 +73,7 @@ export function ProductFormDialog({
         description: product.description || "",
         price: product.price || 0,
         discountPrice: product.discountPrice || 0,
-        categoryId: product.categoryId?.toString() || "",
+        categoryId: product.categoryId || 0,
         stock: product.stock || 0,
         sku: product.sku || "",
         isActive: product.isActive ?? true,
@@ -85,7 +85,7 @@ export function ProductFormDialog({
         description: "",
         price: 0,
         discountPrice: 0,
-        categoryId: "",
+        categoryId: 0,
         stock: 0,
         sku: "",
         isActive: true,
@@ -220,7 +220,7 @@ export function ProductFormDialog({
             <Select
               value={formData.categoryId.toString()}
               onValueChange={(value) =>
-                setFormData({ ...formData, categoryId: value })
+                setFormData({ ...formData, categoryId: Number(value) })
               }
             >
               <SelectTrigger>

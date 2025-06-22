@@ -41,6 +41,12 @@ interface Product {
   category: Category;
 }
 
+interface ProductFilter {
+  categoryName: string;
+  isActive?: boolean;
+  sortByDiscountPrice?: boolean;
+}
+
 interface Cart {
   id: number;
   userId: number;
@@ -104,6 +110,14 @@ interface Farmer {
   updatedAt: string;
 }
 
+interface FarmerMutation {
+  id: number;
+  farmLocation: string;
+  farmSize: number;
+  cropTypes: string[];
+  farmingExperienceYears: number;
+}
+
 interface Engineer {
   id: number;
   userId: number;
@@ -117,6 +131,19 @@ interface Engineer {
   bio: string;
   createdAt: string;
   updatedAt: string;
+}
+
+interface EngineerFilter {
+  userName: string;
+  email: string;
+  specialization: string;
+  address: string;
+}
+
+interface EngineerMutation {
+  specialization: string;
+  experienceYears: number;
+  certification: string;
 }
 interface Ticket {
   id: number;
