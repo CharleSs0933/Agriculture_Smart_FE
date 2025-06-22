@@ -74,7 +74,15 @@ export const apiAdmin = createApi({
       providesTags: ["Farmers"],
     }),
 
-    addFarmer: build.mutation<FarmerMutation, Partial<FarmerMutation>>({
+    addFarmer: build.mutation<
+      FarmerMutation,
+      {
+        farmLocation: string;
+        farmSize: number;
+        cropTypes: string;
+        farmingExperienceYears: number;
+      }
+    >({
       query: (farmer) => ({
         url: "Farmer",
         method: "POST",
@@ -85,7 +93,15 @@ export const apiAdmin = createApi({
 
     updateFarmer: build.mutation<
       FarmerMutation,
-      { id: number | string; data: Partial<FarmerMutation> }
+      {
+        id: number | string;
+        data: {
+          farmLocation: string;
+          farmSize: number;
+          cropTypes: string;
+          farmingExperienceYears: number;
+        };
+      }
     >({
       query: ({ id, data }) => ({
         url: `Farmers/${id}`,

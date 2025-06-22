@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { parseCropTypes, stringifyCropTypes } from "@/lib/utils";
 
 interface FarmerFormModalProps {
   open: boolean;
@@ -17,20 +16,13 @@ interface FarmerFormModalProps {
   farmer: FarmerMutation | null;
 }
 
-interface FormData {
-  farmLocation: string;
-  farmSize: number;
-  cropTypes: string[];
-  farmingExperienceYears: number;
-}
-
 export function FarmerFormModal({
   open,
   onOpenChange,
   onSubmit,
   farmer,
 }: FarmerFormModalProps) {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FarmerMutation>({
     farmLocation: "",
     farmSize: 0,
     cropTypes: [],
@@ -38,9 +30,11 @@ export function FarmerFormModal({
   });
   const [newCropType, setNewCropType] = useState("");
 
+  console.log(farmer);
+
   useEffect(() => {
     if (farmer) {
-      setFormData({ ...farmer, cropTypes: parseCropTypes(farmer.cropTypes) });
+      setFormData(farmer);
     } else {
       setFormData({
         farmLocation: "",
@@ -50,6 +44,7 @@ export function FarmerFormModal({
       });
     }
   }, [farmer]);
+  console.log(formData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -68,7 +63,7 @@ export function FarmerFormModal({
       newCropType.trim() &&
       !formData.cropTypes.includes(newCropType.trim())
     ) {
-      setFormData((prev: FormData) => ({
+      setFormData((prev: FarmerMutation) => ({
         ...prev,
         cropTypes: [...prev.cropTypes, newCropType.trim()],
       }));
@@ -77,17 +72,14 @@ export function FarmerFormModal({
   };
 
   const removeCropType = (cropType: string) => {
-    setFormData((prev: FormData) => ({
+    setFormData((prev: FarmerMutation) => ({
       ...prev,
       cropTypes: prev.cropTypes.filter((type) => type !== cropType),
     }));
   };
 
   const handleSubmit = () => {
-    onSubmit({
-      ...formData,
-      cropTypes: stringifyCropTypes(formData.cropTypes),
-    });
+    onSubmit(formData);
   };
 
   return (

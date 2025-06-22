@@ -105,6 +105,6 @@ interface TicketsQueryParams {
 interface FarmerMutation {
   farmLocation: string;
   farmSize: number;
-  cropTypes: string;
+  cropTypes: string[];
   farmingExperienceYears: number;
 }

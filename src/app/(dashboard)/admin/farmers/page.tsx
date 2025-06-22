@@ -79,7 +79,7 @@ export default function FarmersPage() {
         console.log("Update response:", response); // Log response
         toast.success("Cập nhật nông dân thành công");
       } else {
-        await addFarmer(payload).unwrap();
+        await addFarmer({ ...payload }).unwrap();
         toast.success("Thêm nông dân thành công");
       }
       setSelectedFarmer(null);
