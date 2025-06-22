@@ -1,3 +1,14 @@
+interface User {
+  id: number;
+  userName: string;
+  email: string;
+  address: string;
+  isActive: boolean;
+  createAt: string;
+  updatedAt: string;
+  roles: string[];
+}
+
 interface NewsArticle {
   id: string;
   title: string;
@@ -72,14 +83,6 @@ interface Review {
   createdAt: string;
 }
 
-interface User {
-  id?: number;
-  username: string;
-  email: string;
-  avatar?: string;
-  role: "Farmer" | "Admin" | "Engineer";
-}
-
 interface AnalysisResult {
   plant_name: string;
   disease_name: string;
@@ -133,8 +136,7 @@ interface Ticket {
   createdAt: string;
   updatedAt: string;
   resolvedAt: string | null;
-  farmerId: number;
-  assignedEngineerId: number | null;
+
   farmer?: Farmer;
   assignedEngineer?: Engineer;
 }

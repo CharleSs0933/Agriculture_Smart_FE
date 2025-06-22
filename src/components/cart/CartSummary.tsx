@@ -18,9 +18,10 @@ export function CartSummary({ cart }: { cart: Cart }) {
 
   // Calculate additional costs
   const subtotal = cart?.totalAmount || 0;
-  const shipping = subtotal > 500000 ? 0 : 30000;
-  const tax = subtotal * 0.1; // 10% tax
-  const total = subtotal + shipping + tax;
+  // const shipping = subtotal > 500000 ? 0 : 30000;
+  // const tax = subtotal * 0.1;
+  // const total = subtotal + shipping + tax;
+  const total = subtotal;
 
   return (
     <Card>
@@ -41,7 +42,7 @@ export function CartSummary({ cart }: { cart: Cart }) {
           <span>{formatCurrency(subtotal)}</span>
         </div>
 
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <span className="text-gray-500">Thuế (10%):</span>
           <span>{formatCurrency(tax)}</span>
         </div>
@@ -59,7 +60,7 @@ export function CartSummary({ cart }: { cart: Cart }) {
           <div className="text-xs text-gray-500">
             Miễn phí vận chuyển cho đơn hàng trên {formatCurrency(500000)}
           </div>
-        )}
+        )} */}
 
         <Separator />
 

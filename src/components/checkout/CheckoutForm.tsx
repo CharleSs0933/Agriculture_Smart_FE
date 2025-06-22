@@ -39,9 +39,10 @@ export function CheckoutForm() {
   const subtotal = cart?.totalAmount || 0;
 
   // Calculate additional costs
-  const shipping = subtotal > 500000 ? 0 : 30000;
-  const tax = subtotal * 0.1; // 10% tax
-  const total = subtotal + shipping + tax;
+  // const shipping = subtotal > 500000 ? 0 : 30000;
+  // const tax = subtotal * 0.1;
+  // const total = subtotal + shipping + tax;
+  const total = subtotal;
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -217,7 +218,7 @@ export function CheckoutForm() {
                   <span>{formatCurrency(item.totalPrice)}</span>
                 </div>
               ))}
-
+              {/* 
               <div className="flex justify-between">
                 <span className="text-gray-500">Tạm tính:</span>
                 <span>{formatCurrency(subtotal)}</span>
@@ -235,7 +236,7 @@ export function CheckoutForm() {
                 ) : (
                   <span>{formatCurrency(shipping)}</span>
                 )}
-              </div>
+              </div> */}
 
               <Separator />
 

@@ -21,31 +21,31 @@ const customBaseQuery = async (
   });
 
   try {
-    let result = await baseQuery(args, api, extraOptions);
+    const result = await baseQuery(args, api, extraOptions);
 
-    if (result.error && result.error.status === 401) {
-      const refreshResult = await baseQuery(
-        {
-          url: "/auth/refresh-token",
-          method: "POST",
-        },
-        api,
-        extraOptions
-      );
-      if (refreshResult.data) {
-        result = await baseQuery(args, api, extraOptions);
-      } else {
-        toast.error("Session expired. Please log in again.");
-      }
-    }
+    // if (result.error && result.error.status === 401) {
+    //   const refreshResult = await baseQuery(
+    //     {
+    //       url: "/auth/refresh-token",
+    //       method: "POST",
+    //     },
+    //     api,
+    //     extraOptions
+    //   );
+    //   if (refreshResult.data) {
+    //     result = await baseQuery(args, api, extraOptions);
+    //   } else {
+    //     toast.error("Session expired. Please log in again.");
+    //   }
+    // }
 
     if (result.error) {
       const errorData = result.error.data as { message?: string } | undefined;
-      const errorMessage =
-        errorData?.message ||
-        result.error.status.toString() ||
-        "An error occurred";
-      toast.error(`Error: ${errorMessage}`);
+      // const errorMessage =
+      //   errorData?.message ||
+      //   result.error.status.toString() ||
+      //   "An error occurred";
+      if (errorData) toast.error(`Error: ${errorData.message}`);
     }
 
     const isMutationRequest =

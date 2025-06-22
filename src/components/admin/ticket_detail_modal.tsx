@@ -141,7 +141,7 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
                   </div>
                 </div>
 
-                {ticket.assignedEngineerId && (
+                {ticket.assignedEngineer && (
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full mt-2" />
                     <div className="flex-1">

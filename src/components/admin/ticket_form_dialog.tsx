@@ -38,7 +38,7 @@ export function TicketFormDialog({ trigger, ticket }: TicketFormDialogProps) {
     priority: ticket?.priority || "medium",
     contactMethod: ticket?.contactMethod || "Điện thoại",
     phoneNumber: ticket?.phoneNumber || "",
-    farmerId: ticket?.farmerId || "",
+    farmerId: ticket?.farmer?.id || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {

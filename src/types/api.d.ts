@@ -81,3 +81,13 @@ interface FarmerQueryParams {
   pageIndex?: number;
   pageSize?: number;
 }
+
+interface TicketsQueryParams {
+  pageNumber?: number;
+  pageSize?: number;
+  title?: string;
+  farmerName?: string;
+  assignedEngineerName?: string;
+  status?: "open" | "assigned" | "in_progress" | "resolved" | "closed";
+  priority?: "low" | "medium" | "high" | "urgent";
+}

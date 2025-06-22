@@ -9,7 +9,7 @@ const CheckoutSuccessPage = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
+    <div className="flex flex-col items-center justify-center py-12 text-center h-full">
       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
         <CheckCircle className="h-8 w-8 text-green-600" />
       </div>

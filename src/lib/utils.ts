@@ -38,3 +38,17 @@ export function getPlantDiseaseInfo(
       "Liên hệ chuyên gia nông nghiệp để được tư vấn phương pháp điều trị phù hợp. Trong thời gian chờ đợi, hãy cách ly cây bệnh và theo dõi sự lan truyền.",
   };
 }
+
+// Helper function to parse crop types from JSON string to array
+export function parseCropTypes(cropTypesJson: string): string[] {
+  try {
+    return JSON.parse(cropTypesJson);
+  } catch {
+    return [];
+  }
+}
+
+// Helper function to stringify crop types from array to JSON string
+export function stringifyCropTypes(cropTypes: string[]): string {
+  return JSON.stringify(cropTypes);
+}

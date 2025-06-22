@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useLazyGetMeQuery,
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
@@ -11,21 +12,32 @@ import { toast } from "sonner";
 
 export const useUser = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
   const [loginMutation, { isLoading: isLoginLoading }] = useLoginMutation();
   const [logoutMutation, { isLoading: isLogoutLoading }] = useLogoutMutation();
   const [registerMutation, { isLoading: isRegisterLoading }] =
     useRegisterMutation();
+  const [getMeQuery, { isLoading }] = useLazyGetMeQuery();
 
   useEffect(() => {
     // Check for user in local storage or cookies on initial load
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
-  }, []);
+    const fetchUser = async () => {
+      await getMeQuery()
+        .unwrap()
+        .then((res) => {
+          setUser(res);
+        })
+        .catch((error) => {
+          console.log(error);
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+          setUser(null);
+        });
+    };
+
+    fetchUser();
+  }, [user, getMeQuery]);
 
   const login = async ({
     username,
@@ -37,11 +49,6 @@ export const useUser = () => {
     await loginMutation({ username, password })
       .unwrap()
       .then((res) => {
-        setUser({
-          username: res.username,
-          email: res.email,
-          role: res.role,
-        });
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -51,7 +58,8 @@ export const useUser = () => {
           })
         );
         localStorage.setItem("token", res.token);
-        router.push("/");
+        if (res.role === "Admin") router.push("/admin");
+        if (res.role === "Farmer") router.push("/");
         toast.success("Login successfully");
       })
       .catch((error) => {

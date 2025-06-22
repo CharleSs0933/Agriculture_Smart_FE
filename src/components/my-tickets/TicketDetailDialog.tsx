@@ -177,7 +177,7 @@ export function TicketDetailDialog({
           )}
 
           {/* Assigned Engineer */}
-          {ticket.assignedEngineerId && (
+          {ticket.assignedEngineer && (
             <div>
               <h3 className="font-semibold mb-3">Kỹ sư phụ trách</h3>
               <div className="bg-blue-50 p-4 rounded-lg">
@@ -187,7 +187,7 @@ export function TicketDetailDialog({
                   </div>
                   <div>
                     <p className="font-medium">
-                      Kỹ sư #{ticket.assignedEngineerId}
+                      Kỹ sư #{ticket.assignedEngineer.id}
                     </p>
                     <p className="text-sm text-gray-600">
                       Chuyên gia nông nghiệp
@@ -212,7 +212,7 @@ export function TicketDetailDialog({
                 </div>
               </div>
 
-              {ticket.assignedEngineerId && (
+              {ticket.assignedEngineer && (
                 <div className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
                   <div>

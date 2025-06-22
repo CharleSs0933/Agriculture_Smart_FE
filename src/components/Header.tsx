@@ -29,10 +29,12 @@ import {
   FileText,
   PenTool,
   Ticket,
+  ListOrdered,
 } from "lucide-react";
 
 import { useUser } from "@/hooks/userUser";
 import { useGetCartCountQuery } from "@/state/api";
+import { Skeleton } from "./ui/skeleton";
 
 const navItems = [
   { href: "/news", label: "Tin tức" },
@@ -44,7 +46,7 @@ const navItems = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useUser();
+  const { user, isLoading: isUserLoading, logout } = useUser();
   const { data: itemCount, isLoading } = useGetCartCountQuery(undefined, {
     skip: !user,
   });
@@ -102,13 +104,16 @@ export function Header() {
         </Link>
 
         {/* User Menu */}
-        {user ? (
+        {isUserLoading ? (
+          // Skeleton loading khi đang fetch user
+          <Skeleton className="h-8 w-8 rounded-full" />
+        ) : user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>
-                    {user.username.charAt(0).toUpperCase()}
+                    {user.userName.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -116,7 +121,7 @@ export function Header() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{user.username}</p>
+                  <p className="font-medium">{user.userName}</p>
                   <p className="w-[200px] truncate text-sm text-muted-foreground">
                     {user.email}
                   </p>
@@ -124,9 +129,15 @@ export function Header() {
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/profile">
+                <Link href="/user/profile">
                   <User className="mr-2 h-4 w-4" />
                   Hồ sơ cá nhân
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/user/my-orders">
+                  <ListOrdered className="mr-2 h-4 w-4" />
+                  Đơn hàng của tôi
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -196,11 +207,11 @@ export function Header() {
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                   <Avatar className="h-10 w-10">
                     <AvatarFallback>
-                      {user.username.charAt(0).toUpperCase()}
+                      {user.userName.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium">{user.username}</p>
+                    <p className="font-medium">{user.userName}</p>
                     <p className="text-sm text-gray-500">{user.email}</p>
                   </div>
                 </div>
@@ -284,9 +295,11 @@ export function Header() {
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Giỏ hàng
-                  {/* {itemCount > 0 && (
-                    <Badge className="ml-auto">{itemCount}</Badge>
-                  )} */}
+                  {!isLoading && itemCount && itemCount > 0 ? (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                      {itemCount}
+                    </Badge>
+                  ) : null}
                 </Link>
               </nav>
             </div>

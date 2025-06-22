@@ -4,7 +4,7 @@ import customBaseQuery from "./custombaseQuery";
 export const apiAdmin = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "apiAdmin",
-  tagTypes: ["Products", "Farmers"],
+  tagTypes: ["Products", "Farmers", "Tickets"],
   endpoints: (build) => ({
     getAdminProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -71,6 +71,24 @@ export const apiAdmin = createApi({
       },
       providesTags: ["Farmers"],
     }),
+
+    // #region Tickets
+    getTickets: build.query<ApiResponse<Ticket>, TicketsQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return {
+          url: `Ticket/search?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Tickets"],
+    }),
+    // #endregion
   }),
 });
 
@@ -84,4 +102,7 @@ export const {
 
   //Farmer
   useGetFarmerQuery,
+
+  // Tickets
+  useGetTicketsQuery,
 } = apiAdmin;

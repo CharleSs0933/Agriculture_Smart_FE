@@ -46,8 +46,19 @@ export const apiAuth = createApi({
         },
       }),
     }),
+    getMe: build.query<User, void>({
+      query: () => ({
+        url: "/auth/my-infor",
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
-  apiAuth;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useLazyGetMeQuery,
+} = apiAuth;

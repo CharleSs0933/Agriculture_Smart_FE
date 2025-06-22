@@ -14,6 +14,8 @@ export const api = createApi({
     "NewsCategories",
     "Blogs",
     "BlogsCategories",
+    "Farmers",
+    "Orders",
   ],
   endpoints: (build) => ({
     //#region Product
@@ -213,7 +215,7 @@ export const api = createApi({
         method: "POST",
         body: { shippingAddress, paymentMethod },
       }),
-      invalidatesTags: ["Cart"],
+      invalidatesTags: ["Cart", "Orders"],
     }),
 
     createPayment: build.mutation<
@@ -225,6 +227,49 @@ export const api = createApi({
         method: "POST",
         body: { orderId, fullName },
       }),
+    }),
+
+    getOrders: build.query<Order[], void>({
+      query: () => "/Order",
+      providesTags: ["Orders"],
+    }),
+
+    cancelOrder: build.mutation<void, number>({
+      query: (orderId) => ({
+        url: `/Order/${orderId}/cancel`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+    //#endregion
+
+    //#region Farmer
+    getFarmer: build.query<Farmer, number>({
+      query: (id) => `/Farmers/${id}`,
+      providesTags: ["Farmers"],
+      transformResponse: (response: {
+        succes: boolean;
+        message: string;
+        data: Farmer;
+      }) => response.data,
+    }),
+
+    updateFarmer: build.mutation<
+      Farmer,
+      {
+        id: number;
+        farmLocation: string;
+        farmSize: number;
+        cropTypes: string;
+        farmingExperienceYears: number;
+      }
+    >({
+      query: (body) => ({
+        url: `/Farmers/${body.id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Farmers"],
     }),
     //#endregion
   }),
@@ -253,4 +298,8 @@ export const {
   useGetMyBlogsQuery,
   useCreateBlogMutation,
   useUpdateBlogMutation,
+  useGetFarmerQuery,
+  useUpdateFarmerMutation,
+  useGetOrdersQuery,
+  useCancelOrderMutation,
 } = api;
