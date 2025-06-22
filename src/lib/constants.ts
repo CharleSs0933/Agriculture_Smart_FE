@@ -413,11 +413,6 @@ export const sidebarItems = [
         icon: Package,
       },
       {
-        title: "Người dùng",
-        url: "/admin/users",
-        icon: Users,
-      },
-      {
         title: "Nông dân",
         url: "/admin/farmers",
         icon: Tractor,
