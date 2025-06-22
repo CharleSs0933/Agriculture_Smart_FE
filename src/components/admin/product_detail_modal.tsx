@@ -10,22 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import {
-  Calendar,
-  Package,
-  Star,
-  TrendingUp,
-  Edit,
-  Trash2,
-} from "lucide-react";
+import { Calendar, Package, Star, TrendingUp, Edit } from "lucide-react";
 import Image from "next/image";
 
 interface ProductDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product: Product | null;
-  onEdit?: (product: Product) => void;
-  onDelete?: (product: Product) => void;
+  onEdit: (product: Product) => void;
 }
 
 export function ProductDetailModal({
@@ -33,7 +25,6 @@ export function ProductDetailModal({
   onOpenChange,
   product,
   onEdit,
-  onDelete,
 }: ProductDetailModalProps) {
   if (!product) return null;
 
@@ -74,40 +65,32 @@ export function ProductDetailModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-4xl max-w-7xl max-h-[90vh] overflow-y-auto">
+      {/* Sửa đổi className của DialogContent */}
+      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl">{product.name}</DialogTitle>
-            <div className="flex gap-2">
-              {onEdit && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onEdit(product)}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Chỉnh sửa
-                </Button>
-              )}
-              {onDelete && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onDelete(product)}
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Xóa
-                </Button>
-              )}
+          {/* Sửa đổi flexbox cho tiêu đề và nút */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
+            <DialogTitle className="text-2xl break-words">
+              {product.name}
+            </DialogTitle>
+            <div className="flex gap-2 flex-wrap justify-start sm:justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEdit(product)}
+                className="whitespace-nowrap"
+              >
+                <Edit className="h-4 w-4 mr-1 sm:mr-2" />
+                <span className="sm:inline">Chỉnh sửa</span>{" "}
+              </Button>
             </div>
           </div>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Product Image */}
-          <Card>
-            <CardContent className="p-4">
+          <Card className="p-0">
+            <CardContent className="p-2">
               <div className="relative aspect-square w-full overflow-hidden rounded-lg border bg-muted">
                 <Image
                   src={product.imageUrl || "/placeholder.svg"}
@@ -200,20 +183,26 @@ export function ProductDetailModal({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
+                {" "}
+                {/* Thêm flex-wrap */}
                 <span className="text-muted-foreground">SKU:</span>
-                <code className="bg-muted px-2 py-1 rounded text-sm">
+                <code className="bg-muted px-2 py-1 rounded text-sm break-all">
+                  {" "}
+                  {/* Thêm break-all */}
                   {product.sku}
                 </code>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Danh mục:</span>
-                <span className="font-medium">{product.category.name}</span>
+                <span className="font-medium text-right">
+                  {product.category.name}
+                </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Tồn kho:</span>
                 <span
-                  className={`font-medium ${
+                  className={`font-medium text-right ${
                     product.stock < 10
                       ? "text-orange-600"
                       : product.stock === 0
@@ -224,16 +213,16 @@ export function ProductDetailModal({
                   {product.stock} sản phẩm
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Giá gốc:</span>
-                <span className="font-medium">
+                <span className="font-medium text-right">
                   {formatPrice(product.price)}
                 </span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between">
+                <div className="flex justify-between flex-wrap gap-x-4">
                   <span className="text-muted-foreground">Giá khuyến mãi:</span>
-                  <span className="font-medium text-green-600">
+                  <span className="font-medium text-green-600 text-right">
                     {formatPrice(product.discountPrice)}
                   </span>
                 </div>
@@ -249,22 +238,22 @@ export function ProductDetailModal({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Ngày tạo:</span>
-                <span className="font-medium">
+                <span className="font-medium text-right">
                   {formatDate(product.createdAt)}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Cập nhật:</span>
-                <span className="font-medium">
+                <span className="font-medium text-right">
                   {formatDate(product.updatedAt)}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-x-4">
                 <span className="text-muted-foreground">Trạng thái:</span>
                 <span
-                  className={`font-medium ${
+                  className={`font-medium text-right ${
                     product.isActive ? "text-green-600" : "text-red-600"
                   }`}
                 >
@@ -287,7 +276,9 @@ export function ProductDetailModal({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  {" "}
+                  {/* Đảm bảo 2 cột trên sm */}
                   <div className="text-center">
                     <div className="text-2xl font-bold text-yellow-600">
                       {product.rating}

@@ -78,8 +78,18 @@ interface AdminProductsQueryParams {
 }
 
 interface FarmerQueryParams {
-  pageIndex?: number;
+  pageNumber?: number;
   pageSize?: number;
+  farmLocation?: string;
+  farmSize?: number;
+  cropTypes?: string;
+}
+
+interface EngineerQueryParams {
+  pageNumber?: number;
+  pageSize?: number;
+  specialization?: string;
+  experienceYears?: number;
 }
 
 interface TicketsQueryParams {
@@ -90,4 +100,11 @@ interface TicketsQueryParams {
   assignedEngineerName?: string;
   status?: "open" | "assigned" | "in_progress" | "resolved" | "closed";
   priority?: "low" | "medium" | "high" | "urgent";
+}
+
+interface FarmerMutation {
+  farmLocation: string;
+  farmSize: number;
+  cropTypes: string;
+  farmingExperienceYears: number;
 }

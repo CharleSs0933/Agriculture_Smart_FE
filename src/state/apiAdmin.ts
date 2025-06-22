@@ -4,7 +4,7 @@ import customBaseQuery from "./custombaseQuery";
 export const apiAdmin = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "apiAdmin",
-  tagTypes: ["Products", "Farmers", "Tickets"],
+  tagTypes: ["Products", "Farmers", "Engineers", "Tickets"],
   endpoints: (build) => ({
     getAdminProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -29,7 +29,7 @@ export const apiAdmin = createApi({
 
     createProduct: build.mutation<Product, Partial<Product>>({
       query: (product) => ({
-        url: "Product/admin",
+        url: "Product",
         method: "POST",
         body: product,
       }),
@@ -41,7 +41,7 @@ export const apiAdmin = createApi({
       { id: number | string; data: Partial<Product> }
     >({
       query: ({ id, data }) => ({
-        url: `Product/admin/${id}`,
+        url: `Product/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -50,11 +50,13 @@ export const apiAdmin = createApi({
 
     deleteProduct: build.mutation<void, number>({
       query: (id) => ({
-        url: `Product/admin/${id}`,
+        url: `Product/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Products"],
     }),
+
+    //region API Farmer
 
     getFarmer: build.query<ApiResponse<Farmer>, FarmerQueryParams>({
       query: (queryParams) => {
@@ -65,12 +67,89 @@ export const apiAdmin = createApi({
           }
         });
         return {
-          url: `Farmers?${params.toString()}`,
+          url: `Farmers/search?${params.toString()}`,
           method: "GET",
         };
       },
       providesTags: ["Farmers"],
     }),
+
+    addFarmer: build.mutation<FarmerMutation, Partial<FarmerMutation>>({
+      query: (farmer) => ({
+        url: "Farmer",
+        method: "POST",
+        body: farmer,
+      }),
+      invalidatesTags: ["Farmers"],
+    }),
+
+    updateFarmer: build.mutation<
+      FarmerMutation,
+      { id: number | string; data: Partial<FarmerMutation> }
+    >({
+      query: ({ id, data }) => ({
+        url: `Farmers/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Farmers", id }],
+    }),
+
+    deleteFarmer: build.mutation<void, number>({
+      query: (id) => ({
+        url: `Farmers/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Farmers"],
+    }),
+    //endregion
+
+    //region API Engineer
+    getEngineer: build.query<ApiResponse<Engineer>, EngineerQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return {
+          url: `Engineers/search?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Engineers"],
+    }),
+
+    addEngineer: build.mutation<Engineer, Partial<Engineer>>({
+      query: (engineer) => ({
+        url: "Engineers",
+        method: "POST",
+        body: engineer,
+      }),
+      invalidatesTags: ["Farmers"],
+    }),
+
+    updateEngineer: build.mutation<
+      Engineer,
+      { id: number | string; data: Partial<Engineer> }
+    >({
+      query: ({ id, data }) => ({
+        url: `Engineers/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Engineers", id }],
+    }),
+
+    deleteEngineer: build.mutation<void, number>({
+      query: (id) => ({
+        url: `Engineers/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Engineers"],
+    }),
+    //endregion
 
     // #region Tickets
     getTickets: build.query<ApiResponse<Ticket>, TicketsQueryParams>({
@@ -102,6 +181,15 @@ export const {
 
   //Farmer
   useGetFarmerQuery,
+  useAddFarmerMutation,
+  useUpdateFarmerMutation,
+  useDeleteFarmerMutation,
+
+  //Engineer
+  useGetEngineerQuery,
+  useAddEngineerMutation,
+  useUpdateEngineerMutation,
+  useDeleteEngineerMutation,
 
   // Tickets
   useGetTicketsQuery,

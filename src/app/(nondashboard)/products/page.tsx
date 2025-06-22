@@ -7,7 +7,7 @@ import { useGetProductsQuery } from "@/state/api";
 export default function ProductsPage() {
   const [filters, setFilters] = useState<ProductsQueryParams>({
     PageNumber: 1,
-    PageSize: 10,
+    PageSize: 5,
     Name: "",
     Description: "",
     CategoryName: "",
