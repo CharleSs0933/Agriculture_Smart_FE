@@ -11,10 +11,35 @@ import {
 } from "../ui/select";
 import { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
+import { Skeleton } from "../ui/skeleton";
 
 interface TicketFilterProps {
   onFilterChange: (filters: TicketsQueryParams) => void;
   currentFilters: TicketsQueryParams;
+}
+export default function TicketFilterSkeleton() {
+  return (
+    <div className="flex flex-col gap-4 mb-6">
+      {/* Search Inputs + Button */}
+      <div className="flex flex-col md:flex-row gap-4">
+        {[1, 2, 3].map((_, idx) => (
+          <div key={idx} className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300 h-4 w-4" />
+            <Skeleton className="h-10 w-full pl-10 rounded-md" />
+          </div>
+        ))}
+
+        <Skeleton className="h-10 w-40 rounded-md" />
+      </div>
+
+      {/* Select Filters */}
+      <div className="flex flex-wrap gap-4">
+        {[1, 2].map((_, idx) => (
+          <Skeleton key={idx} className="h-10 w-48 rounded-md" />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function TicketAdminFilter({

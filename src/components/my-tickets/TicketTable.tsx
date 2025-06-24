@@ -20,6 +20,7 @@ import {
 } from "../ui/table";
 import { AssignEngineerDialog } from "../admin/assign_engineer_dialog";
 import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
 
 // Define the Ticket type
 const priorityColors = {
@@ -69,6 +70,67 @@ const StatusIcon = ({ status }: { status: string }) => {
   }
 };
 
+export function TicketTableSkeleton() {
+  return (
+    <div className="roumded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-16">ID</TableHead>
+            <TableHead className="min-w-[300px]">Ticket</TableHead>
+            <TableHead className="w-32">Độ ưu tiên</TableHead>
+            <TableHead className="w-32">Trạng thái</TableHead>
+            <TableHead className="min-w-[200px]">Kỹ sư</TableHead>
+            <TableHead className="w-32">Ngày tạo</TableHead>
+            <TableHead className="w-24 text-right">Thao tác</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[...Array(5)].map((_, idx) => (
+            <TableRow key={`skeleton-${idx}`}>
+              <TableCell>
+                <Skeleton className="h-4 w-10" />
+              </TableCell>
+              <TableCell>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-48" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-3 w-16" />
+                    <Skeleton className="h-3 w-10" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                  <Skeleton className="h-3 w-32" />
+                  <Skeleton className="h-3 w-40" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-16" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+              </TableCell>
+              <TableCell>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24 mx-auto" />
+                  <Skeleton className="h-3 w-20 mx-auto" />
+                  <Skeleton className="h-3 w-16 mx-auto" />
+                </div>
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-3 w-16 mt-1" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-8 w-8 ml-auto rounded-md" />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 export function TicketTable({
   ticketsData,
 }: //   handleViewPost,
@@ -79,7 +141,7 @@ export function TicketTable({
   //   handleEditPost: (ticketId: number) => void;
 }) {
   return (
-    <div className="rounded-md border custom-scrollbar">
+    <div className="rounded-md border ">
       <Table>
         <TableHeader>
           <TableRow>

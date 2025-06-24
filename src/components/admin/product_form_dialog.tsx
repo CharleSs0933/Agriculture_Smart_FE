@@ -218,7 +218,9 @@ export function ProductFormDialog({
           <div className="space-y-2">
             <Label htmlFor="category">Danh mục *</Label>
             <Select
-              value={formData.categoryId.toString()}
+              value={
+                formData.categoryId === 0 ? "" : formData.categoryId.toString()
+              }
               onValueChange={(value) =>
                 setFormData({ ...formData, categoryId: Number(value) })
               }

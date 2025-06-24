@@ -74,6 +74,7 @@ export const useUser = () => {
         setUser(null);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+        router.push("/login");
       })
       .catch((error) => {
         console.log(error);

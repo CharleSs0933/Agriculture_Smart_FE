@@ -24,9 +24,55 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { sidebarItems } from "@/lib/constants";
+import { useUser } from "@/hooks/userUser";
+import { Skeleton } from "../ui/skeleton";
 
 export function AdminSidebar() {
+  const { user, logout, isLoading, isLogoutLoading } = useUser();
   const pathname = usePathname();
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full flex-col justify-between border-r bg-sidebar px-2 py-4">
+        {/* Sidebar Header */}
+        <div className="mb-4 space-y-2">
+          <div className="flex items-center gap-2 px-2">
+            <Skeleton className="size-8 rounded-lg bg-muted" />
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-4 w-24 bg-muted" />
+              <Skeleton className="h-3 w-16 bg-muted/80" />
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Content */}
+        <div className="flex-1 space-y-4 overflow-auto">
+          {[...Array(3)].map((_, groupIndex) => (
+            <div key={groupIndex} className="space-y-2">
+              <Skeleton className="h-4 w-28 bg-muted/70 px-2" />
+              {[...Array(3)].map((_, itemIndex) => (
+                <div key={itemIndex} className="flex items-center gap-2 px-2">
+                  <Skeleton className="size-4 rounded bg-muted" />
+                  <Skeleton className="h-3 w-20 bg-muted/60" />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="mt-4 space-y-2 border-t pt-4 px-2">
+          <div className="flex items-center gap-2">
+            <Skeleton className="size-8 rounded-lg bg-muted" />
+            <div className="flex flex-col gap-1">
+              <Skeleton className="h-4 w-24 bg-muted" />
+              <Skeleton className="h-3 w-20 bg-muted/80" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Sidebar>
@@ -87,8 +133,12 @@ export function AdminSidebar() {
                     <AvatarFallback className="rounded-lg">AD</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">Admin User</span>
-                    <span className="truncate text-xs">admin@example.com</span>
+                    <span className="truncate font-semibold capitalize">
+                      {user?.userName || "Admin"}
+                    </span>
+                    <span className="truncate text-xs">
+                      {user?.email || "admin@gmail.com"}
+                    </span>
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -106,7 +156,7 @@ export function AdminSidebar() {
                   <Settings className="mr-2 h-4 w-4" />
                   Cài đặt
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={logout} disabled={isLogoutLoading}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Đăng xuất
                 </DropdownMenuItem>

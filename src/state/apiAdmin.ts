@@ -4,7 +4,7 @@ import customBaseQuery from "./custombaseQuery";
 export const apiAdmin = createApi({
   baseQuery: customBaseQuery,
   reducerPath: "apiAdmin",
-  tagTypes: ["Products", "Farmers", "Engineers", "Tickets"],
+  tagTypes: ["Products", "Farmers", "Engineers", "Tickets", "Orders"],
   endpoints: (build) => ({
     getAdminProducts: build.query<ApiResponse<Product>, ProductsQueryParams>({
       query: (queryParams) => {
@@ -184,6 +184,54 @@ export const apiAdmin = createApi({
       providesTags: ["Tickets"],
     }),
     // #endregion
+
+    // #region Orders
+    getOrders: build.query<ApiResponse<Order>, OrdersQueryParams>({
+      query: (queryParams) => {
+        const params = new URLSearchParams();
+        Object.entries(queryParams).forEach(([key, value]) => {
+          if (value !== undefined) {
+            params.append(key, value.toString());
+          }
+        });
+        return {
+          url: `Order/admin/filtered?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["Orders"],
+    }),
+
+    cancelOrder: build.mutation<void, number>({
+      query: (orderId) => ({
+        url: `/Order/${orderId}/cancel`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+
+    updateOrderStatus: build.mutation<void, { id: number; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/Order/admin/${id}/status`,
+        method: "PUT",
+        body: { status },
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+
+    updatePaymentStatus: build.mutation<
+      void,
+      { id: number; paymentStatus: string }
+    >({
+      query: ({ id, paymentStatus }) => ({
+        url: `/Order/admin/${id}/payment-status`,
+        method: "PUT",
+        body: { paymentStatus },
+      }),
+      invalidatesTags: ["Orders"],
+    }),
+
+    // #endregion
   }),
 });
 
@@ -209,4 +257,10 @@ export const {
 
   // Tickets
   useGetTicketsQuery,
+
+  // Orders
+  useGetOrdersQuery,
+  useCancelOrderMutation,
+  useUpdateOrderStatusMutation,
+  useUpdatePaymentStatusMutation,
 } = apiAdmin;

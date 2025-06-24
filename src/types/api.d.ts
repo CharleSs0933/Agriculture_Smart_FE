@@ -108,3 +108,10 @@ interface FarmerMutation {
   cropTypes: string[];
   farmingExperienceYears: number;
 }
+
+interface OrdersQueryParams {
+  pageNumber?: number;
+  pageSize?: number;
+  status?: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+  paymentStatus?: "pending" | "paid" | "failed";
+}
