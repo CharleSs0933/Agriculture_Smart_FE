@@ -23,11 +23,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { adminSidebarItems } from "@/lib/constants";
+import { engineerSidebarItems } from "@/lib/constants";
 import { useUser } from "@/hooks/userUser";
 import { Skeleton } from "../ui/skeleton";
 
-export function AdminSidebar() {
+export function EngineerSidebar() {
   const { user, logout, isLoading, isLogoutLoading } = useUser();
   const pathname = usePathname();
 
@@ -80,7 +80,7 @@ export function AdminSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/admin">
+              <Link href="/engineer">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <BarChart3 className="size-4" />
                 </div>
@@ -95,7 +95,7 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {adminSidebarItems.map((group) => (
+        {engineerSidebarItems.map((group) => (
           <SidebarGroup key={group.title}>
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>

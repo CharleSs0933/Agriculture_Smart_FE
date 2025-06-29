@@ -183,6 +183,25 @@ export const apiAdmin = createApi({
       },
       providesTags: ["Tickets"],
     }),
+    updateTicketStatus: build.mutation<void, TicketUpdateRequest>({
+      query: (data) => ({
+        url: `Ticket/${data.id}/status`,
+        method: "PATCH",
+        body: {
+          status: data.status,
+          assignedEngineerId: data.assignedEngineerId,
+          notes: data.notes,
+        },
+      }),
+      invalidatesTags: ["Tickets"],
+    }),
+    getTicketByEngineer: build.query<Ticket[], void>({
+      query: () => ({
+        url: "Ticket/engineer",
+        method: "GET",
+      }),
+      providesTags: ["Tickets"],
+    }),
     // #endregion
 
     // #region Orders
@@ -257,6 +276,8 @@ export const {
 
   // Tickets
   useGetTicketsQuery,
+  useUpdateTicketStatusMutation,
+  useGetTicketByEngineerQuery,
 
   // Orders
   useGetOrdersQuery,

@@ -37,7 +37,11 @@ import {
   CheckCircle2,
   Calendar,
 } from "lucide-react";
-import { useGetEngineerQuery } from "@/state/apiAdmin";
+import {
+  useGetEngineerQuery,
+  useUpdateTicketStatusMutation,
+} from "@/state/apiAdmin";
+import { toast } from "sonner";
 
 interface AssignEngineerDialogProps {
   ticketId: number;
@@ -85,35 +89,32 @@ export function AssignEngineerDialog({
   });
 
   // Assign engineer mutation
-  // const [assignEngineer, { isLoading: isAssigning }] =
-  //   useAssignEngineerToTicketMutation();
+  const [assignEngineer, { isLoading: isAssigning }] =
+    useUpdateTicketStatusMutation();
 
   const handleAssign = async () => {
     if (!selectedEngineer) return;
 
-    // try {
-    //   await assignEngineer({
-    //     ticketId,
-    //     engineerId: selectedEngineerId,
-    //   }).unwrap();
-
-    //   toast({
-    //     title: "Thành công",
-    //     description: `Đã phân công kỹ sư ${selectedEngineer?.userName} cho ticket #${ticketId}`,
-    //   });
-
-    //   setOpen(false);
-    //   setSelectedEngineerId(null);
-    //   setSearchTerm("");
-    //   setFilterSpecialization("");
-    //   setFilterExperience("");
-    // } catch (error) {
-    //   toast({
-    //     title: "Lỗi",
-    //     description: "Không thể phân công kỹ sư. Vui lòng thử lại.",
-    //     variant: "destructive",
-    //   });
-    // }
+    await assignEngineer({
+      id: ticketId,
+      assignedEngineerId: selectedEngineer.id,
+      status: "assigned",
+    })
+      .unwrap()
+      .then(() => {
+        toast.success("Đã phân công kỹ sư thành công", {
+          description: `Kỹ sư ${selectedEngineer.userName} đã được phân công cho ticket #${ticketId}`,
+        });
+        setOpen(false);
+        setSelectedEngineer(null);
+        setFilterSpecialization("");
+        setFilterExperience("");
+      })
+      .catch((error) => {
+        toast.error("Không thể phân công kỹ sư", {
+          description: error?.data?.message || "Vui lòng thử lại sau",
+        });
+      });
   };
 
   const resetFilters = () => {
@@ -165,7 +166,7 @@ export function AssignEngineerDialog({
               <div className="space-y-2">
                 <Label className="text-sm">Chuyên môn</Label>
                 <Select
-                  value={filterSpecialization}
+                  value={filterSpecialization || "all"}
                   onValueChange={(value) =>
                     setFilterSpecialization(value === "all" ? undefined : value)
                   }
@@ -391,20 +392,17 @@ export function AssignEngineerDialog({
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              // disabled={isAssigning}
+              disabled={isAssigning}
             >
               Hủy
             </Button>
             <Button
               onClick={handleAssign}
-              // disabled={
-              //   !selectedEngineerId || isAssigning || isLoadingEngineers
-              // }
+              disabled={!selectedEngineer || isAssigning || isLoadingEngineers}
               className="min-w-[120px]"
             >
-              {/* {isAssigning && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isAssigning ? "Đang phân công..." : "Phân công"} */}
-              Phân công
+              {isAssigning && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isAssigning ? "Đang phân công..." : "Phân công"}
             </Button>
           </div>
         </div>

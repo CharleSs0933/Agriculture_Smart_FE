@@ -8,6 +8,7 @@ import {
 } from "@/state/apiAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import { toast } from "sonner";
 
 export const useUser = () => {
@@ -30,8 +31,8 @@ export const useUser = () => {
         })
         .catch((error) => {
           console.log(error);
-          localStorage.removeItem("user");
-          localStorage.removeItem("token");
+          Cookies.remove("token");
+          Cookies.remove("role");
           setUser(null);
         });
     };
@@ -49,15 +50,18 @@ export const useUser = () => {
     await loginMutation({ username, password })
       .unwrap()
       .then((res) => {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            username: res.username,
-            email: res.email,
-            role: res.role,
-          })
-        );
-        localStorage.setItem("token", res.token);
+        Cookies.set("token", res.token, {
+          // Set token in cookies with 1 hours expiration
+          expires: 1 / 24, // 1 hour
+          secure: true,
+          sameSite: "strict",
+        });
+        Cookies.set("role", res.role, {
+          // Set role in cookies with 1 hours expiration
+          expires: 1 / 24, // 1 hour
+          secure: true,
+          sameSite: "strict",
+        });
         if (res.role === "Admin") router.push("/admin");
         if (res.role === "Farmer") router.push("/");
         toast.success("Login successfully");
@@ -72,8 +76,8 @@ export const useUser = () => {
       .unwrap()
       .then(() => {
         setUser(null);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        Cookies.remove("token");
+        Cookies.remove("role");
         router.push("/login");
       })
       .catch((error) => {
@@ -110,14 +114,6 @@ export const useUser = () => {
       });
   };
 
-  const clearUser = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
-    router.push("/login");
-  };
-
   const isLogged = !!user;
 
   return {
@@ -130,6 +126,5 @@ export const useUser = () => {
     isLogoutLoading,
     register,
     isRegisterLoading,
-    clearUser,
   };
 };

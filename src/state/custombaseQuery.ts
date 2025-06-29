@@ -1,6 +1,7 @@
 import { BaseQueryApi, FetchArgs } from "@reduxjs/toolkit/query";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const customBaseQuery = async (
   args: string | FetchArgs,
@@ -10,7 +11,7 @@ const customBaseQuery = async (
   const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
     prepareHeaders: async (headers) => {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -22,22 +23,6 @@ const customBaseQuery = async (
 
   try {
     const result = await baseQuery(args, api, extraOptions);
-
-    // if (result.error && result.error.status === 401) {
-    //   const refreshResult = await baseQuery(
-    //     {
-    //       url: "/auth/refresh-token",
-    //       method: "POST",
-    //     },
-    //     api,
-    //     extraOptions
-    //   );
-    //   if (refreshResult.data) {
-    //     result = await baseQuery(args, api, extraOptions);
-    //   } else {
-    //     toast.error("Session expired. Please log in again.");
-    //   }
-    // }
 
     if (result.error) {
       const errorData = result.error.data as { message?: string } | undefined;

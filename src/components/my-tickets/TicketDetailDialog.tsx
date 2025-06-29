@@ -171,6 +171,8 @@ export function TicketDetailDialog({
               <Image
                 src={ticket.imageUrl || "/placeholder.svg"}
                 alt="Ticket attachment"
+                width={600}
+                height={400}
                 className="max-w-full h-auto rounded-lg border"
               />
             </div>

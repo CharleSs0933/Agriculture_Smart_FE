@@ -115,3 +115,10 @@ interface OrdersQueryParams {
   status?: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
   paymentStatus?: "pending" | "paid" | "failed";
 }
+
+interface TicketUpdateRequest {
+  id: number;
+  status: "open" | "assigned" | "in_progress" | "resolved" | "closed";
+  assignedEngineerId?: number;
+  notes?: string;
+}

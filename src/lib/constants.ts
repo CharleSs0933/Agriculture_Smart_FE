@@ -15,6 +15,7 @@ import {
   Tractor,
   HardHat,
   Ticket,
+  NewspaperIcon,
 } from "lucide-react";
 
 export const navItems = [
@@ -26,7 +27,7 @@ export const navItems = [
   { href: "#", label: "Liên hệ" },
 ];
 
-export const sidebarItems = [
+export const adminSidebarItems = [
   {
     title: "Tổng quan",
     items: [
@@ -88,6 +89,39 @@ export const sidebarItems = [
       {
         title: "Cài đặt",
         url: "/admin/settings",
+        icon: Settings,
+      },
+    ],
+  },
+];
+
+export const engineerSidebarItems = [
+  {
+    title: "Quản lý",
+    items: [
+      {
+        title: "Tin tức",
+        url: "/engineer/news",
+        icon: NewspaperIcon,
+      },
+      {
+        title: "Ticket",
+        url: "/engineer/tickets",
+        icon: Ticket,
+      },
+      {
+        title: "Blog",
+        url: "/engineer/blogs",
+        icon: FileText,
+      },
+    ],
+  },
+  {
+    title: "Hệ thống",
+    items: [
+      {
+        title: "Cài đặt",
+        url: "/engineer/settings",
         icon: Settings,
       },
     ],

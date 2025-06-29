@@ -134,7 +134,7 @@ export function OrderDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-4xl max-h-[90vh]  overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
@@ -283,6 +283,8 @@ export function OrderDetailModal({
                   >
                     <Image
                       src={item.product.imageUrl || "/placeholder.svg"}
+                      width={64}
+                      height={64}
                       alt={item.product.name}
                       className="w-16 h-16 object-cover rounded-md"
                     />
