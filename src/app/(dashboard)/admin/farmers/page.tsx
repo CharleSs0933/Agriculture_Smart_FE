@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { ConfirmDialog } from "@/components/admin/confirm_dialog";
 import { toast } from "sonner";
 import { FarmerFormModal } from "@/components/admin/farmer_form_modal";
 import { FarmerDetailModal } from "@/components/admin/farmer_detail_modal"; // Import the StatsCard component
-import { Tractor, MapPin, Wheat } from "lucide-react"; // Import icons
+import { Tractor, MapPin, Wheat } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { StatsCard } from "@/components/admin/stats_card";
 
@@ -29,6 +29,7 @@ export default function FarmersPage() {
   const [selectedFarmer, setSelectedFarmer] = useState<Farmer | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const queryParams = useMemo(
@@ -45,7 +46,6 @@ export default function FarmersPage() {
     isError,
     refetch,
   } = useGetFarmerQuery(queryParams);
-
   const [deleteFarmer] = useDeleteFarmerMutation();
   const [addFarmer] = useAddFarmerMutation();
   const [updateFarmer] = useUpdateFarmerMutation();
@@ -64,46 +64,45 @@ export default function FarmersPage() {
     }
   };
 
-  const handleSubmit = async (data: FarmerMutation) => {
-    const payload = {
-      farmLocation: data.farmLocation,
-      farmSize: data.farmSize,
-      cropTypes: data.cropTypes,
-      farmingExperienceYears: data.farmingExperienceYears,
-    };
+  const handleSubmit = async (data: FarmerFormData) => {
+    console.log(data.id);
     try {
       if (data.id) {
-        const response = await updateFarmer({
+        await updateFarmer({
           id: data.id,
-          data: payload,
+          data: data,
         }).unwrap();
-        console.log("Update response:", response); // Log response
         toast.success("Cập nhật nông dân thành công");
       } else {
-        await addFarmer(payload).unwrap();
+        await addFarmer(data).unwrap();
         toast.success("Thêm nông dân thành công");
       }
-      setSelectedFarmer(null);
       setIsFormOpen(false);
+      setSelectedFarmer(null);
       refetch();
-    } catch (error) {
-      console.error("Update error:", error); // Log error
+    } catch {
       toast.error(data.id ? "Cập nhật thất bại" : "Thêm mới thất bại");
     }
   };
 
-  const parseCropTypes = (cropTypesString: string) => {
-    try {
-      return JSON.parse(cropTypesString);
-    } catch {
-      return [];
-    }
-  };
-
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const handleViewDetails = (farmer: Farmer) => {
     setSelectedFarmer(farmer);
-    setIsDetailOpen(true); // Open the detail modal
+    setIsDetailOpen(true);
+  };
+
+  const handleViewEdit = (farmer: Farmer) => {
+    setSelectedFarmer(farmer);
+    setIsFormOpen(true);
+  };
+
+  const handleViewDeleteForm = (farmer: Farmer) => {
+    setSelectedFarmer(farmer);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleViewAdd = () => {
+    setSelectedFarmer(null);
+    setIsFormOpen(true);
   };
 
   const filteredFarmers = useMemo(() => {
@@ -113,12 +112,16 @@ export default function FarmersPage() {
 
     return farmerData.items.filter((farmer: Farmer) => {
       return (
-        (farmer.userName?.toLowerCase().includes(searchLower) ?? false) ||
+        (farmer.username?.toLowerCase().includes(searchLower) ?? false) ||
         (farmer.email?.toLowerCase().includes(searchLower) ?? false) ||
         (farmer.phoneNumber?.toLowerCase().includes(searchLower) ?? false)
       );
     });
   }, [farmerData?.items, debouncedSearchTerm]);
+
+  useEffect(() => {
+    console.log("Giá trị select ĐÃ CẬP NHẬT:", selectedFarmer);
+  });
 
   if (isLoading) return <Loading />;
   if (isError)
@@ -145,12 +148,7 @@ export default function FarmersPage() {
             Tổng số: {farmerData?.totalCount ?? 0} nông dân
           </p>
         </div>
-        <Button
-          onClick={() => {
-            setSelectedFarmer(null);
-            setIsFormOpen(true);
-          }}
-        >
+        <Button onClick={handleViewAdd}>
           <Plus className="mr-2 h-4 w-4" /> Thêm mới
         </Button>
       </div>
@@ -222,14 +220,8 @@ export default function FarmersPage() {
             <FarmerTable
               farmers={filteredFarmers}
               onViewDetails={handleViewDetails}
-              onEdit={(farmer) => {
-                setSelectedFarmer(farmer);
-                setIsFormOpen(true);
-              }}
-              onDelete={(farmer) => {
-                setSelectedFarmer(farmer);
-                setIsDeleteDialogOpen(true);
-              }}
+              onEdit={handleViewEdit}
+              onDelete={handleViewDeleteForm}
             />
           </div>
 
@@ -255,16 +247,7 @@ export default function FarmersPage() {
           open={isFormOpen}
           onOpenChange={setIsFormOpen}
           onSubmit={handleSubmit}
-          farmer={
-            selectedFarmer
-              ? {
-                  ...selectedFarmer,
-                  cropTypes: Array.isArray(selectedFarmer.cropTypes)
-                    ? selectedFarmer.cropTypes
-                    : parseCropTypes(selectedFarmer.cropTypes),
-                }
-              : null
-          }
+          farmer={selectedFarmer}
         />
       )}
 

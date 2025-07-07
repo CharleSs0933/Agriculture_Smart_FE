@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -30,9 +29,10 @@ export function FarmerTable({
   onEdit,
   onDelete,
 }: FarmerTableProps) {
-  const parseCropTypes = (cropTypesString: string) => {
+  const parseCropTypes = (cropTypesString: string): string[] => {
     try {
-      return JSON.parse(cropTypesString);
+      const parsed = JSON.parse(cropTypesString);
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
@@ -56,7 +56,7 @@ export function FarmerTable({
           farmers.map((farmer) => (
             <TableRow key={farmer.id}>
               <TableCell>
-                <div className="font-medium">{farmer.userName}</div>
+                <div className="font-medium">{farmer.username}</div>
                 <div className="text-sm text-muted-foreground">
                   ID: {farmer.id}
                 </div>
@@ -77,9 +77,13 @@ export function FarmerTable({
                 <div className="flex flex-wrap gap-1">
                   {parseCropTypes(farmer.cropTypes)
                     .slice(0, 2)
-                    .map((crop, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs">
-                        {crop}
+                    .map((cropType, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        {cropType}
                       </Badge>
                     ))}
                   {parseCropTypes(farmer.cropTypes).length > 2 && (
@@ -130,10 +134,7 @@ export function FarmerTable({
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => {
-                        onEdit({
-                          ...farmer,
-                          cropTypes: parseCropTypes(farmer.cropTypes),
-                        });
+                        onEdit(farmer);
                       }}
                     >
                       <Pencil className="mr-2 h-4 w-4" /> Sửa

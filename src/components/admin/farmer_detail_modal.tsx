@@ -50,7 +50,7 @@ export function FarmerDetailModal({
   };
 
   const cropTypes = parseCropTypes(farmer.cropTypes);
-  const initial = farmer.userName.charAt(0).toUpperCase();
+  const initial = farmer.username.charAt(0).toUpperCase();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
@@ -82,9 +82,9 @@ export function FarmerDetailModal({
                 <div className="text-center w-full">
                   <p
                     className="text-lg font-medium truncate max-w-full"
-                    title={farmer.userName}
+                    title={farmer.username}
                   >
-                    {farmer.userName}
+                    {farmer.username}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     ID: #{farmer.id}

@@ -74,9 +74,9 @@ export const apiAdmin = createApi({
       providesTags: ["Farmers"],
     }),
 
-    addFarmer: build.mutation<FarmerMutation, Partial<FarmerMutation>>({
+    addFarmer: build.mutation<FarmerFormData, Partial<FarmerFormData>>({
       query: (farmer) => ({
-        url: "Farmer",
+        url: "/Farmers",
         method: "POST",
         body: farmer,
       }),
@@ -84,8 +84,8 @@ export const apiAdmin = createApi({
     }),
 
     updateFarmer: build.mutation<
-      FarmerMutation,
-      { id: number | string; data: Partial<FarmerMutation> }
+      FarmerFormData,
+      { id: number; data: Partial<FarmerFormData> }
     >({
       query: ({ id, data }) => ({
         url: `Farmers/${id}`,
@@ -121,18 +121,18 @@ export const apiAdmin = createApi({
       providesTags: ["Engineers"],
     }),
 
-    addEngineer: build.mutation<Engineer, Partial<Engineer>>({
+    addEngineer: build.mutation<EngineerFormdata, Partial<EngineerFormdata>>({
       query: (engineer) => ({
-        url: "Engineers",
+        url: "/Engineers",
         method: "POST",
         body: engineer,
       }),
-      invalidatesTags: ["Farmers"],
+      invalidatesTags: ["Engineers"],
     }),
 
     updateEngineer: build.mutation<
-      Engineer,
-      { id: number | string; data: Partial<Engineer> }
+      EngineerFormdata,
+      { id: number; data: Partial<EngineerFormdata> }
     >({
       query: ({ id, data }) => ({
         url: `Engineers/${id}`,

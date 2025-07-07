@@ -1,24 +1,34 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search, HardHat, Award, Clock } from "lucide-react";
+import { Search, HardHat, Award, Clock, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { EngineerDetailModal } from "@/components/admin/engineer_detail_modal";
 import { Pagination } from "@/components/admin/pagination";
-import { useGetEngineerQuery } from "@/state/apiAdmin";
+import {
+  useAddEngineerMutation,
+  useDeleteEngineerMutation,
+  useGetEngineerQuery,
+  useUpdateEngineerMutation,
+} from "@/state/apiAdmin";
 import { StatsCard } from "@/components/admin/stats_card"; // Import the StatsCard component
 import { EngineerTable } from "@/components/admin/engineer_table"; // Import the EngineerTable component
-// import { toast } from "sonner";
+import { toast } from "sonner";
+import Loading from "./loading";
+import { Button } from "@/components/ui/button";
+import { EngineerFormModal } from "@/components/admin/engineer_form_modal";
+import { ConfirmDialog } from "@/components/admin/confirm_dialog";
 
 export default function EngineersPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [selectedEngineer, setSelectedEngineer] = useState<Engineer | null>(
     null
   );
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  // const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const queryParams = useMemo(
     () => ({
@@ -30,60 +40,54 @@ export default function EngineersPage() {
 
   const {
     data: fetchEngineer,
-    // isLoading,
-    // isError,
-    // refetch,
+    isLoading,
+    isError,
+    refetch,
   } = useGetEngineerQuery(queryParams);
 
-  //  const [deleteEngineer] = useDeleteEngineerMutation();
-  // const [addEngineer] = useAddEngineerMutation();
-  // const [updateEngineer] = useUpdateEngineerMutation();
+  const [deleteEngineer] = useDeleteEngineerMutation();
+  const [addEngineer] = useAddEngineerMutation();
+  const [updateEngineer] = useUpdateEngineerMutation();
 
-  // const handleDelete = async () => {
-  //     if (!selectedEngineer) return;
+  const handleDelete = async () => {
+    if (!selectedEngineer) return;
 
-  //     try {
-  //       await deleteEngineer(selectedEngineer.id).unwrap();
-  //       toast.success("Xóa nông dân thành công");
-  //       refetch();
-  //     } catch (error) {
-  //       toast.error("Xóa nông dân thất bại");
-  //     } finally {
-  //       setIsDeleteDialogOpen(false);
-  //     }
-  //   };
+    try {
+      await deleteEngineer(selectedEngineer.id).unwrap();
+      toast.success("Xóa kỹ sư thành công");
+      refetch();
+    } catch {
+      toast.error("Xóa kỹ sư thất bại");
+    } finally {
+      setIsDeleteDialogOpen(false);
+    }
+  };
 
-  // const handleSubmit = async (data) => {
-  //     const payload = {
-  //       farmLocation: data.farmLocation,
-  //       farmSize: data.farmSize,
-  //       cropTypes: JSON.stringify(data.cropTypes),
-  //       farmingExperienceYears: data.farmingExperienceYears,
-  //     };
-  //     try {
-  //       if (data.id) {
-  //         const response = await updateFarmer({
-  //           id: data.id,
-  //           data: payload,
-  //         }).unwrap();
-  //         console.log("Update response:", response); // Log response
-  //         toast.success("Cập nhật nông dân thành công");
-  //       } else {
-  //         await addFarmer(payload).unwrap();
-  //         toast.success("Thêm nông dân thành công");
-  //       }
-  //       setSelectedFarmer(null);
-  //       setIsFormOpen(false);
-  //       refetch();
-  //     } catch (error) {
-  //       console.error("Update error:", error); // Log error
-  //       toast.error(data.id ? "Cập nhật thất bại" : "Thêm mới thất bại");
-  //     }
-  //   };
+  const handleSubmit = async (data: EngineerFormdata) => {
+    try {
+      if (data.id) {
+        await updateEngineer({
+          id: data.id,
+          data: data,
+        }).unwrap();
+        toast.success("Cập nhật kỹ sư thành công");
+      } else {
+        // Nếu không có id → là thêm mới
+        await addEngineer(data).unwrap();
+        toast.success("Thêm kỹ sư thành công");
+      }
+
+      setIsFormOpen(false);
+      setSelectedEngineer(null);
+      refetch();
+    } catch {
+      toast.error(data.id ? "Cập nhật thất bại" : "Thêm mới thất bại");
+    }
+  };
 
   const filteredEngineers = (fetchEngineer?.items ?? []).filter(
     (engineer: EngineerFilter) =>
-      engineer.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      engineer.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       engineer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       engineer.specialization
         .toLowerCase()
@@ -112,6 +116,34 @@ export default function EngineersPage() {
     setIsDetailModalOpen(true);
   };
 
+  const handleViewEdit = (engineer: Engineer) => {
+    setSelectedEngineer(engineer);
+    setIsFormOpen(true);
+  };
+
+  const handleViewDeleteForm = (engineer: Engineer) => {
+    setSelectedEngineer(engineer);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleViewAdd = () => {
+    setSelectedEngineer(null);
+    setIsFormOpen(true);
+  };
+
+  if (isLoading) return <Loading />;
+  if (isError)
+    return (
+      <div className="flex flex-col items-center justify-center py-16 space-y-4">
+        <p className="text-red-600 text-center">
+          Đã xảy ra lỗi khi tải dữ liệu
+        </p>
+        <Button variant="outline" onClick={refetch}>
+          Thử lại
+        </Button>
+      </div>
+    );
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -122,6 +154,9 @@ export default function EngineersPage() {
             Quản lý thông tin kỹ sư nông nghiệp ({totalItems} kỹ sư)
           </p>
         </div>
+        <Button onClick={handleViewAdd}>
+          <Plus className="mr-2 h-4 w-4" /> Thêm mới
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -191,6 +226,8 @@ export default function EngineersPage() {
       <EngineerTable
         engineers={currentEngineers}
         onViewDetails={handleViewDetails}
+        onEdit={handleViewEdit}
+        onDelete={handleViewDeleteForm}
       />
 
       {/* Pagination */}
@@ -205,12 +242,31 @@ export default function EngineersPage() {
         />
       </div>
 
+      {isFormOpen && (
+        <EngineerFormModal
+          open={isFormOpen}
+          onOpenChange={setIsFormOpen}
+          onSubmit={handleSubmit}
+          engineer={selectedEngineer}
+        />
+      )}
+
       {/* Detail Modal */}
       <EngineerDetailModal
         engineer={selectedEngineer}
         open={isDetailModalOpen}
         onOpenChange={setIsDetailModalOpen}
       />
+
+      {isDeleteDialogOpen && (
+        <ConfirmDialog
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          title="Xác nhận xóa"
+          description="Bạn có chắc chắn muốn xóa kỹ sư này?"
+          onConfirm={handleDelete}
+        />
+      )}
     </div>
   );
 }

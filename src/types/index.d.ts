@@ -98,7 +98,7 @@ interface AnalysisResult {
 interface Farmer {
   id: number;
   userId: number;
-  userName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   address: string;
@@ -110,18 +110,23 @@ interface Farmer {
   updatedAt: string;
 }
 
-interface FarmerMutation {
-  id: number;
+interface FarmerFormData {
+  id?: number;
+  username: string;
+  email: string;
+  password: string;
+  address: string;
+  phoneNumber: string;
   farmLocation: string;
   farmSize: number;
-  cropTypes: string[];
+  cropTypes: string;
   farmingExperienceYears: number;
 }
 
 interface Engineer {
   id: number;
   userId: number;
-  userName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   address: string;
@@ -134,16 +139,23 @@ interface Engineer {
 }
 
 interface EngineerFilter {
-  userName: string;
+  username: string;
   email: string;
   specialization: string;
   address: string;
 }
 
-interface EngineerMutation {
+interface EngineerFormdata {
+  id?: number;
+  username: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  address: string;
   specialization: string;
   experienceYears: number;
   certification: string;
+  bio: string;
 }
 interface Ticket {
   id: number;

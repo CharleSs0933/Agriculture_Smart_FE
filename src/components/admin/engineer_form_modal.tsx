@@ -9,61 +9,60 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
-interface FarmerFormModalProps {
+interface EngineerFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (farmerData: FarmerFormData) => void;
-  farmer: Farmer | null;
+  onSubmit: (EngineerData: EngineerFormdata) => void;
+  engineer: Engineer | null;
 }
 
-export function FarmerFormModal({
+export function EngineerFormModal({
   open,
   onOpenChange,
   onSubmit,
-  farmer,
-}: FarmerFormModalProps) {
-  const [newCropType, setNewCropType] = useState("");
-  const [editCropTypes, setEditCropTypes] = useState<string[]>([]);
-  const [formData, setFormData] = useState<FarmerFormData>({
+  engineer,
+}: EngineerFormModalProps) {
+  const [newCertificate, setNewCertificate] = useState("");
+  const [editCertificates, setEditCertificates] = useState<string[]>([]);
+  const [formData, setFormData] = useState<EngineerFormdata>({
     id: undefined,
     username: "",
     email: "",
     password: "",
     address: "",
     phoneNumber: "",
-    farmLocation: "",
-    farmSize: 0,
-    cropTypes: "",
-    farmingExperienceYears: 0,
+    specialization: "",
+    experienceYears: 0,
+    certification: "",
+    bio: "",
   });
 
   useEffect(() => {
-    if (farmer) {
-      setEditCropTypes(parseCropTypes(farmer.cropTypes));
+    if (engineer) {
+      setEditCertificates(parseCertification(engineer.certification));
       setFormData({
-        id: farmer.id,
-        username: farmer.username || "",
-        email: farmer.email || "",
+        id: engineer.id,
+        username: engineer.username || "",
+        email: engineer.email || "",
         password: "",
-        address: farmer.address || "",
-        phoneNumber: farmer.phoneNumber || "",
-        farmLocation: farmer.farmLocation || "",
-        farmSize: farmer.farmSize || 0,
-        cropTypes: farmer.cropTypes,
-        farmingExperienceYears: farmer.farmingExperienceYears || 0,
+        address: engineer.address || "",
+        phoneNumber: engineer.phoneNumber || "",
+        specialization: engineer.specialization || "",
+        experienceYears: engineer.experienceYears || 0,
+        certification: engineer.certification,
+        bio: engineer.bio || "0",
       });
     }
-  }, [farmer]);
+  }, [engineer]);
 
-  useEffect(() => {
-    console.log("Farmer:", editCropTypes);
-  }, [editCropTypes]);
-
-  const parseCropTypes = (cropTypesString: unknown): string[] => {
-    if (typeof cropTypesString !== "string" || !cropTypesString.trim()) {
+  const parseCertification = (certificationString: unknown): string[] => {
+    if (
+      typeof certificationString !== "string" ||
+      !certificationString.trim()
+    ) {
       return [];
     }
-    const trimmed = cropTypesString.trim();
+    const trimmed = certificationString.trim();
     if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
       try {
         const parsed = JSON.parse(trimmed);
@@ -87,35 +86,34 @@ export function FarmerFormModal({
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === "farmSize" || name === "farmingExperienceYears"
-          ? Number(value)
-          : value,
+      [name]: name === "experienceYears" ? Number(value) : value,
     }));
   };
 
-  const handleCropTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewCropType(e.target.value);
+  const handleCertificationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewCertificate(e.target.value);
   };
 
-  const addCropType = () => {
-    if (newCropType && !editCropTypes.includes(newCropType.trim())) {
-      const updated = [...editCropTypes, newCropType.trim()];
-      setEditCropTypes(updated);
+  const addCertification = () => {
+    if (newCertificate && !editCertificates.includes(newCertificate.trim())) {
+      const updated = [...editCertificates, newCertificate.trim()];
+      setEditCertificates(updated);
       setFormData((prev) => ({
         ...prev,
-        cropTypes: JSON.stringify(updated), // or updated.join(",")
+        certification: JSON.stringify(updated), // or updated.join(",")
       }));
-      setNewCropType(""); // Clear input
+      setNewCertificate(""); // Clear input
     }
   };
 
-  const removeCropType = (cropType: string) => {
-    const updated = editCropTypes.filter((type) => type !== cropType);
-    setEditCropTypes(updated);
+  const removeCertification = (certification: string) => {
+    const updated = editCertificates.filter((type) => type !== certification);
+    setEditCertificates(updated);
     setFormData((prev) => ({
       ...prev,
-      cropTypes: JSON.stringify(updated),
+      certification: JSON.stringify(updated),
     }));
   };
 
@@ -128,7 +126,7 @@ export function FarmerFormModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {farmer ? "Cập nhật Nông dân" : "Thêm Nông dân"}
+            {engineer ? "Cập nhật Nông dân" : "Thêm Nông dân"}
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
@@ -157,7 +155,7 @@ export function FarmerFormModal({
             />
           </div>
           {/* password */}
-          {!farmer ? (
+          {!engineer ? (
             <div>
               <label className="block text-sm font-medium mb-1">Mật khẩu</label>
               <Input
@@ -193,63 +191,56 @@ export function FarmerFormModal({
           </div>
           {/* Farm Location Input */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Vị trí trang trại
-            </label>
+            <label className="block text-sm font-medium mb-1">Tiểu sử</label>
             <Input
-              name="farmLocation"
-              placeholder="Vị trí trang trại"
-              value={formData.farmLocation}
+              name="bio"
+              placeholder="Tiểu sử kỹ sư"
+              value={formData.bio}
               onChange={handleChange}
             />
           </div>
 
           {/* Farm Size Input */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Diện tích trang trại (ha)
-            </label>
+            <label className="block text-sm font-medium mb-1">Chuyên môn</label>
             <Input
-              name="farmSize"
-              type="number"
-              placeholder="Diện tích trang trại (ha)"
-              value={formData.farmSize}
+              name="specialization"
+              placeholder="Chuyên môn hóa"
+              value={formData.specialization}
               onChange={handleChange}
             />
           </div>
 
           {/* Crop Type Input */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Loại cây trồng
-            </label>
+            <label className="block text-sm font-medium mb-1">Chứng chỉ</label>
             <div className="flex items-center">
               <Input
-                name="newCropType"
-                placeholder="Nhập loại cây trồng"
-                value={newCropType}
-                onChange={handleCropTypeChange}
+                name="newCertificate"
+                placeholder="Nhập tên chứng chỉ"
+                value={newCertificate}
+                onChange={handleCertificationChange}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    addCropType();
+                    addCertification();
                   }
                 }}
               />
-              <Button onClick={addCropType} className="ml-2">
+              <Button onClick={addCertification} className="ml-2">
                 Thêm
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {editCropTypes.map((cropType, index) => (
+              {editCertificates.map((certification, index) => (
                 <Badge
                   key={index}
                   variant="secondary"
                   className="flex items-center"
                 >
-                  {cropType}
+                  {certification}
                   <button
                     className="ml-2 text-red-500"
-                    onClick={() => removeCropType(cropType)}
+                    onClick={() => removeCertification(certification)}
                   >
                     x
                   </button>
@@ -264,10 +255,10 @@ export function FarmerFormModal({
               Kinh nghiệm (năm)
             </label>
             <Input
-              name="farmingExperienceYears"
+              name="experienceYears"
               type="number"
               placeholder="Kinh nghiệm (năm)"
-              value={formData.farmingExperienceYears}
+              value={formData.experienceYears}
               onChange={handleChange}
             />
           </div>
@@ -277,7 +268,7 @@ export function FarmerFormModal({
             Hủy
           </Button>
           <Button className="ml-2" onClick={() => handleSubmit()}>
-            {farmer ? "Cập nhật" : "Thêm"}
+            {engineer ? "Cập nhật" : "Thêm"}
           </Button>
         </div>
       </DialogContent>
