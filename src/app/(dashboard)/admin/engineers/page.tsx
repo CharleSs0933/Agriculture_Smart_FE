@@ -18,6 +18,7 @@ import Loading from "./loading";
 import { Button } from "@/components/ui/button";
 import { EngineerFormModal } from "@/components/admin/engineer_form_modal";
 import { ConfirmDialog } from "@/components/admin/confirm_dialog";
+import { EngineerFormData } from "@/lib/schemas";
 
 export default function EngineersPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,7 +64,7 @@ export default function EngineersPage() {
     }
   };
 
-  const handleSubmit = async (data: EngineerFormdata) => {
+  const handleSubmit = async (data: EngineerFormData) => {
     try {
       if (data.id) {
         await updateEngineer({
@@ -131,6 +132,15 @@ export default function EngineersPage() {
     setIsFormOpen(true);
   };
 
+  const safeParseCertLength = (cert: string): number => {
+    try {
+      const parsed = JSON.parse(cert);
+      return Array.isArray(parsed) ? parsed.length : 0;
+    } catch {
+      return 0;
+    }
+  };
+
   if (isLoading) return <Loading />;
   if (isError)
     return (
@@ -183,17 +193,11 @@ export default function EngineersPage() {
         />
         <StatsCard
           title="Chứng chỉ TB"
-          value={
-            fetchEngineer?.items.length > 0
-              ? Math.round(
-                  fetchEngineer.items.reduce(
-                    (sum: number, engineer: Engineer) =>
-                      sum + JSON.parse(engineer.certification).length,
-                    0
-                  ) / fetchEngineer.items.length
-                )
-              : 0
-          }
+          value={fetchEngineer?.items.reduce(
+            (sum: number, engineer: Engineer) =>
+              sum + safeParseCertLength(engineer.certification),
+            0
+          )}
           icon={<Award className="h-4 w-4 text-muted-foreground" />}
         />
         <StatsCard

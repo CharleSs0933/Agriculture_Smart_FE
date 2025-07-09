@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -6,8 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FarmerFormData, farmerSchema } from "@/lib/schemas";
+import { FormField } from "./form-field";
 
 interface FarmerFormModalProps {
   open: boolean;
@@ -22,234 +28,179 @@ export function FarmerFormModal({
   onSubmit,
   farmer,
 }: FarmerFormModalProps) {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<FarmerFormData>({
+    resolver: zodResolver(farmerSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      phoneNumber: "",
+      address: "",
+      farmLocation: "",
+      farmSize: 0,
+      cropTypes: "[]",
+      farmingExperienceYears: 0,
+    },
+  });
+
   const [newCropType, setNewCropType] = useState("");
   const [editCropTypes, setEditCropTypes] = useState<string[]>([]);
-  const [formData, setFormData] = useState<FarmerFormData>({
-    id: undefined,
-    username: "",
-    email: "",
-    password: "",
-    address: "",
-    phoneNumber: "",
-    farmLocation: "",
-    farmSize: 0,
-    cropTypes: "",
-    farmingExperienceYears: 0,
-  });
 
   useEffect(() => {
     if (farmer) {
-      setEditCropTypes(parseCropTypes(farmer.cropTypes));
-      setFormData({
-        id: farmer.id,
-        username: farmer.username || "",
-        email: farmer.email || "",
+      const cropArray = parseCropTypes(farmer.cropTypes);
+      setEditCropTypes(cropArray);
+      reset({
+        ...farmer,
+        cropTypes: JSON.stringify(cropArray),
         password: "",
-        address: farmer.address || "",
-        phoneNumber: farmer.phoneNumber || "",
-        farmLocation: farmer.farmLocation || "",
-        farmSize: farmer.farmSize || 0,
-        cropTypes: farmer.cropTypes,
-        farmingExperienceYears: farmer.farmingExperienceYears || 0,
       });
+    } else {
+      setEditCropTypes([]);
+      reset();
     }
-  }, [farmer]);
+  }, [farmer, reset]);
 
-  useEffect(() => {
-    console.log("Farmer:", editCropTypes);
-  }, [editCropTypes]);
-
-  const parseCropTypes = (cropTypesString: unknown): string[] => {
-    if (typeof cropTypesString !== "string" || !cropTypesString.trim()) {
+  const parseCropTypes = (value: unknown): string[] => {
+    if (typeof value !== "string") return [];
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
       return [];
     }
-    const trimmed = cropTypesString.trim();
-    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        if (
-          Array.isArray(parsed) &&
-          parsed.every((item) => typeof item === "string")
-        ) {
-          return parsed;
-        }
-      } catch (error) {
-        console.warn("JSON.parse failed, fallback to CSV:", error);
-      }
-    }
-    return trimmed
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === "farmSize" || name === "farmingExperienceYears"
-          ? Number(value)
-          : value,
-    }));
-  };
-
-  const handleCropTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewCropType(e.target.value);
   };
 
   const addCropType = () => {
-    if (newCropType && !editCropTypes.includes(newCropType.trim())) {
-      const updated = [...editCropTypes, newCropType.trim()];
+    const trimmed = newCropType.trim();
+    if (trimmed && !editCropTypes.includes(trimmed)) {
+      const updated = [...editCropTypes, trimmed];
       setEditCropTypes(updated);
-      setFormData((prev) => ({
-        ...prev,
-        cropTypes: JSON.stringify(updated), // or updated.join(",")
-      }));
-      setNewCropType(""); // Clear input
+      setValue("cropTypes", JSON.stringify(updated));
+      setNewCropType("");
     }
   };
 
-  const removeCropType = (cropType: string) => {
-    const updated = editCropTypes.filter((type) => type !== cropType);
+  const removeCropType = (type: string) => {
+    const updated = editCropTypes.filter((t) => t !== type);
     setEditCropTypes(updated);
-    setFormData((prev) => ({
-      ...prev,
-      cropTypes: JSON.stringify(updated),
-    }));
-  };
-
-  const handleSubmit = () => {
-    onSubmit(formData);
+    setValue("cropTypes", JSON.stringify(updated));
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>
             {farmer ? "Cập nhật Nông dân" : "Thêm Nông dân"}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          {/* username */}
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Tên đăng nhập
-            </label>
-            <Input
-              name="username"
-              placeholder="Tên đăng nhập"
-              value={formData.username}
-              onChange={handleChange}
-            />
-          </div>
+        <form
+          onSubmit={handleSubmit((data) => {
+            onSubmit(data);
+          })}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left: Thông tin chính */}
+            <div className="space-y-4">
+              <FormField label="Tên đăng nhập" error={errors.username?.message}>
+                <Input {...register("username")} placeholder="Tên đăng nhập" />
+              </FormField>
 
-          {/* email */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <Input
-              name="email"
-              placeholder="Example@gmail.com"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          {/* password */}
-          {!farmer ? (
-            <div>
-              <label className="block text-sm font-medium mb-1">Mật khẩu</label>
-              <Input
-                name="password"
-                placeholder="Mật khẩu"
-                value={formData.password}
-                type="password"
-                onChange={handleChange}
-              />
+              <FormField label="Email" error={errors.email?.message}>
+                <Input {...register("email")} placeholder="Email" />
+              </FormField>
+
+              {!farmer && (
+                <FormField label="Mật khẩu" error={errors.password?.message}>
+                  <Input
+                    {...register("password")}
+                    placeholder="Mật khẩu"
+                    type="password"
+                  />
+                </FormField>
+              )}
+
+              <FormField
+                label="Số điện thoại"
+                error={errors.phoneNumber?.message}
+              >
+                <Input
+                  {...register("phoneNumber")}
+                  placeholder="Số điện thoại"
+                />
+              </FormField>
             </div>
-          ) : null}
-          {/* address */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Địa chỉ</label>
-            <Input
-              name="address"
-              placeholder="Địa chỉ"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div>
-          {/* phone number */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Số điện thoại
-            </label>
-            <Input
-              name="phoneNumber"
-              placeholder="Số điện thoại"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-          </div>
-          {/* Farm Location Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Vị trí trang trại
-            </label>
-            <Input
-              name="farmLocation"
-              placeholder="Vị trí trang trại"
-              value={formData.farmLocation}
-              onChange={handleChange}
-            />
+
+            {/* Right: Thông tin phụ */}
+            <div className="space-y-4">
+              <FormField label="Địa chỉ">
+                <Input {...register("address")} placeholder="Địa chỉ" />
+              </FormField>
+
+              <FormField label="Vị trí trang trại">
+                <Input {...register("farmLocation")} placeholder="Vị trí" />
+              </FormField>
+
+              <FormField
+                label="Diện tích trang trại (ha)"
+                error={errors.farmSize?.message}
+              >
+                <Input
+                  {...register("farmSize", { valueAsNumber: true })}
+                  type="number"
+                />
+              </FormField>
+
+              <FormField
+                label="Kinh nghiệm (năm)"
+                error={errors.farmingExperienceYears?.message}
+              >
+                <Input
+                  {...register("farmingExperienceYears", {
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                />
+              </FormField>
+            </div>
           </div>
 
-          {/* Farm Size Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Diện tích trang trại (ha)
-            </label>
-            <Input
-              name="farmSize"
-              type="number"
-              placeholder="Diện tích trang trại (ha)"
-              value={formData.farmSize}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Crop Type Input */}
-          <div>
+          {/* Cây trồng */}
+          <div className="mt-6">
             <label className="block text-sm font-medium mb-1">
               Loại cây trồng
             </label>
             <div className="flex items-center">
               <Input
-                name="newCropType"
                 placeholder="Nhập loại cây trồng"
                 value={newCropType}
-                onChange={handleCropTypeChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    addCropType();
-                  }
-                }}
+                onChange={(e) => setNewCropType(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addCropType()}
               />
-              <Button onClick={addCropType} className="ml-2">
+              <Button className="ml-2" type="button" onClick={addCropType}>
                 Thêm
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {editCropTypes.map((cropType, index) => (
+              {editCropTypes.map((type, idx) => (
                 <Badge
-                  key={index}
+                  key={idx}
                   variant="secondary"
-                  className="flex items-center"
+                  className="flex items-center px-2"
                 >
-                  {cropType}
+                  {type}
                   <button
+                    type="button"
                     className="ml-2 text-red-500"
-                    onClick={() => removeCropType(cropType)}
+                    onClick={() => removeCropType(type)}
                   >
                     x
                   </button>
@@ -258,28 +209,15 @@ export function FarmerFormModal({
             </div>
           </div>
 
-          {/* Farming Experience Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Kinh nghiệm (năm)
-            </label>
-            <Input
-              name="farmingExperienceYears"
-              type="number"
-              placeholder="Kinh nghiệm (năm)"
-              value={formData.farmingExperienceYears}
-              onChange={handleChange}
-            />
+          <div className="flex justify-end mt-6">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Hủy
+            </Button>
+            <Button type="submit" className="ml-2">
+              {farmer ? "Cập nhật" : "Thêm"}
+            </Button>
           </div>
-        </div>
-        <div className="flex justify-end mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Hủy
-          </Button>
-          <Button className="ml-2" onClick={() => handleSubmit()}>
-            {farmer ? "Cập nhật" : "Thêm"}
-          </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

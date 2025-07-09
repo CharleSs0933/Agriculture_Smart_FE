@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -6,13 +8,18 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { EngineerFormData, engineerSchema } from "@/lib/schemas";
+import { FormField } from "./form-field";
+// Bạn có thể để trong cùng file nếu muốn
 
 interface EngineerFormModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (EngineerData: EngineerFormdata) => void;
+  onSubmit: (engineerData: EngineerFormData) => void;
   engineer: Engineer | null;
 }
 
@@ -22,225 +29,166 @@ export function EngineerFormModal({
   onSubmit,
   engineer,
 }: EngineerFormModalProps) {
-  const [newCertificate, setNewCertificate] = useState("");
-  const [editCertificates, setEditCertificates] = useState<string[]>([]);
-  const [formData, setFormData] = useState<EngineerFormdata>({
-    id: undefined,
-    username: "",
-    email: "",
-    password: "",
-    address: "",
-    phoneNumber: "",
-    specialization: "",
-    experienceYears: 0,
-    certification: "",
-    bio: "",
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<EngineerFormData>({
+    resolver: zodResolver(engineerSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      address: "",
+      phoneNumber: "",
+      specialization: "",
+      experienceYears: 0,
+      certification: "[]",
+      bio: "",
+    },
   });
+
+  const [newCertificate, setNewCertificate] = useState("");
+  const [certificates, setCertificates] = useState<string[]>([]);
 
   useEffect(() => {
     if (engineer) {
-      setEditCertificates(parseCertification(engineer.certification));
-      setFormData({
-        id: engineer.id,
-        username: engineer.username || "",
-        email: engineer.email || "",
+      const certs = parseCert(engineer.certification);
+      setCertificates(certs);
+      reset({
+        ...engineer,
+        certification: JSON.stringify(certs),
         password: "",
-        address: engineer.address || "",
-        phoneNumber: engineer.phoneNumber || "",
-        specialization: engineer.specialization || "",
-        experienceYears: engineer.experienceYears || 0,
-        certification: engineer.certification,
-        bio: engineer.bio || "0",
       });
+    } else {
+      setCertificates([]);
+      reset();
     }
-  }, [engineer]);
+  }, [engineer, reset]);
 
-  const parseCertification = (certificationString: unknown): string[] => {
-    if (
-      typeof certificationString !== "string" ||
-      !certificationString.trim()
-    ) {
-      return [];
-    }
-    const trimmed = certificationString.trim();
-    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        if (
-          Array.isArray(parsed) &&
-          parsed.every((item) => typeof item === "string")
-        ) {
-          return parsed;
-        }
-      } catch (error) {
-        console.warn("JSON.parse failed, fallback to CSV:", error);
-      }
-    }
-    return trimmed
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "experienceYears" ? Number(value) : value,
-    }));
-  };
-
-  const handleCertificationChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setNewCertificate(e.target.value);
-  };
-
-  const addCertification = () => {
-    if (newCertificate && !editCertificates.includes(newCertificate.trim())) {
-      const updated = [...editCertificates, newCertificate.trim()];
-      setEditCertificates(updated);
-      setFormData((prev) => ({
-        ...prev,
-        certification: JSON.stringify(updated), // or updated.join(",")
-      }));
-      setNewCertificate(""); // Clear input
+  const parseCert = (certStr: unknown): string[] => {
+    if (typeof certStr !== "string" || !certStr.trim()) return [];
+    try {
+      const parsed = JSON.parse(certStr);
+      return Array.isArray(parsed)
+        ? parsed.filter((s) => typeof s === "string")
+        : [];
+    } catch {
+      return certStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
     }
   };
 
-  const removeCertification = (certification: string) => {
-    const updated = editCertificates.filter((type) => type !== certification);
-    setEditCertificates(updated);
-    setFormData((prev) => ({
-      ...prev,
-      certification: JSON.stringify(updated),
-    }));
+  const addCertificate = () => {
+    const trimmed = newCertificate.trim();
+    if (trimmed && !certificates.includes(trimmed)) {
+      const updated = [...certificates, trimmed];
+      setCertificates(updated);
+      setValue("certification", JSON.stringify(updated));
+      setNewCertificate("");
+    }
   };
 
-  const handleSubmit = () => {
-    onSubmit(formData);
+  const removeCertificate = (item: string) => {
+    const updated = certificates.filter((c) => c !== item);
+    setCertificates(updated);
+    setValue("certification", JSON.stringify(updated));
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>
-            {engineer ? "Cập nhật Nông dân" : "Thêm Nông dân"}
+            {engineer ? "Cập nhật Kỹ sư" : "Thêm Kỹ sư"}
           </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          {/* username */}
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Tên đăng nhập
-            </label>
-            <Input
-              name="username"
-              placeholder="Tên đăng nhập"
-              value={formData.username}
-              onChange={handleChange}
-            />
-          </div>
+        <form
+          onSubmit={handleSubmit((data) => {
+            onSubmit(data);
+          })}
+          className="space-y-4"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField label="Tên đăng nhập" error={errors.username?.message}>
+              <Input {...register("username")} placeholder="Tên đăng nhập" />
+            </FormField>
 
-          {/* email */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <Input
-              name="email"
-              placeholder="Example@gmail.com"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          {/* password */}
-          {!engineer ? (
-            <div>
-              <label className="block text-sm font-medium mb-1">Mật khẩu</label>
+            <FormField label="Email" error={errors.email?.message}>
+              <Input {...register("email")} placeholder="Email" />
+            </FormField>
+
+            {!engineer && (
+              <FormField label="Mật khẩu" error={errors.password?.message}>
+                <Input
+                  {...register("password")}
+                  type="password"
+                  placeholder="Mật khẩu"
+                />
+              </FormField>
+            )}
+
+            <FormField label="Địa chỉ">
+              <Input {...register("address")} placeholder="Địa chỉ" />
+            </FormField>
+
+            <FormField
+              label="Số điện thoại"
+              error={errors.phoneNumber?.message}
+            >
+              <Input {...register("phoneNumber")} placeholder="Số điện thoại" />
+            </FormField>
+
+            <FormField label="Chuyên môn">
+              <Input {...register("specialization")} placeholder="Chuyên môn" />
+            </FormField>
+
+            <FormField label="Tiểu sử">
+              <Input {...register("bio")} placeholder="Giới thiệu ngắn" />
+            </FormField>
+
+            <FormField
+              label="Kinh nghiệm (năm)"
+              error={errors.experienceYears?.message}
+            >
               <Input
-                name="password"
-                placeholder="Mật khẩu"
-                value={formData.password}
-                type="password"
-                onChange={handleChange}
+                {...register("experienceYears", { valueAsNumber: true })}
+                type="number"
               />
-            </div>
-          ) : null}
-          {/* address */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Địa chỉ</label>
-            <Input
-              name="address"
-              placeholder="Địa chỉ"
-              value={formData.address}
-              onChange={handleChange}
-            />
-          </div>
-          {/* phone number */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Số điện thoại
-            </label>
-            <Input
-              name="phoneNumber"
-              placeholder="Số điện thoại"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-          </div>
-          {/* Farm Location Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Tiểu sử</label>
-            <Input
-              name="bio"
-              placeholder="Tiểu sử kỹ sư"
-              value={formData.bio}
-              onChange={handleChange}
-            />
+            </FormField>
           </div>
 
-          {/* Farm Size Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Chuyên môn</label>
-            <Input
-              name="specialization"
-              placeholder="Chuyên môn hóa"
-              value={formData.specialization}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Crop Type Input */}
+          {/* Chứng chỉ */}
           <div>
             <label className="block text-sm font-medium mb-1">Chứng chỉ</label>
             <div className="flex items-center">
               <Input
-                name="newCertificate"
-                placeholder="Nhập tên chứng chỉ"
+                placeholder="Nhập chứng chỉ"
                 value={newCertificate}
-                onChange={handleCertificationChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    addCertification();
-                  }
-                }}
+                onChange={(e) => setNewCertificate(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addCertificate()}
               />
-              <Button onClick={addCertification} className="ml-2">
+              <Button type="button" className="ml-2" onClick={addCertificate}>
                 Thêm
               </Button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              {editCertificates.map((certification, index) => (
+              {certificates.map((item, i) => (
                 <Badge
-                  key={index}
+                  key={i}
                   variant="secondary"
-                  className="flex items-center"
+                  className="flex items-center px-2"
                 >
-                  {certification}
+                  {item}
                   <button
+                    type="button"
                     className="ml-2 text-red-500"
-                    onClick={() => removeCertification(certification)}
+                    onClick={() => removeCertificate(item)}
                   >
                     x
                   </button>
@@ -249,28 +197,19 @@ export function EngineerFormModal({
             </div>
           </div>
 
-          {/* Farming Experience Input */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Kinh nghiệm (năm)
-            </label>
-            <Input
-              name="experienceYears"
-              type="number"
-              placeholder="Kinh nghiệm (năm)"
-              value={formData.experienceYears}
-              onChange={handleChange}
-            />
+          <div className="flex justify-end pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Hủy
+            </Button>
+            <Button type="submit" className="ml-2">
+              {engineer ? "Cập nhật" : "Thêm"}
+            </Button>
           </div>
-        </div>
-        <div className="flex justify-end mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Hủy
-          </Button>
-          <Button className="ml-2" onClick={() => handleSubmit()}>
-            {engineer ? "Cập nhật" : "Thêm"}
-          </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -77,19 +77,23 @@ export function EngineerTable({
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="secondary">{engineer.specialization}</Badge>
+                {!engineer.specialization ? (
+                  <Badge variant="secondary">Chưa có chuyên môn</Badge>
+                ) : (
+                  <Badge variant="secondary">{engineer.specialization}</Badge>
+                )}
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">
                   {parseCertifications(engineer.certification)
                     .slice(0, 2)
-                    .map((cropType, index) => (
+                    .map((certification, index) => (
                       <Badge
                         key={index}
                         variant="secondary"
                         className="text-xs"
                       >
-                        {cropType}
+                        {certification}
                       </Badge>
                     ))}
                   {parseCertifications(engineer.certification).length > 2 && (
@@ -97,10 +101,37 @@ export function EngineerTable({
                       +{parseCertifications(engineer.certification).length - 2}
                     </Badge>
                   )}
+                  {parseCertifications(engineer.certification).length == 0 && (
+                    <Badge variant="outline" className="text-xs bg-red-200">
+                      Chưa có chứng chỉ
+                    </Badge>
+                  )}
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="outline">{engineer.experienceYears} năm</Badge>
+                <Badge
+                  variant="outline"
+                  className={`
+                  ${
+                    engineer.experienceYears < 2
+                      ? "bg-zinc-500 text-zinc-200"
+                      : ""
+                  }
+                  ${
+                    engineer.experienceYears >= 2 &&
+                    engineer.experienceYears < 5
+                      ? "bg-yellow-100 text-yellow-800"
+                      : ""
+                  }
+                  ${
+                    engineer.experienceYears >= 5
+                      ? "bg-green-100 text-green-800"
+                      : ""
+                  }
+                `}
+                >
+                  {engineer.experienceYears} năm
+                </Badge>
               </TableCell>
               <TableCell>
                 <div className="text-sm">{formatDate(engineer.createdAt)}</div>

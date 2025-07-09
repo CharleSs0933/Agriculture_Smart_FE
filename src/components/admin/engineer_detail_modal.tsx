@@ -33,9 +33,22 @@ export function EngineerDetailModal({
 }: EngineerDetailModalProps) {
   if (!engineer) return null;
 
-  const certifications = engineer.certification
-    ? JSON.parse(engineer.certification)
-    : [];
+  const parseCert = (certStr: unknown): string[] => {
+    if (typeof certStr !== "string" || !certStr.trim()) return [];
+    try {
+      const parsed = JSON.parse(certStr);
+      return Array.isArray(parsed)
+        ? parsed.filter((s) => typeof s === "string")
+        : [];
+    } catch {
+      return certStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+  };
+
+  const certifications = parseCert(engineer.certification);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("vi-VN", {
       year: "numeric",
@@ -67,7 +80,7 @@ export function EngineerDetailModal({
                 <label className="text-sm font-medium text-muted-foreground">
                   Tên người dùng
                 </label>
-                <p className="text-lg font-semibold">{engineer.userName}</p>
+                <p className="text-lg font-semibold">{engineer.username}</p>
               </div>
 
               <div className="flex items-center gap-2">

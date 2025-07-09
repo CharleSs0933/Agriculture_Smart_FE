@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { FarmerDetailModal } from "@/components/admin/farmer_detail_modal"; // I
 import { Tractor, MapPin, Wheat } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { StatsCard } from "@/components/admin/stats_card";
+import { FarmerFormData } from "@/lib/schemas";
 
 export default function FarmersPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,7 +66,6 @@ export default function FarmersPage() {
   };
 
   const handleSubmit = async (data: FarmerFormData) => {
-    console.log(data.id);
     try {
       if (data.id) {
         await updateFarmer({
@@ -118,10 +118,6 @@ export default function FarmersPage() {
       );
     });
   }, [farmerData?.items, debouncedSearchTerm]);
-
-  useEffect(() => {
-    console.log("Giá trị select ĐÃ CẬP NHẬT:", selectedFarmer);
-  });
 
   if (isLoading) return <Loading />;
   if (isError)

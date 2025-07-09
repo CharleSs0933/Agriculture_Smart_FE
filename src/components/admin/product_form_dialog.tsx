@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -23,12 +21,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import {
   useCreateProductMutation,
   useUpdateProductMutation,
 } from "@/state/apiAdmin";
 import { toast } from "sonner";
+import Image from "next/image";
 
 interface ProductFormDialogProps {
   open: boolean;
@@ -80,32 +79,43 @@ export function ProductFormDialog({
         imageUrl: product.imageUrl || "",
       });
     } else {
-      setFormData({
-        name: "",
-        description: "",
-        price: 0,
-        discountPrice: 0,
-        categoryId: 0,
-        stock: 0,
-        sku: "",
-        isActive: true,
-        imageUrl: "",
-      });
+      resetForm();
     }
   }, [product, open]);
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      price: 0,
+      discountPrice: 0,
+      categoryId: 0,
+      stock: 0,
+      sku: "",
+      isActive: true,
+      imageUrl: "",
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const productData = {
-        ...formData,
-        categoryId: Number(formData.categoryId),
-        price: Number(formData.price),
-        discountPrice: Number(formData.discountPrice),
-        stock: Number(formData.stock),
-      };
+    const { name, sku, categoryId, price, stock } = formData;
 
+    if (!name || !sku || !categoryId || !price || !stock) {
+      toast.error("Vui lòng nhập đầy đủ các trường bắt buộc");
+      return;
+    }
+
+    const productData = {
+      ...formData,
+      price: Number(formData.price) || 0,
+      discountPrice: Number(formData.discountPrice) || 0,
+      categoryId: Number(formData.categoryId) || 0,
+      stock: Number(formData.stock) || 0,
+    };
+
+    try {
       if (product) {
         await updateProduct({ id: product.id, data: productData }).unwrap();
         toast.success("Cập nhật sản phẩm thành công");
@@ -117,14 +127,22 @@ export function ProductFormDialog({
       onSave();
       onOpenChange(false);
     } catch (error) {
-      console.log("Save product error:", error);
+      console.error("Save product error:", error);
       toast.error("Có lỗi xảy ra khi lưu sản phẩm");
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setFormData((prev) => ({ ...prev, imageUrl }));
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-[90vw] max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {product ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm mới"}
@@ -137,6 +155,7 @@ export function ProductFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Tên + SKU */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Tên sản phẩm *</Label>
@@ -162,6 +181,7 @@ export function ProductFormDialog({
             </div>
           </div>
 
+          {/* Mô tả */}
           <div className="space-y-2">
             <Label htmlFor="description">Mô tả</Label>
             <Textarea
@@ -174,6 +194,7 @@ export function ProductFormDialog({
             />
           </div>
 
+          {/* Giá, khuyến mãi, tồn kho */}
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price">Giá bán *</Label>
@@ -215,8 +236,9 @@ export function ProductFormDialog({
             </div>
           </div>
 
+          {/* Danh mục */}
           <div className="space-y-2">
-            <Label htmlFor="category">Danh mục *</Label>
+            <Label>Danh mục *</Label>
             <Select
               value={formData.categoryId.toString()}
               onValueChange={(value) =>
@@ -236,23 +258,53 @@ export function ProductFormDialog({
             </Select>
           </div>
 
+          {/* Hình ảnh */}
           <div className="space-y-2">
-            <Label htmlFor="imageUrl">URL hình ảnh</Label>
-            <div className="flex gap-2">
-              <Input
-                id="imageUrl"
-                value={formData.imageUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
-                placeholder="https://example.com/image.jpg"
-              />
-              <Button type="button" variant="outline" size="icon">
-                <Upload className="h-4 w-4" />
-              </Button>
+            <Label>Hình ảnh</Label>
+            <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6">
+              {formData.imageUrl ? (
+                <div className="relative">
+                  <Image
+                    src={formData.imageUrl}
+                    alt="Ảnh sản phẩm"
+                    className="w-full h-48 object-cover rounded-lg"
+                    width={400}
+                    height={200}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={() => setFormData({ ...formData, imageUrl: "" })}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <Label htmlFor="image-upload" className="cursor-pointer">
+                    <span className="text-sm font-medium text-primary hover:text-primary/80">
+                      Tải ảnh lên
+                    </span>
+                    <Input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    PNG, JPG, GIF tối đa 10MB
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
+          {/* Kích hoạt */}
           <div className="flex items-center space-x-2">
             <Switch
               id="isActive"

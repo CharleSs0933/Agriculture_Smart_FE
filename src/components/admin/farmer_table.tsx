@@ -91,6 +91,11 @@ export function FarmerTable({
                       +{parseCropTypes(farmer.cropTypes).length - 2}
                     </Badge>
                   )}
+                  {parseCropTypes(farmer.cropTypes).length == 0 && (
+                    <Badge variant="secondary" className="text-xs bg-red-200">
+                      Chưa xác định loại cây trồng
+                    </Badge>
+                  )}
                 </div>
               </TableCell>
               <TableCell>

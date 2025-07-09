@@ -110,19 +110,6 @@ interface Farmer {
   updatedAt: string;
 }
 
-interface FarmerFormData {
-  id?: number;
-  username: string;
-  email: string;
-  password: string;
-  address: string;
-  phoneNumber: string;
-  farmLocation: string;
-  farmSize: number;
-  cropTypes: string;
-  farmingExperienceYears: number;
-}
-
 interface Engineer {
   id: number;
   userId: number;
@@ -145,18 +132,6 @@ interface EngineerFilter {
   address: string;
 }
 
-interface EngineerFormdata {
-  id?: number;
-  username: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  address: string;
-  specialization: string;
-  experienceYears: number;
-  certification: string;
-  bio: string;
-}
 interface Ticket {
   id: number;
   title: string;
