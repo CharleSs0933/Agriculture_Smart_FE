@@ -11,7 +11,7 @@ export const apiAI = createApi({
   endpoints: (build) => ({
     analyzeImage: build.mutation<AnalysisResult, FormData>({
       query: (formData) => ({
-        url: "/diagnose",
+        url: "/diagnose/",
         method: "POST",
         body: formData,
       }),
