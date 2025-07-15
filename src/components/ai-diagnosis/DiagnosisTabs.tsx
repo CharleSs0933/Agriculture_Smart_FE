@@ -191,51 +191,6 @@ Xin cảm ơn!`;
           </Card>
         </TabsContent>
 
-        <TabsContent value="image" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ImageIcon className="h-5 w-5 text-purple-500" />
-                Hình ảnh đã phân tích
-              </CardTitle>
-              <CardDescription>
-                Hình ảnh cây trồng được sử dụng để chẩn đoán
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge variant="outline" className="bg-green-50">
-                    {results.plant_name}
-                  </Badge>
-                  <Badge variant="outline" className="bg-red-50">
-                    {results.disease_name}
-                  </Badge>
-                </div>
-                <Separator />
-                {preview && (
-                  <div className="flex justify-center">
-                    <div className="relative max-w-md w-full">
-                      <Image
-                        src={preview || "/placeholder.svg"}
-                        alt="Analyzed plant image"
-                        className="w-full h-auto rounded-lg border border-gray-200 shadow-sm"
-                      />
-                    </div>
-                  </div>
-                )}
-                {!preview && (
-                  <div className="flex justify-center items-center h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                    <p className="text-gray-500">
-                      Không có hình ảnh để hiển thị
-                    </p>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
         <TabsContent value="support" className="mt-6">
           <Card>
             <CardHeader>
