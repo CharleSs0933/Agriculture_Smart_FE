@@ -4,6 +4,7 @@ export const apiAI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_API_AI_URL}`,
     prepareHeaders: (headers) => {
+      console.log("🔥 Base URL is", process.env.NEXT_PUBLIC_API_AI_URL);
       return headers;
     },
   }),
