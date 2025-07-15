@@ -64,10 +64,6 @@ Xin cảm ơn!`;
             <Pill className="h-4 w-4" />
             <span className="hidden sm:inline">Điều trị</span>
           </TabsTrigger>
-          <TabsTrigger value="image" className="flex items-center gap-2">
-            <ImageIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Hình ảnh</span>
-          </TabsTrigger>
           <TabsTrigger value="support" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span className="hidden sm:inline">Hỗ trợ</span>
