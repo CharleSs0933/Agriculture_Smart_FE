@@ -20,6 +20,7 @@ import {
   Send,
 } from "lucide-react";
 import { TicketForm } from "../support/ticket-form";
+import Image from "next/image";
 
 interface DiagnosisTabsProps {
   results: AnalysisResult;
@@ -215,7 +216,7 @@ Xin cảm ơn!`;
                 {preview && (
                   <div className="flex justify-center">
                     <div className="relative max-w-md w-full">
-                      <img
+                      <Image
                         src={preview || "/placeholder.svg"}
                         alt="Analyzed plant image"
                         className="w-full h-auto rounded-lg border border-gray-200 shadow-sm"

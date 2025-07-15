@@ -8,7 +8,6 @@ import { AnalysisPanel } from "@/components/ai-diagnosis/AnalysisPanel";
 import { DiagnosisTabs } from "@/components/ai-diagnosis/DiagnosisTabs";
 import { toast } from "sonner";
 import { useAnalyzeImageMutation } from "@/state/apiAI";
-import { getPlantDiseaseInfo } from "@/lib/utils";
 
 export default function AIDiagnosis() {
   const [file, setFile] = useState<File | null>(null);
