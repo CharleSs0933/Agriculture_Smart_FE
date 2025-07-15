@@ -20,7 +20,6 @@ import {
   Send,
 } from "lucide-react";
 import { TicketForm } from "../support/ticket-form";
-import Image from "next/image";
 
 interface DiagnosisTabsProps {
   results: AnalysisResult;
