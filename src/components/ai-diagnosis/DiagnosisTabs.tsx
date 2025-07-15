@@ -50,7 +50,7 @@ Xin cảm ơn!`;
   return (
     <div className="mx-auto max-w-5xl mt-8">
       <Tabs defaultValue="symptoms" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="symptoms" className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4" />
             <span className="hidden sm:inline">Triệu chứng</span>
