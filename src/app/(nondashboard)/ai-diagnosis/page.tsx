@@ -59,29 +59,29 @@ export default function AIDiagnosis() {
 
       const data = await analyzeImageMutation(formData).unwrap();
 
-      // Get detailed information based on plant_name and disease_name
-      const diseaseInfo = getPlantDiseaseInfo(
-        data.plant_name,
-        data.disease_name
+      setResults(data);
+
+      toast.success(
+        `Phát hiện bệnh ${data.disease_name} trên ${data.plant_name}`
       );
-
-      // Transform API response to match your component structure
-      const analysisResult: AnalysisResult = {
-        plant_name: data.plant_name,
-        disease_name: data.disease_name,
-        confidence: data.confidence * 100,
-        symptoms: diseaseInfo.symptoms,
-        description: diseaseInfo.description,
-        treatment: diseaseInfo.treatment,
-      };
-
-      setResults(analysisResult);
-
-      toast.success("Phân tích hình ảnh hoàn tất");
     } catch (error) {
       console.log("Analysis error:", error);
 
       toast.error("Có lỗi xảy ra khi phân tích hình ảnh. Vui lòng thử lại.");
+    }
+  };
+
+  const handleReset = () => {
+    setFile(null);
+    setPreview(null);
+    setResults(null);
+
+    // Reset file input
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
     }
   };
 
@@ -98,6 +98,7 @@ export default function AIDiagnosis() {
             isAnalyzing={isLoading}
             results={results}
             onAnalyze={analyzeImage}
+            onReset={handleReset}
           />
         </div>
 

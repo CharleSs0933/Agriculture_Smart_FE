@@ -25,12 +25,6 @@ interface ProductsQueryParams {
   SortByDiscountPrice?: boolean;
 }
 
-interface AIAnalysis {
-  plant_name: string;
-  disease_name: string;
-  confidence: number;
-}
-
 interface CreateTicketRequest {
   title: string;
   category: string;

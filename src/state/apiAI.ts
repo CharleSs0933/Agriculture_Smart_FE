@@ -8,11 +8,10 @@ export const apiAI = createApi({
     },
   }),
   reducerPath: "apiAI",
-  tagTypes: [""],
   endpoints: (build) => ({
-    analyzeImage: build.mutation<AIAnalysis, FormData>({
+    analyzeImage: build.mutation<AnalysisResult, FormData>({
       query: (formData) => ({
-        url: "/predict",
+        url: "/diagnose",
         method: "POST",
         body: formData,
       }),

@@ -37,7 +37,6 @@ interface TicketFormProps {
   aiDiagnosisData?: {
     plant_name: string;
     disease_name: string;
-    confidence: number;
     image: string;
   };
 }
@@ -156,7 +155,6 @@ export function TicketForm({
                 <AlertDescription className="text-blue-800">
                   <strong>Kết quả AI chẩn đoán:</strong>{" "}
                   {aiDiagnosisData.plant_name} - {aiDiagnosisData.disease_name}
-                  (Độ tin cậy: {aiDiagnosisData.confidence}%)
                 </AlertDescription>
               </Alert>
             )}

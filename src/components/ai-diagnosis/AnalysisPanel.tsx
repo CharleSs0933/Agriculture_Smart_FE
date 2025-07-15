@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,16 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AlertCircle, ArrowRight, Leaf, Bug } from "lucide-react";
+import { Brain, Loader2, RotateCcw, CheckCircle } from "lucide-react";
 
 interface AnalysisPanelProps {
   file: File | null;
   isAnalyzing: boolean;
   results: AnalysisResult | null;
   onAnalyze: () => void;
+  onReset: () => void;
 }
 
 export function AnalysisPanel({
@@ -25,94 +25,101 @@ export function AnalysisPanel({
   isAnalyzing,
   results,
   onAnalyze,
+  onReset,
 }: AnalysisPanelProps) {
   return (
-    <Card>
+    <Card className="h-fit">
       <CardHeader>
-        <CardTitle>Phân tích AI</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Brain className="h-5 w-5 text-green-600" />
+          Phân tích AI
+        </CardTitle>
         <CardDescription>
-          Hệ thống AI sẽ phân tích hình ảnh và đưa ra chẩn đoán
+          {!results
+            ? "Tải lên hình ảnh cây trồng để bắt đầu chẩn đoán bệnh"
+            : "Kết quả chẩn đoán từ hệ thống AI"}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {!file && !results && (
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Chưa có hình ảnh</AlertTitle>
-            <AlertDescription>
-              Vui lòng tải lên hình ảnh cây trồng của bạn để bắt đầu phân tích.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {file && !results && !isAnalyzing && (
-          <div className="flex justify-center">
-            <Button
-              onClick={onAnalyze}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              Bắt đầu phân tích
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        )}
-
-        {isAnalyzing && (
-          <div className="flex flex-col items-center justify-center space-y-4 py-8">
-            <div className="w-12 h-12 rounded-full border-4 border-green-200 border-t-green-600 animate-spin"></div>
-            <p className="text-sm text-gray-500">Đang phân tích hình ảnh...</p>
-          </div>
-        )}
-
-        {results && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-4">
+        {!results ? (
+          <>
+            <div className="text-center py-8">
+              <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 mb-4">Chưa có kết quả phân tích</p>
+              <Button
+                onClick={onAnalyze}
+                disabled={!file || isAnalyzing}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {isAnalyzing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Đang phân tích...
+                  </>
+                ) : (
+                  <>
+                    <Brain className="h-4 w-4 mr-2" />
+                    Phân tích hình ảnh
+                  </>
+                )}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Leaf className="h-5 w-5 text-green-600" />
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="font-medium text-green-700">
+                  Phân tích hoàn tất
+                </span>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Loại cây</p>
-                  <p className="font-semibold capitalize">
+                  <label className="text-sm font-medium text-gray-700">
+                    Loại cây trồng
+                  </label>
+                  <Badge variant="outline" className="ml-2 bg-green-50">
                     {results.plant_name}
-                  </p>
+                  </Badge>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Bug className="h-5 w-5 text-red-600" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-gray-700">
                     Bệnh được phát hiện
-                  </p>
-                  <p className="font-semibold capitalize">
+                  </label>
+                  <Badge variant="outline" className="ml-2 bg-red-50">
                     {results.disease_name}
-                  </p>
+                  </Badge>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Số triệu chứng
+                  </label>
+                  <Badge variant="outline" className="ml-2 bg-blue-50">
+                    {results.symptoms.length} triệu chứng
+                  </Badge>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-500">Độ tin cậy</p>
-                <Badge variant="outline" className="bg-green-50">
-                  {results.confidence.toFixed(1)}%
-                </Badge>
+              <Separator />
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={onReset}
+                  variant="outline"
+                  className="flex-1 bg-transparent"
+                >
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Phân tích ảnh mới
+                </Button>
               </div>
             </div>
-
-            <Separator />
-
-            <div>
-              <h4 className="text-sm font-medium mb-2 flex items-center">
-                <AlertCircle className="h-4 w-4 mr-1 text-amber-500" />
-                Triệu chứng
-              </h4>
-              <ul className="list-disc pl-5 space-y-1">
-                {results.symptoms.map((symptom, index) => (
-                  <li key={index} className="text-sm text-gray-600">
-                    {symptom}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          </>
         )}
       </CardContent>
     </Card>

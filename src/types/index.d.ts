@@ -92,10 +92,9 @@ interface Review {
 interface AnalysisResult {
   plant_name: string;
   disease_name: string;
-  confidence: number;
   symptoms: string[];
-  description: string;
-  treatment: string;
+  description: string[];
+  treatment: string[];
 }
 
 interface Farmer {
