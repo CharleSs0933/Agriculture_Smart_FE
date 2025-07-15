@@ -15,7 +15,6 @@ import {
   AlertTriangle,
   Stethoscope,
   Pill,
-  ImageIcon,
   MessageSquare,
   Send,
 } from "lucide-react";
