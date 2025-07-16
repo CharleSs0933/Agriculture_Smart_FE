@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function HeroSection() {
+  const router = useRouter();
   return (
     <section className="w-full py-8 md:py-16 lg:py-10 bg-green-50">
       <div className=" w-full px-4 md:px-6">
@@ -44,8 +46,13 @@ export function HeroSection() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
-                  Bắt đầu ngay
+                <Button
+                  className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+                  onClick={() => {
+                    router.push("/ai-diagnosis");
+                  }}
+                >
+                  Chẩn đoán ngay
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </motion.div>
