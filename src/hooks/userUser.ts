@@ -53,13 +53,13 @@ export const useUser = () => {
         Cookies.set("token", res.token, {
           // Set token in cookies with 1 hours expiration
           expires: 1 / 24, // 1 hour
-          secure: true,
+          secure: false,
           sameSite: "strict",
         });
         Cookies.set("role", res.role, {
           // Set role in cookies with 1 hours expiration
           expires: 1 / 24, // 1 hour
-          secure: true,
+          secure: false,
           sameSite: "strict",
         });
         if (res.role === "Admin") router.push("/admin");
