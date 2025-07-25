@@ -115,7 +115,7 @@ interface Farmer {
 interface Engineer {
   id: number;
   userId: number;
-  userName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   address: string;
@@ -128,7 +128,7 @@ interface Engineer {
 }
 
 interface EngineerFilter {
-  userName: string;
+  username: string;
   email: string;
   specialization: string;
   address: string;

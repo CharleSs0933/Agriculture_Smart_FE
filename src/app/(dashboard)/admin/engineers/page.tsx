@@ -83,7 +83,7 @@ export default function EngineersPage() {
 
   const filteredEngineers = (fetchEngineer?.items ?? []).filter(
     (engineer: EngineerFilter) =>
-      engineer.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      engineer.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
       engineer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       engineer.specialization
         .toLowerCase()

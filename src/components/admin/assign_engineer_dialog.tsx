@@ -103,7 +103,7 @@ export function AssignEngineerDialog({
       .unwrap()
       .then(() => {
         toast.success("Đã phân công kỹ sư thành công", {
-          description: `Kỹ sư ${selectedEngineer.userName} đã được phân công cho ticket #${ticketId}`,
+          description: `Kỹ sư ${selectedEngineer.username} đã được phân công cho ticket #${ticketId}`,
         });
         setOpen(false);
         setSelectedEngineer(null);
@@ -250,7 +250,7 @@ export function AssignEngineerDialog({
                         <Avatar className="h-10 w-10">
                           <AvatarImage src="/placeholder.svg?height=40&width=40" />
                           <AvatarFallback className="bg-primary/10">
-                            {engineer.userName
+                            {engineer.username
                               .split(" ")
                               .map((n) => n[0])
                               .join("")
@@ -260,7 +260,7 @@ export function AssignEngineerDialog({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="font-medium truncate">
-                              {engineer.userName}
+                              {engineer.username}
                             </h4>
                             {selectedEngineer === engineer && (
                               <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
@@ -292,7 +292,7 @@ export function AssignEngineerDialog({
                   <Avatar className="h-16 w-16 mx-auto mb-3">
                     <AvatarImage src="/placeholder.svg?height=64&width=64" />
                     <AvatarFallback className="bg-primary/10 text-lg">
-                      {selectedEngineer.userName
+                      {selectedEngineer.username
                         .split(" ")
                         .map((n) => n[0])
                         .join("")
@@ -300,7 +300,7 @@ export function AssignEngineerDialog({
                     </AvatarFallback>
                   </Avatar>
                   <h3 className="font-semibold text-lg">
-                    {selectedEngineer.userName}
+                    {selectedEngineer.username}
                   </h3>
                   <Badge variant="outline" className="mt-1">
                     {selectedEngineer.specialization}
@@ -380,7 +380,7 @@ export function AssignEngineerDialog({
           <div className="text-sm text-muted-foreground">
             {selectedEngineer ? (
               <span>
-                Đã chọn: <strong>{selectedEngineer.userName}</strong>
+                Đã chọn: <strong>{selectedEngineer.username}</strong>
               </span>
             ) : (
               <span>Chưa chọn kỹ sư nào</span>
