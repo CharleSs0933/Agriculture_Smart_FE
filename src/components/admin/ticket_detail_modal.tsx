@@ -152,7 +152,7 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
                         </span>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Phân công cho {ticket.assignedEngineer?.userName}
+                        Phân công cho {ticket.assignedEngineer?.username}
                       </p>
                     </div>
                   </div>
@@ -256,7 +256,7 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
                     <Avatar>
                       <AvatarImage src="/placeholder.svg?height=40&width=40" />
                       <AvatarFallback>
-                        {ticket.assignedEngineer.userName
+                        {ticket.assignedEngineer.username
                           .split(" ")
                           .map((n) => n[0])
                           .join("")}
@@ -264,7 +264,7 @@ export function TicketDetailModal({ ticket, trigger }: TicketDetailModalProps) {
                     </Avatar>
                     <div>
                       <p className="font-medium">
-                        {ticket.assignedEngineer.userName}
+                        {ticket.assignedEngineer.username}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {ticket.assignedEngineer.specialization}

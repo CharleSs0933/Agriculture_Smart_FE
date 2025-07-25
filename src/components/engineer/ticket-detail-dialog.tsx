@@ -262,7 +262,7 @@ export function TicketDetailDialog({
                           </span>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Phân công cho {ticket.assignedEngineer?.userName}
+                          Phân công cho {ticket.assignedEngineer?.username}
                         </p>
                       </div>
                     </div>

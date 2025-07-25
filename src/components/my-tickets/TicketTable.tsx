@@ -207,7 +207,7 @@ export function TicketTable({
                   {ticket.assignedEngineer ? (
                     <div className="space-y-1">
                       <div className="font-medium text-sm">
-                        {ticket.assignedEngineer.userName}
+                        {ticket.assignedEngineer.username}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {ticket.assignedEngineer.specialization}

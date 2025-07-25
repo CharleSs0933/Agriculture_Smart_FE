@@ -56,7 +56,7 @@ export const EngineerTable: React.FC<EngineerTableProps> = ({
           <TableRow key={engineer.id}>
             <TableCell>
               <div>
-                <div className="font-medium">{engineer.userName}</div>
+                <div className="font-medium">{engineer.username}</div>
                 <div className="text-sm text-muted-foreground">
                   ID: #{engineer.id}
                 </div>

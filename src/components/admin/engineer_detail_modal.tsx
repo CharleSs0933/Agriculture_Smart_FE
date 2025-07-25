@@ -67,7 +67,7 @@ export function EngineerDetailModal({
                 <label className="text-sm font-medium text-muted-foreground">
                   Tên người dùng
                 </label>
-                <p className="text-lg font-semibold">{engineer.userName}</p>
+                <p className="text-lg font-semibold">{engineer.username}</p>
               </div>
 
               <div className="flex items-center gap-2">
