@@ -233,7 +233,7 @@ export const api = createApi({
       { paymentUrl: string },
       { orderId: number; fullName: string }
     >({
-      query: ({ orderId, fullName }) => ({
+      query: ({ orderId }) => ({
         url: `/PayOS/create-link/${orderId}`,
         method: "POST",
         // body: { orderId, fullName },
