@@ -26,15 +26,15 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect to the appropriate dashboard based on role
-  if (pathname === "/") {
-    if (role === "Admin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    } else if (role === "Farmer") {
-      return NextResponse.redirect(new URL("/user", request.url));
-    } else if (role === "Engineer") {
-      return NextResponse.redirect(new URL("/engineer", request.url));
-    }
-  }
+  // if (pathname === "/") {
+  //   if (role === "Admin") {
+  //     return NextResponse.redirect(new URL("/admin", request.url));
+  //   } else if (role === "Farmer") {
+  //     return NextResponse.redirect(new URL("/user", request.url));
+  //   } else if (role === "Engineer") {
+  //     return NextResponse.redirect(new URL("/engineer", request.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }

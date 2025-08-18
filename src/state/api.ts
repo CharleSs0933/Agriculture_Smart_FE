@@ -215,18 +215,30 @@ export const api = createApi({
         method: "POST",
         body: { shippingAddress, paymentMethod },
       }),
-      invalidatesTags: ["Cart", "Orders"],
+      invalidatesTags: ["Cart", "Orders", "CartCount"],
     }),
+
+    // createPayment: build.mutation<
+    //   { paymentUrl: string },
+    //   { orderId: number; fullName: string }
+    // >({
+    //   query: ({ orderId, fullName }) => ({
+    //     url: "/Payment/create-payment",
+    //     method: "POST",
+    //     body: { orderId, fullName },
+    //   }),
+    // }),
 
     createPayment: build.mutation<
       { paymentUrl: string },
       { orderId: number; fullName: string }
     >({
       query: ({ orderId, fullName }) => ({
-        url: "/Payment/create-payment",
+        url: `/PayOS/create-link/${orderId}`,
         method: "POST",
-        body: { orderId, fullName },
+        // body: { orderId, fullName },
       }),
+      invalidatesTags: ["Orders"],
     }),
 
     getOrders: build.query<Order[], void>({
