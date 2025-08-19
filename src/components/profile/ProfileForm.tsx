@@ -113,7 +113,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                       Tên người dùng
                     </Label>
                     <Input
-                      value={profile.userName}
+                      value={profile.username}
                       disabled
                       className="bg-gray-50 border-gray-200"
                     />

@@ -313,14 +313,14 @@ export function TicketDetailDialog({
                       <Avatar>
                         <AvatarImage src="/placeholder.svg?height=40&width=40" />
                         <AvatarFallback>
-                          {ticket.farmer.userName
+                          {ticket.farmer.username
                             .split(" ")
                             .map((n) => n[0])
                             .join("")}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{ticket.farmer.userName}</p>
+                        <p className="font-medium">{ticket.farmer.username}</p>
                         <p className="text-sm text-muted-foreground">
                           {ticket.farmer.email}
                         </p>

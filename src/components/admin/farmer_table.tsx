@@ -56,7 +56,7 @@ export function FarmerTable({
           farmers.map((farmer) => (
             <TableRow key={farmer.id}>
               <TableCell>
-                <div className="font-medium">{farmer.userName}</div>
+                <div className="font-medium">{farmer.username}</div>
                 <div className="text-sm text-muted-foreground">
                   ID: {farmer.id}
                 </div>
