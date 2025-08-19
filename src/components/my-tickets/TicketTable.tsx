@@ -168,7 +168,7 @@ export function TicketTable({
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="font-medium">
-                        {ticket.farmer?.userName || "N/A"}
+                        {ticket.farmer?.username || "N/A"}
                       </span>
                       <span>•</span>
                       <Badge variant="outline" className="text-xs px-1 py-0">

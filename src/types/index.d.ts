@@ -100,7 +100,7 @@ interface AnalysisResult {
 interface Farmer {
   id: number;
   userId: number;
-  userName: string;
+  username: string;
   email: string;
   phoneNumber: string;
   address: string;

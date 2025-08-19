@@ -112,7 +112,7 @@ export default function FarmersPage() {
 
     return farmerData.items.filter((farmer) => {
       return (
-        (farmer.userName?.toLowerCase().includes(searchLower) ?? false) ||
+        (farmer.username?.toLowerCase().includes(searchLower) ?? false) ||
         (farmer.email?.toLowerCase().includes(searchLower) ?? false) ||
         (farmer.phoneNumber?.toLowerCase().includes(searchLower) ?? false)
       );
