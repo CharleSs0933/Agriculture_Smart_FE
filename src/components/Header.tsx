@@ -92,16 +92,19 @@ export function Header() {
       {/* Desktop Actions */}
       <div className="ml-4 lg:ml-6 hidden md:flex items-center gap-4">
         {/* Cart Button */}
-        <Link href="/user/cart">
-          <Button variant="outline" size="sm" className="relative">
-            <ShoppingCart className="h-4 w-4" />
-            {!isLoading && itemCount && itemCount > 0 ? (
-              <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                {itemCount}
-              </Badge>
-            ) : null}
-          </Button>
-        </Link>
+
+        {!isLoading && user && (
+          <Link href="/user/cart">
+            <Button variant="outline" size="sm" className="relative">
+              <ShoppingCart className="h-4 w-4" />
+              {!isLoading && itemCount && itemCount > 0 ? (
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  {itemCount}
+                </Badge>
+              ) : null}
+            </Button>
+          </Link>
+        )}
 
         {/* User Menu */}
         {isUserLoading ? (
@@ -255,15 +258,12 @@ export function Header() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full">
                         Đăng nhập
                       </Button>
                     </Link>
-                    <Link
-                      href="/auth/register"
-                      onClick={() => setIsOpen(false)}
-                    >
+                    <Link href="/register" onClick={() => setIsOpen(false)}>
                       <Button className="w-full">Đăng ký</Button>
                     </Link>
                   </div>
@@ -288,19 +288,21 @@ export function Header() {
                   </motion.div>
                 ))}
 
-                <Link
-                  href="/user/cart"
-                  className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Giỏ hàng
-                  {!isLoading && itemCount && itemCount > 0 ? (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                      {itemCount}
-                    </Badge>
-                  ) : null}
-                </Link>
+                {user && (
+                  <Link
+                    href="/user/cart"
+                    className="flex items-center gap-2 text-lg font-medium hover:text-green-600 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    Giỏ hàng
+                    {!isLoading && itemCount && itemCount > 0 ? (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                        {itemCount}
+                      </Badge>
+                    ) : null}
+                  </Link>
+                )}
               </nav>
             </div>
           </SheetContent>
