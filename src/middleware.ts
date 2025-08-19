@@ -7,7 +7,7 @@ const isAdminProtected = ["/admin"];
 const isEngineerProtected = ["/engineer"];
 
 export async function middleware(request: NextRequest) {
-  const role = (await cookies()).get("role")?.value;
+  const role = (await cookies()).get("role")?.value || "Farmer";
   const { pathname } = request.nextUrl;
 
   console.log(role);
